@@ -30,7 +30,10 @@ jobs:
           dotnet-version: 7.0.x
 
       - name: Publish backend
-        run: dotnet publish src/AdaptAula.Api/AdaptAula.Api.csproj -c Release -o publish/aula-adaptada-api
+        run: |
+          dotnet publish src/AdaptAula.Api/AdaptAula.Api.csproj -c Release -o publish/aula-adaptada-api
+          mkdir -p publish/aula-adaptada-api/logs
+          touch publish/aula-adaptada-api/logs/.gitkeep
 
       - name: Deploy frontend (agzlabs.com/aula-adaptada/)
         uses: SamKirkland/FTP-Deploy-Action@v4.4.0
