@@ -1,0 +1,25 @@
+# .NET
+bin/
+obj/
+*.user
+App_Data/
+
+# Frontend
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Editors / OS
+.vs/
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+.DS_Store
+
+# Secrets
+appsettings.Development.json
+appsettings.*.local.json
+.env
+.env.*
