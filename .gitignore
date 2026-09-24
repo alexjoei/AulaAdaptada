@@ -3,6 +3,7 @@ bin/
 obj/
 *.user
 App_Data/
+publish/
 
 # Frontend
 node_modules/
@@ -23,3 +24,5 @@ appsettings.Development.json
 appsettings.*.local.json
 .env
 .env.*
+# .env.production has no secrets (just the public API base URL) — keep it tracked
+!web/adaptaula-web/.env.production

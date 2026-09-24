@@ -63,6 +63,27 @@ con el backend en `http://localhost:5080`.
 dotnet test tests/AdaptAula.Tests/AdaptAula.Tests.csproj
 ```
 
+## Despliegue en agzlabs.com
+
+Aula Adaptada vive como subweb de [AGZ Labs](https://agzlabs.com), en dos carpetas hermanas del
+mismo dominio (para evitar que la app .NET y el sitio estático se pisen):
+
+- **Frontend** (`web/adaptaula-web/dist`, tras `npm run build`) → sube el contenido de `dist/` a
+  `public_html/aula-adaptada/` por FTP. Vite ya compila con `base: '/aula-adaptada/'` y
+  `VITE_API_BASE_URL` apunta a `https://agzlabs.com/aula-adaptada-api/api` (ver
+  `web/adaptaula-web/.env.production`). Incluye un `.htaccess` con fallback a `index.html` para
+  que las rutas internas de React Router (`basename="/aula-adaptada"`) funcionen al refrescar o
+  enlazar directamente.
+- **Backend** (`dotnet publish src/AdaptAula.Api/AdaptAula.Api.csproj -c Release -o publish/aula-adaptada-api`)
+  → sube el contenido de esa carpeta (incluye `web.config` con el módulo ASP.NET Core para IIS) a
+  la carpeta que tu panel de hosting asigne para una "aplicación .NET" en la ruta
+  `/aula-adaptada-api`. CORS en `Program.cs` ya permite `https://agzlabs.com`.
+  Recuerda configurar `Gemini__ApiKey` en el entorno del hosting (o en un
+  `appsettings.Production.json` no versionado) — sin ella el pipeline sigue funcionando pero no
+  reescribe texto.
+- Si el panel solo permite montar la app .NET en una ruta distinta a `/aula-adaptada-api`, cambia
+  `VITE_API_BASE_URL` en `.env.production` a la ruta real y repite `npm run build` antes de subir.
+
 ## Alcance de esta primera versión (MVP1)
 
 - Formatos: texto pegado, DOCX, PDF con capa de texto (no escaneado/OCR).
