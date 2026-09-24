@@ -44,6 +44,12 @@ jobs:
           local-dir: web/adaptaula-web/dist/
           server-dir: aula-adaptada/
 
+      - name: Take backend offline (release file locks)
+        run: |
+          echo "<h1>Actualizando Aula Adaptada...</h1>" > app_offline.htm
+          curl -T app_offline.htm --user "${{ secrets.FTP_USERNAME }}:${{ secrets.FTP_PASSWORD }}" "ftp://${{ secrets.FTP_SERVER }}/aula-adaptada-api/app_offline.htm"
+          sleep 5
+
       - name: Deploy backend (agzlabs.com/aula-adaptada-api/)
         uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
@@ -54,3 +60,7 @@ jobs:
           server-dir: aula-adaptada-api/
           exclude: |
             **/App_Data/**
+
+      - name: Bring backend back online
+        if: always()
+        run: curl --user "${{ secrets.FTP_USERNAME }}:${{ secrets.FTP_PASSWORD }}" "ftp://${{ secrets.FTP_SERVER }}/" -Q "DELE /aula-adaptada-api/app_offline.htm"
