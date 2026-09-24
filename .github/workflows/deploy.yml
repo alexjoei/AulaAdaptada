@@ -1,0 +1,54 @@
+name: Deploy Aula Adaptada to SmarterASP
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get repo files
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build frontend
+        working-directory: web/adaptaula-web
+        run: |
+          npm ci
+          npm run build
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 7.0.x
+
+      - name: Publish backend
+        run: dotnet publish src/AdaptAula.Api/AdaptAula.Api.csproj -c Release -o publish/aula-adaptada-api
+
+      - name: Deploy frontend (agzlabs.com/aula-adaptada/)
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: web/adaptaula-web/dist/
+          server-dir: aula-adaptada/
+
+      - name: Deploy backend (agzlabs.com/aula-adaptada-api/)
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: publish/aula-adaptada-api/
+          server-dir: aula-adaptada-api/
+          exclude: |
+            **/App_Data/**
+            **/logs/**
