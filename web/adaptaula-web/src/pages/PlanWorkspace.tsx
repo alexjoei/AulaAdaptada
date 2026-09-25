@@ -1,19 +1,31 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { api, ApiError } from "../api/client";
+import { useNavigate, useParams } from "react-router-dom";
+import { api } from "../api/client";
 import type { AdaptationPlan, Assessment, AdaptedQuestion, ValidationResult, Question } from "../api/types";
-import { Eyebrow, Stepper, SeverityBadge } from "../components/ui";
+import { Eyebrow, Stepper, SeverityBadge, PIPELINE_STEPS } from "../components/ui";
+import { diffWords, type DiffToken } from "../utils/diff";
+
+function DiffText({ tokens, side }: { tokens: DiffToken[]; side: "original" | "adapted" }) {
+  return (
+    <p style={{ marginTop: 8 }}>
+      {tokens.map((t, i) => {
+        if (side === "original" && t.type === "added") return null;
+        if (side === "adapted" && t.type === "removed") return null;
+        const className = t.type === "removed" ? "diff-removed" : t.type === "added" ? "diff-added" : undefined;
+        return <span key={i} className={className}>{t.text}</span>;
+      })}
+    </p>
+  );
+}
 
 export default function PlanWorkspace() {
   const { id: planId } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [plan, setPlan] = useState<AdaptationPlan | null>(null);
   const [assessment, setAssessment] = useState<Assessment | null>(null);
   const [adapted, setAdapted] = useState<AdaptedQuestion[]>([]);
   const [validation, setValidation] = useState<ValidationResult[]>([]);
-  const [canExport, setCanExport] = useState(false);
   const [generating, setGenerating] = useState(false);
-  const [approvedBy, setApprovedBy] = useState("");
-  const [exporting, setExporting] = useState<"Docx" | "Pdf" | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [generated, setGenerated] = useState(false);
 
@@ -23,6 +35,15 @@ export default function PlanWorkspace() {
       setPlan(p);
       const a = await api.assessments.get(p.assessmentId);
       setAssessment(a);
+      if (p.status !== "Draft" && p.status !== "Planned") {
+        const [freshAdapted, freshValidation] = await Promise.all([
+          api.plans.adaptedQuestions(planId),
+          api.plans.validationResults(planId),
+        ]);
+        setAdapted(freshAdapted);
+        setValidation(freshValidation);
+        setGenerated(true);
+      }
     });
   }, [planId]);
 
@@ -34,7 +55,6 @@ export default function PlanWorkspace() {
       const result = await api.plans.generate(planId);
       setAdapted(result.adaptedQuestions);
       setValidation(result.validationResults);
-      setCanExport(result.canExport);
       setGenerated(true);
     } catch {
       setError("No se pudo generar la adaptación. Comprueba la configuración de la IA (clave de Gemini).");
@@ -54,19 +74,6 @@ export default function PlanWorkspace() {
     setValidation(freshValidation);
   }
 
-  async function doExport(format: "Docx" | "Pdf") {
-    if (!planId) return;
-    setExporting(format);
-    setError(null);
-    try {
-      await api.plans.export(planId, format, approvedBy);
-    } catch (e) {
-      setError(e instanceof ApiError ? e.message : "No se pudo exportar.");
-    } finally {
-      setExporting(null);
-    }
-  }
-
   if (!plan || !assessment) return <div className="page wrap"><p className="muted">Cargando…</p></div>;
 
   const questionsById = new Map<string, Question>(assessment.sections.flatMap((s) => s.questions).map((q) => [q.id, q]));
@@ -75,14 +82,27 @@ export default function PlanWorkspace() {
     if (!v.questionId) continue;
     validationByQuestion.set(v.questionId, [...(validationByQuestion.get(v.questionId) ?? []), v]);
   }
+  const diffByQuestion = new Map<string, DiffToken[]>();
+  for (const a of adapted) {
+    const original = questionsById.get(a.questionId)?.originalText ?? "";
+    diffByQuestion.set(a.questionId, diffWords(original, a.adaptedText));
+  }
   const planLevelIssues = validation.filter((v) => !v.questionId);
   const errorCount = validation.filter((v) => v.severity === "Error").length;
+
+  const links = [
+    "/upload",
+    `/assessments/${assessment.id}/analysis`,
+    `/assessments/${assessment.id}/adapt`,
+    undefined,
+    generated ? `/plans/${planId}/export` : undefined,
+  ];
 
   return (
     <div className="page">
       <div className="wrap">
-        <Eyebrow>{generated ? "Comparador" : "Generación"}</Eyebrow>
-        <Stepper steps={["Subida", "Análisis", "Adaptación", "Comparador"]} current={3} />
+        <Eyebrow>{generated ? "Comparador" : "Generación de textos"}</Eyebrow>
+        <Stepper steps={PIPELINE_STEPS} current={3} links={links} />
         <h1 style={{ fontSize: 28, marginBottom: 4 }}>{assessment.title}</h1>
         <p className="muted" style={{ marginBottom: 24 }}>
           Nivel {plan.level} {plan.isCurricularChange && "· Cambio curricular"}
@@ -116,7 +136,7 @@ export default function PlanWorkspace() {
               <div>
                 <strong>{errorCount === 0 ? "Sin errores" : `${errorCount} error(es) de validación`}</strong>
                 <p className="muted" style={{ fontSize: 13 }}>
-                  {canExport ? "Se puede exportar." : "Resuelve los errores antes de exportar."}
+                  Revisa los cambios resaltados y acepta o rechaza cada pregunta antes de continuar.
                 </p>
               </div>
               <div className="row">
@@ -137,25 +157,29 @@ export default function PlanWorkspace() {
             <div className="comparator-grid">
               <div>
                 <div className="comparator-col-label">Original</div>
-                {[...questionsById.values()].sort((a, b) => a.order - b.order).map((q) => (
-                  <div key={q.id} className="comparator-question">
-                    <strong>Pregunta {q.order + 1} · {q.points} pts</strong>
-                    <p style={{ marginTop: 8 }}>{q.originalText}</p>
-                  </div>
-                ))}
+                {[...questionsById.values()].sort((a, b) => a.order - b.order).map((q) => {
+                  const tokens = diffByQuestion.get(q.id);
+                  return (
+                    <div key={q.id} className="comparator-question">
+                      <strong>Pregunta {q.order + 1} · {q.points} pts</strong>
+                      {tokens ? <DiffText tokens={tokens} side="original" /> : <p style={{ marginTop: 8 }}>{q.originalText}</p>}
+                    </div>
+                  );
+                })}
               </div>
               <div>
                 <div className="comparator-col-label">Adaptado</div>
                 {adapted.sort((a, b) => (questionsById.get(a.questionId)?.order ?? 0) - (questionsById.get(b.questionId)?.order ?? 0)).map((a) => {
                   const q = questionsById.get(a.questionId);
                   const issues = validationByQuestion.get(a.questionId) ?? [];
+                  const tokens = diffByQuestion.get(a.questionId);
                   return (
                     <div key={a.id} className="comparator-question adapted">
                       <div className="row spread">
                         <strong>Pregunta {(q?.order ?? 0) + 1} · {a.points} pts</strong>
                         <div className="row">{issues.map((v) => <SeverityBadge key={v.id} severity={v.severity} />)}</div>
                       </div>
-                      <p style={{ marginTop: 8 }}>{a.adaptedText}</p>
+                      {tokens ? <DiffText tokens={tokens} side="adapted" /> : <p style={{ marginTop: 8 }}>{a.adaptedText}</p>}
                       {a.supports.length > 0 && (
                         <ul className="support-list">
                           {a.supports.map((s, i) => <li key={i}>{s}</li>)}
@@ -173,22 +197,9 @@ export default function PlanWorkspace() {
               </div>
             </div>
 
-            <div className="card-panel mt-32">
-              <h3 style={{ fontSize: 16, marginBottom: 12 }}>Exportar</h3>
-              <div className="field" style={{ maxWidth: 320 }}>
-                <label>Aprobado por (docente)</label>
-                <input value={approvedBy} onChange={(e) => setApprovedBy(e.target.value)} placeholder="Nombre o alias del docente" />
-              </div>
-              <div className="row">
-                <button className="btn" disabled={!canExport || !!exporting} onClick={() => doExport("Docx")}>
-                  {exporting === "Docx" ? "Exportando…" : "Exportar DOCX"}
-                </button>
-                <button className="btn btn-outline" disabled={!canExport || !!exporting} onClick={() => doExport("Pdf")}>
-                  {exporting === "Pdf" ? "Exportando…" : "Exportar PDF"}
-                </button>
-              </div>
-              {error && <p style={{ color: "var(--error)", marginTop: 12 }}>{error}</p>}
-            </div>
+            <button className="btn mt-32" onClick={() => navigate(`/plans/${planId}/export`)}>
+              Continuar a generación
+            </button>
           </>
         )}
       </div>

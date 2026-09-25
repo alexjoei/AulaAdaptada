@@ -1,7 +1,7 @@
 import { useState, type DragEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { api, ApiError } from "../api/client";
-import { Eyebrow } from "../components/ui";
+import { Eyebrow, Stepper, PIPELINE_STEPS } from "../components/ui";
 
 export default function Upload() {
   const navigate = useNavigate();
@@ -44,6 +44,7 @@ export default function Upload() {
     <div className="page">
       <div className="wrap-narrow">
         <Eyebrow>Nueva adaptación</Eyebrow>
+        <Stepper steps={PIPELINE_STEPS} current={0} />
         <h1 style={{ fontSize: 28, marginBottom: 8 }}>Sube una prueba</h1>
         <p className="muted" style={{ marginBottom: 28 }}>
           MVP1 admite DOCX, PDF con texto (no escaneado) o pegar el texto directamente.

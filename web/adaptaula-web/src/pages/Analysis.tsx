@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { api } from "../api/client";
 import type { Assessment, Question } from "../api/types";
-import { Eyebrow, Stepper } from "../components/ui";
+import { Eyebrow, Stepper, PIPELINE_STEPS } from "../components/ui";
 
 const CONSTRUCT_TAGS = [
   { key: "reading", label: "Lectura" },
@@ -80,7 +80,7 @@ export default function Analysis() {
     <div className="page">
       <div className="wrap">
         <Eyebrow>Análisis del original</Eyebrow>
-        <Stepper steps={["Subida", "Análisis", "Adaptación", "Comparador"]} current={1} />
+        <Stepper steps={PIPELINE_STEPS} current={1} links={["/upload"]} />
         <h1 style={{ fontSize: 28, marginBottom: 4 }}>{assessment.title}</h1>
         <p className="muted" style={{ marginBottom: 24 }}>
           {assessment.subject} · {assessment.grade}º · {questions.length} preguntas

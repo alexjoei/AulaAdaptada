@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { api } from "../api/client";
 import type { NecessityPreset, StudentProfile } from "../api/types";
-import { Eyebrow, Stepper } from "../components/ui";
+import { Eyebrow, Stepper, PIPELINE_STEPS } from "../components/ui";
 
 const LEVELS = [
   { value: 1, label: "1 · Accesibilidad", hint: "Tipografía, espaciado, contraste. No cambia contenido ni dificultad." },
@@ -66,7 +66,7 @@ export default function AdaptationSelector() {
     <div className="page">
       <div className="wrap-narrow">
         <Eyebrow>Selector de adaptación</Eyebrow>
-        <Stepper steps={["Subida", "Análisis", "Adaptación", "Comparador"]} current={2} />
+        <Stepper steps={PIPELINE_STEPS} current={2} links={["/upload", `/assessments/${assessmentId}/analysis`]} />
         <h1 style={{ fontSize: 28, marginBottom: 20 }}>¿Para quién es esta adaptación?</h1>
 
         <div className="card-panel" style={{ marginBottom: 20 }}>

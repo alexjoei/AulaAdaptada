@@ -43,4 +43,32 @@ public class QuestionSplitterTests
         Assert.Single(questions);
         Assert.True(confidence < 0.5);
     }
+
+    [Fact]
+    public void Split_IgnoresEmbeddedNumberedLists_ThatDoNotContinueTheQuestionSequence()
+    {
+        // Regression test: a true/false table's row labels (1, 2, 3, 4) sit between question 22
+        // and question 23 and must not be mistaken for new question boundaries, since they don't
+        // continue the 19, 20, 21, 22, 23... sequence.
+        var text = """
+            19. What's the main idea of the text? Choose the right option among the four available answers provided below in this reading comprehension question.
+            20. What do they have to do if they see a bear? Choose the right option among the four available answers provided below in this reading comprehension question.
+            21. What is the setting for this text? Choose the right option among the four available answers provided below in this reading comprehension question.
+            22. Are these statements true or false? Mark with an X in the appropriate column for each one.
+            1. Susan is 13 years old
+            2. Susan lives in England
+            3. The bear's roar makes her scared
+            4. Susan loves going hiking with adults
+            23. What's another word for scary? Choose the right option among the four available answers provided below in this reading comprehension question.
+            """;
+
+        var (questions, confidence) = QuestionSplitter.Split(text);
+
+        Assert.Equal(5, questions.Count);
+        Assert.Contains("Are these statements true or false", questions[3].OriginalText);
+        Assert.Contains("Susan is 13 years old", questions[3].OriginalText);
+        Assert.Contains("What's another word for scary", questions[4].OriginalText);
+        Assert.DoesNotContain("What's another word for scary", questions[3].OriginalText);
+        Assert.True(confidence > 0.6);
+    }
 }
