@@ -55,7 +55,7 @@ export default function PlanWorkspace() {
     setError(null);
     setProgress(null);
     pollRef.current = setInterval(() => {
-      api.plans.generateProgress(planId).then(setProgress).catch(() => {});
+      api.plans.generateProgress(planId).then((p) => setProgress(p ?? null)).catch(() => {});
     }, 1000);
     try {
       const result = await api.plans.generate(planId);
