@@ -16,12 +16,15 @@ public class PlansController : ControllerBase
     private readonly AdaptAulaDbContext _db;
     private readonly AdaptationPipelineService _pipeline;
     private readonly ExportService _exportService;
+    private readonly GenerationProgressTracker _progress;
 
-    public PlansController(AdaptAulaDbContext db, AdaptationPipelineService pipeline, ExportService exportService)
+    public PlansController(
+        AdaptAulaDbContext db, AdaptationPipelineService pipeline, ExportService exportService, GenerationProgressTracker progress)
     {
         _db = db;
         _pipeline = pipeline;
         _exportService = exportService;
+        _progress = progress;
     }
 
     /// <summary>PLAN step (spec §7): deterministic rule resolution only, no text rewritten yet.</summary>
@@ -84,6 +87,17 @@ public class PlansController : ControllerBase
         await _db.SaveChangesAsync(ct);
 
         return new GenerateResponse(adapted, validation, SafetyValidator.CanExport(validation));
+    }
+
+    /// <summary>Polled by the "Generando…" screen while <see cref="Generate"/> is in flight (a
+    /// separate request/thread — the tracker is a singleton shared across requests). Returns 204
+    /// when nothing is currently generating for this plan, either because it hasn't started yet or
+    /// because it already finished.</summary>
+    [HttpGet("plans/{id:guid}/generate-progress")]
+    public ActionResult<GenerationProgressResponse> GetGenerateProgress(Guid id)
+    {
+        var progress = _progress.Get(id);
+        return progress is null ? NoContent() : new GenerationProgressResponse(progress.Value.Current, progress.Value.Total);
     }
 
     [HttpGet("plans/{id:guid}/adapted-questions")]
@@ -150,3 +164,5 @@ public class PlansController : ControllerBase
 }
 
 public record GenerateResponse(List<AdaptedQuestion> AdaptedQuestions, List<ValidationResult> ValidationResults, bool CanExport);
+
+public record GenerationProgressResponse(int Current, int Total);

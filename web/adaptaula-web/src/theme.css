@@ -192,6 +192,26 @@ button { font-family: inherit; }
 }
 .dropzone.active { border-color: var(--grad-from); background: var(--panel-alt); }
 
+/* ---------- progress bars ---------- */
+
+.progress-bar-track {
+  width: 100%; height: 6px; border-radius: 999px; background: var(--panel-alt);
+  border: 1px solid var(--border); overflow: hidden;
+}
+.progress-bar-fill { height: 100%; border-radius: 999px; background: var(--gradient); transition: width 0.3s ease; }
+
+/* Indeterminate variant for a step with no natural sub-progress to count (e.g. one AI call, not
+   many) — a shorter bar slides back and forth to signal "still working" without implying a
+   percentage it can't actually report. */
+.progress-bar-fill-indeterminate {
+  height: 100%; width: 40%; border-radius: 999px; background: var(--gradient);
+  animation: progress-indeterminate 1.2s ease-in-out infinite;
+}
+@keyframes progress-indeterminate {
+  0% { margin-left: -40%; }
+  100% { margin-left: 100%; }
+}
+
 /* ---------- progress stepper ---------- */
 
 .stepper { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 32px; }

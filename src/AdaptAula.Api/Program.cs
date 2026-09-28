@@ -40,6 +40,7 @@ builder.Services.AddHttpClient<IDocumentStructureExtractor, GeminiDocumentStruct
 builder.Services.AddSingleton<DocumentIngestionService>();
 builder.Services.AddSingleton<DocxExporter>();
 builder.Services.AddSingleton<PdfExporter>();
+builder.Services.AddSingleton<GenerationProgressTracker>();
 builder.Services.AddScoped<AdaptationPipelineService>();
 builder.Services.AddScoped<ExportService>();
 

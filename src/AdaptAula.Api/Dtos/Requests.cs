@@ -2,7 +2,7 @@ using AdaptAula.Domain;
 
 namespace AdaptAula.Api.Dtos;
 
-public record CreateAssessmentFromTextRequest(string Title, string Text, int Grade, string Subject, string Language = "es");
+public record CreateAssessmentFromTextRequest(string Title, string Text, int? Grade, string? Subject, string Language = "es");
 
 public record UpdateAssessmentRequest(
     string? Title,

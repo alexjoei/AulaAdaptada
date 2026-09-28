@@ -22,7 +22,12 @@ public record AdaptationTextRequest(
 /// always carried over from the original <see cref="Question"/> in the pipeline, which
 /// structurally prevents the AI from changing them (spec §11 POINTS_CHANGED / ANSWER_CHANGED).
 /// </summary>
+/// <param name="QuestionId">Which request this answers — a batch call can't assume the model
+/// preserved array order or answered every item, so callers must match on this rather than on
+/// position. The generator implementation resolves it from the model's own numbering internally;
+/// callers never deal with that numbering directly.</param>
 public record AdaptationTextResponse(
+    Guid QuestionId,
     string AdaptedText,
     ResponseMode ResponseMode,
     List<string> Supports,
@@ -33,5 +38,12 @@ public record AdaptationTextResponse(
 /// of the pipeline so it can move from a free tier to a paid one without other changes).</summary>
 public interface IAdaptationTextGenerator
 {
-    Task<AdaptationTextResponse> GenerateAsync(AdaptationTextRequest request, CancellationToken ct = default);
+    /// <summary>Adapts several questions in one call — the free-tier bottleneck is Gemini's
+    /// requests-per-minute cap, not per-call latency, so batching questions into fewer, larger
+    /// calls is what actually shortens a full-assessment generation, not parallelizing one-call-
+    /// per-question. Each returned <see cref="AdaptationTextResponse.QuestionId"/> identifies which
+    /// request it answers; a request the model failed to answer is simply absent from the result
+    /// (not assumed by position), and the caller (the pipeline) decides the fallback for it.</summary>
+    Task<IReadOnlyList<AdaptationTextResponse>> GenerateBatchAsync(
+        IReadOnlyList<AdaptationTextRequest> requests, CancellationToken ct = default);
 }

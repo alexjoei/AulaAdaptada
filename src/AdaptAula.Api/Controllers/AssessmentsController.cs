@@ -42,7 +42,7 @@ public class AssessmentsController : ControllerBase
     [HttpPost("upload")]
     [RequestSizeLimit(20_000_000)]
     public async Task<ActionResult<Assessment>> Upload(
-        IFormFile file, [FromForm] int grade, [FromForm] string subject, [FromForm] string language, CancellationToken ct)
+        IFormFile file, [FromForm] int? grade, [FromForm] string? subject, [FromForm] string language, CancellationToken ct)
     {
         if (file.Length == 0) return BadRequest("Archivo vacío.");
 
@@ -90,7 +90,7 @@ public class AssessmentsController : ControllerBase
     }
 
     private async Task<ActionResult<Assessment>> Persist(
-        IngestionResult result, int grade, string subject, string language, CancellationToken ct)
+        IngestionResult result, int? grade, string? subject, string language, CancellationToken ct)
     {
         result.Assessment.Grade = grade;
         result.Assessment.Subject = subject;

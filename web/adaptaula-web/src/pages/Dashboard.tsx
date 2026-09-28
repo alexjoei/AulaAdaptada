@@ -43,7 +43,12 @@ export default function Dashboard() {
               <Link key={a.id} to={`/assessments/${a.id}/analysis`} className="card-panel" style={{ textDecoration: "none" }}>
                 <h3 style={{ fontSize: 18, marginBottom: 8 }}>{a.title}</h3>
                 <p className="muted" style={{ fontSize: 14 }}>
-                  {a.subject} · {a.grade}º · {a.totalPoints} puntos · {a.sections.reduce((n, s) => n + s.questions.length, 0)} preguntas
+                  {[
+                    a.subject,
+                    a.grade ? `${a.grade}º` : null,
+                    `${a.totalPoints} puntos`,
+                    `${a.sections.reduce((n, s) => n + s.questions.length, 0)} preguntas`,
+                  ].filter(Boolean).join(" · ")}
                 </p>
               </Link>
             ))}

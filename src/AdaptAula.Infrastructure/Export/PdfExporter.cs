@@ -34,8 +34,7 @@ public class PdfExporter
                 page.Header().Column(col =>
                 {
                     col.Item().Text(assessment.Title).FontSize(bodySize + 8).Bold();
-                    col.Item().Text($"{assessment.Subject} · {assessment.Grade}º · {assessment.TotalPoints} puntos")
-                        .FontSize(bodySize).Italic();
+                    col.Item().Text(BuildSubtitle(assessment)).FontSize(bodySize).Italic();
                 });
 
                 page.Content().PaddingTop(12).Column(col =>
@@ -68,6 +67,17 @@ public class PdfExporter
         });
 
         return document.GeneratePdf();
+    }
+
+    /// <summary>Grade/subject/points, joined loosely — grade and subject are optional (a teacher may
+    /// not have specified them), so only the parts that are actually present appear.</summary>
+    private static string BuildSubtitle(Assessment assessment)
+    {
+        var parts = new List<string>();
+        if (!string.IsNullOrWhiteSpace(assessment.Subject)) parts.Add(assessment.Subject);
+        if (assessment.Grade is not null) parts.Add($"{assessment.Grade}º");
+        parts.Add($"{assessment.TotalPoints} puntos");
+        return string.Join(" · ", parts);
     }
 
     /// <summary>The shared reading passage/instructions a group of questions refers to — rendered

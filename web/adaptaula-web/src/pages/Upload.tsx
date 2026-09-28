@@ -10,7 +10,7 @@ export default function Upload() {
   const [dragActive, setDragActive] = useState(false);
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
-  const [grade, setGrade] = useState(6);
+  const [grade, setGrade] = useState<number | "">("");
   const [subject, setSubject] = useState("");
   const [language, setLanguage] = useState("es");
   const [busy, setBusy] = useState(false);
@@ -21,10 +21,12 @@ export default function Upload() {
     setBusy(true);
     setError(null);
     setErrorCode(null);
+    const gradeValue = grade === "" ? undefined : grade;
+    const subjectValue = subject.trim() === "" ? undefined : subject;
     try {
       const assessment = mode === "file" && file
-        ? await api.assessments.upload(file, grade, subject, language)
-        : await api.assessments.createFromText({ title, text, grade, subject, language });
+        ? await api.assessments.upload(file, gradeValue, subjectValue, language)
+        : await api.assessments.createFromText({ title, text, grade: gradeValue, subject: subjectValue, language });
       navigate(`/assessments/${assessment.id}/analysis`);
     } catch (e) {
       setError(e instanceof ApiError ? e.message : "No se pudo procesar el documento.");
@@ -41,7 +43,7 @@ export default function Upload() {
     if (dropped) setFile(dropped);
   }
 
-  const canSubmit = mode === "file" ? !!file && !!subject : !!title && !!text && !!subject;
+  const canSubmit = mode === "file" ? !!file : !!title && !!text;
 
   return (
     <div className="page">
@@ -88,11 +90,14 @@ export default function Upload() {
 
           <div className="card-grid cols-3 mt-24">
             <div className="field">
-              <label>Curso</label>
-              <input type="number" min={1} max={12} value={grade} onChange={(e) => setGrade(Number(e.target.value))} />
+              <label>Curso (opcional)</label>
+              <input
+                type="number" min={1} max={12} value={grade}
+                onChange={(e) => setGrade(e.target.value === "" ? "" : Number(e.target.value))}
+              />
             </div>
             <div className="field">
-              <label>Asignatura</label>
+              <label>Asignatura (opcional)</label>
               <input value={subject} onChange={(e) => setSubject(e.target.value)} placeholder="Natural Science" />
             </div>
             <div className="field">
@@ -114,8 +119,13 @@ export default function Upload() {
           {error && errorCode !== "ai_unavailable" && <p style={{ color: "var(--error)", marginBottom: 12 }}>{error}</p>}
 
           <button className="btn" disabled={!canSubmit || busy} onClick={submit}>
-            {busy ? "Procesando…" : errorCode === "ai_unavailable" ? "Reintentar" : "Analizar prueba"}
+            {busy ? "Procesando…" : errorCode === "ai_unavailable" ? "Reintentar" : "Analizar documento"}
           </button>
+          {busy && (
+            <div className="progress-bar-track" style={{ marginTop: 12 }}>
+              <div className="progress-bar-fill-indeterminate" />
+            </div>
+          )}
         </div>
       </div>
     </div>

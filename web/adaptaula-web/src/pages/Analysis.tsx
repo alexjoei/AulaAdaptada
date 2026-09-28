@@ -103,7 +103,8 @@ export default function Analysis() {
         <Stepper steps={PIPELINE_STEPS} current={1} links={["/upload"]} />
         <h1 style={{ fontSize: 28, marginBottom: 4 }}>{assessment.title}</h1>
         <p className="muted" style={{ marginBottom: 24 }}>
-          {assessment.subject} · {assessment.grade}º · {questions.length} preguntas
+          {[assessment.subject, assessment.grade ? `${assessment.grade}º` : null, `${questions.length} preguntas`]
+            .filter(Boolean).join(" · ")}
         </p>
 
         {lowConfidence && (

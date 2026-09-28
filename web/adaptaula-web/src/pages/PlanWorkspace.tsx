@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { api } from "../api/client";
-import type { AdaptationPlan, Assessment, AdaptedQuestion, ValidationResult, Question } from "../api/types";
+import type { AdaptationPlan, Assessment, AdaptedQuestion, ValidationResult, Question, GenerationProgress } from "../api/types";
 import { Eyebrow, Stepper, SeverityBadge, PIPELINE_STEPS } from "../components/ui";
 import { diffWords, type DiffToken } from "../utils/diff";
 
@@ -26,8 +26,10 @@ export default function PlanWorkspace() {
   const [adapted, setAdapted] = useState<AdaptedQuestion[]>([]);
   const [validation, setValidation] = useState<ValidationResult[]>([]);
   const [generating, setGenerating] = useState(false);
+  const [progress, setProgress] = useState<GenerationProgress | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [generated, setGenerated] = useState(false);
+  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     if (!planId) return;
@@ -51,6 +53,10 @@ export default function PlanWorkspace() {
     if (!planId) return;
     setGenerating(true);
     setError(null);
+    setProgress(null);
+    pollRef.current = setInterval(() => {
+      api.plans.generateProgress(planId).then(setProgress).catch(() => {});
+    }, 1000);
     try {
       const result = await api.plans.generate(planId);
       setAdapted(result.adaptedQuestions);
@@ -59,9 +65,14 @@ export default function PlanWorkspace() {
     } catch {
       setError("No se pudo generar la adaptación. Comprueba la configuración de la IA (clave de Gemini).");
     } finally {
+      if (pollRef.current) clearInterval(pollRef.current);
+      pollRef.current = null;
       setGenerating(false);
+      setProgress(null);
     }
   }
+
+  useEffect(() => () => { if (pollRef.current) clearInterval(pollRef.current); }, []);
 
   async function review(adaptedQuestionId: string, approved: boolean) {
     if (!planId) return;
@@ -124,7 +135,9 @@ export default function PlanWorkspace() {
               pregunta siguiendo exactamente esas reglas — nunca cambia puntos ni respuestas.
             </p>
             <button className="btn" disabled={generating} onClick={generate}>
-              {generating ? "Generando…" : "Generar textos adaptados"}
+              {generating
+                ? (progress && progress.total > 0 ? `Adaptando ${progress.current}/${progress.total}…` : "Generando…")
+                : "Generar textos adaptados"}
             </button>
             {error && <p style={{ color: "var(--error)", marginTop: 16 }}>{error}</p>}
           </div>

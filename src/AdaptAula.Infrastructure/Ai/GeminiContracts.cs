@@ -84,6 +84,12 @@ internal class GeminiCandidate
 /// <see cref="AdaptationTextResponse"/> but as plain JSON-friendly types.</summary>
 internal class GeminiAdaptedQuestionPayload
 {
+    /// <summary>1-based position matching the "PREGUNTA N" numbering the batch prompt gave this
+    /// question — resolved back to the request's real Guid inside GeminiAdaptationTextGenerator.
+    /// Never exposed outside that class.</summary>
+    [JsonPropertyName("question_index")]
+    public int QuestionIndex { get; set; }
+
     [JsonPropertyName("adapted_text")]
     public string AdaptedText { get; set; } = string.Empty;
 

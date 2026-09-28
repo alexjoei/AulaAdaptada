@@ -1,9 +1,9 @@
 import type {
   Assessment, StudentProfile, NecessityPreset, AdaptationPlan, AdaptedQuestion,
-  ValidationResult, GenerateResponse, ExportFormat, QuestionType,
+  ValidationResult, GenerateResponse, GenerationProgress, ExportFormat, QuestionType,
 } from "./types";
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:5080";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:5282";
 
 class ApiError extends Error {
   status: number;
@@ -50,13 +50,13 @@ export const api = {
   assessments: {
     list: () => request<Assessment[]>("/api/assessments"),
     get: (id: string) => request<Assessment>(`/api/assessments/${id}`),
-    createFromText: (body: { title: string; text: string; grade: number; subject: string; language: string }) =>
+    createFromText: (body: { title: string; text: string; grade?: number; subject?: string; language: string }) =>
       request<Assessment>("/api/assessments/text", { method: "POST", body: JSON.stringify(body) }),
-    upload: async (file: File, grade: number, subject: string, language: string) => {
+    upload: async (file: File, grade: number | undefined, subject: string | undefined, language: string) => {
       const form = new FormData();
       form.append("file", file);
-      form.append("grade", String(grade));
-      form.append("subject", subject);
+      if (grade !== undefined) form.append("grade", String(grade));
+      if (subject) form.append("subject", subject);
       form.append("language", language);
       const res = await fetch(`${BASE_URL}/api/assessments/upload`, { method: "POST", body: form });
       if (!res.ok) throw await buildApiError(res.status, await res.text().catch(() => ""));
@@ -82,6 +82,7 @@ export const api = {
       request<AdaptationPlan>(`/api/assessments/${assessmentId}/plans`, { method: "POST", body: JSON.stringify(body) }),
     get: (id: string) => request<AdaptationPlan>(`/api/plans/${id}`),
     generate: (id: string) => request<GenerateResponse>(`/api/plans/${id}/generate`, { method: "POST" }),
+    generateProgress: (id: string) => request<GenerationProgress | undefined>(`/api/plans/${id}/generate-progress`),
     adaptedQuestions: (id: string) => request<AdaptedQuestion[]>(`/api/plans/${id}/adapted-questions`),
     validationResults: (id: string) => request<ValidationResult[]>(`/api/plans/${id}/validation-results`),
     review: (id: string, adaptedQuestionId: string, approved: boolean) =>

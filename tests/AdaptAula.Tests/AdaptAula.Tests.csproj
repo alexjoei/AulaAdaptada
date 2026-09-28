@@ -26,6 +26,7 @@
     <ProjectReference Include="..\..\src\AdaptAula.RulesEngine\AdaptAula.RulesEngine.csproj" />
     <ProjectReference Include="..\..\src\AdaptAula.Validation\AdaptAula.Validation.csproj" />
     <ProjectReference Include="..\..\src\AdaptAula.Infrastructure\AdaptAula.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\AdaptAula.Api\AdaptAula.Api.csproj" />
   </ItemGroup>
 
 </Project>

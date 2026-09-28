@@ -4,8 +4,10 @@ public class Assessment
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     public string Title { get; set; } = string.Empty;
-    public int Grade { get; set; }
-    public string Subject { get; set; } = string.Empty;
+
+    /// <summary>Optional — a teacher may not know or care to specify these at upload time.</summary>
+    public int? Grade { get; set; }
+    public string? Subject { get; set; }
     public string Language { get; set; } = "es";
     public int TotalPoints { get; set; }
     public string? SourceFileName { get; set; }

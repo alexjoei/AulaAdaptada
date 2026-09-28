@@ -35,8 +35,8 @@ export interface Section {
 export interface Assessment {
   id: string;
   title: string;
-  grade: number;
-  subject: string;
+  grade: number | null;
+  subject: string | null;
   language: string;
   totalPoints: number;
   sourceFileName: string | null;
@@ -120,4 +120,9 @@ export interface GenerateResponse {
   adaptedQuestions: AdaptedQuestion[];
   validationResults: ValidationResult[];
   canExport: boolean;
+}
+
+export interface GenerationProgress {
+  current: number;
+  total: number;
 }

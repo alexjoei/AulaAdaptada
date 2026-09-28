@@ -37,7 +37,7 @@ public class DocxExporter
             var nextImageId = 1;
 
             body.AppendChild(Heading($"{assessment.Title}", "32"));
-            body.AppendChild(Paragraph($"{assessment.Subject} · {assessment.Grade}º · {assessment.TotalPoints} puntos", "20", italic: true));
+            body.AppendChild(Paragraph(BuildSubtitle(assessment), "20", italic: true));
             body.AppendChild(EmptyParagraph());
 
             var orderedSections = assessment.Sections.OrderBy(s => s.Order).ToList();
@@ -175,6 +175,17 @@ public class DocxExporter
                 DistanceFromLeft = 0U,
                 DistanceFromRight = 0U
             });
+    }
+
+    /// <summary>Grade/subject/points, joined loosely — grade and subject are optional (a teacher may
+    /// not have specified them), so only the parts that are actually present appear.</summary>
+    private static string BuildSubtitle(Assessment assessment)
+    {
+        var parts = new List<string>();
+        if (!string.IsNullOrWhiteSpace(assessment.Subject)) parts.Add(assessment.Subject);
+        if (assessment.Grade is not null) parts.Add($"{assessment.Grade}º");
+        parts.Add($"{assessment.TotalPoints} puntos");
+        return string.Join(" · ", parts);
     }
 
     private static Paragraph Heading(string text, string fontSize) =>

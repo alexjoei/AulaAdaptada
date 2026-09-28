@@ -1,7 +1,9 @@
 using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 using AdaptAula.Domain;
 using AdaptAula.Infrastructure.Export;
 using AdaptAula.Infrastructure.Persistence;
+using AdaptAula.RulesEngine;
 using Microsoft.EntityFrameworkCore;
 
 namespace AdaptAula.Api.Services;
@@ -57,12 +59,21 @@ public class ExportService
             : _pdfExporter.Export(assessment, plan, questionsById, adaptedQuestions);
 
         var extension = format == ExportFormat.Docx ? "docx" : "pdf";
-        var fileName = $"{assessment.Id}_{plan.Id}_{DateTime.UtcNow:yyyyMMddHHmmss}.{extension}";
-        var filePath = Path.Combine(_exportRoot, fileName);
+        var profile = await _db.StudentProfiles.FindAsync(new object[] { plan.ProfileId }, ct);
+        var fileName = BuildFileName(assessment, profile, extension);
+
+        // Each export version gets its own folder so the download name can stay purely descriptive
+        // (grade-subject-language-accommodations-original) without a uniqueness suffix baked in —
+        // uniqueness on disk comes from the folder, not the filename itself.
+        var versionId = Guid.NewGuid();
+        var versionDir = Path.Combine(_exportRoot, versionId.ToString());
+        Directory.CreateDirectory(versionDir);
+        var filePath = Path.Combine(versionDir, fileName);
         await File.WriteAllBytesAsync(filePath, bytes, ct);
 
         var version = new ExportVersion
         {
+            Id = versionId,
             AssessmentId = assessment.Id,
             ProfileId = plan.ProfileId,
             PlanId = plan.Id,
@@ -78,4 +89,32 @@ public class ExportService
 
         return version;
     }
+
+    /// <summary>Curso-asignatura-idioma-(adaptaciones)-nombre_original, skipping whatever the
+    /// teacher didn't specify (grade/subject are optional) rather than showing an empty segment.</summary>
+    internal static string BuildFileName(Assessment assessment, StudentProfile? profile, string extension)
+    {
+        var parts = new List<string>();
+        if (assessment.Grade is not null) parts.Add(assessment.Grade.Value.ToString());
+        if (!string.IsNullOrWhiteSpace(assessment.Subject)) parts.Add(Slugify(assessment.Subject));
+        if (!string.IsNullOrWhiteSpace(assessment.Language)) parts.Add(assessment.Language);
+
+        var accommodationLabels = (profile?.Measures ?? new List<string>())
+            .Select(key => NecessityPresets.ByKey.TryGetValue(key, out var preset) ? preset.DisplayName : key)
+            .Select(Slugify)
+            .ToList();
+        if (accommodationLabels.Count > 0) parts.Add(string.Join("+", accommodationLabels));
+
+        var originalNameBase = !string.IsNullOrWhiteSpace(assessment.SourceFileName)
+            ? Path.GetFileNameWithoutExtension(assessment.SourceFileName)
+            : assessment.Title;
+        if (!string.IsNullOrWhiteSpace(originalNameBase)) parts.Add(Slugify(originalNameBase));
+
+        var baseName = parts.Count > 0 ? string.Join("-", parts) : "adaptaula-export";
+        return $"{baseName}.{extension}";
+    }
+
+    private static readonly Regex UnsafeFileNameChars = new(@"[^\w\-]+", RegexOptions.Compiled);
+
+    private static string Slugify(string value) => UnsafeFileNameChars.Replace(value.Trim(), "_").Trim('_');
 }
