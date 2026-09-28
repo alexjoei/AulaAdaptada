@@ -29,7 +29,28 @@ internal class GeminiContent
 internal class GeminiPart
 {
     [JsonPropertyName("text")]
-    public string Text { get; set; } = string.Empty;
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? Text { get; set; }
+
+    /// <summary>Embeds a PDF, image or other binary blob directly in the request (Gemini's
+    /// <c>inline_data</c> part shape) — used to hand the model a document's raw bytes, or a
+    /// separately-labeled reference image, alongside plain-text instructions in the same call.</summary>
+    [JsonPropertyName("inline_data")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public GeminiInlineData? InlineData { get; set; }
+
+    public static GeminiPart FromText(string text) => new() { Text = text };
+    public static GeminiPart FromBytes(byte[] bytes, string mimeType) =>
+        new() { InlineData = new GeminiInlineData { MimeType = mimeType, Data = Convert.ToBase64String(bytes) } };
+}
+
+internal class GeminiInlineData
+{
+    [JsonPropertyName("mime_type")]
+    public string MimeType { get; set; } = string.Empty;
+
+    [JsonPropertyName("data")]
+    public string Data { get; set; } = string.Empty;
 }
 
 internal class GeminiGenerationConfig
@@ -86,4 +107,42 @@ internal class GeminiChangeLogEntryPayload
 
     [JsonPropertyName("description")]
     public string Description { get; set; } = string.Empty;
+}
+
+/// <summary>Shape the model is constrained to return via response_schema for the document
+/// structuring call — mirrors <see cref="DocumentStructure"/> but as plain JSON-friendly types.</summary>
+internal class GeminiDocumentStructurePayload
+{
+    [JsonPropertyName("confidence")]
+    public double Confidence { get; set; }
+
+    [JsonPropertyName("sections")]
+    public List<GeminiSectionPayload> Sections { get; set; } = new();
+}
+
+internal class GeminiSectionPayload
+{
+    [JsonPropertyName("stimulus_text")]
+    public string? StimulusText { get; set; }
+
+    [JsonPropertyName("start_page")]
+    public int StartPage { get; set; }
+
+    [JsonPropertyName("end_page")]
+    public int EndPage { get; set; }
+
+    [JsonPropertyName("questions")]
+    public List<GeminiQuestionPayload> Questions { get; set; } = new();
+}
+
+internal class GeminiQuestionPayload
+{
+    [JsonPropertyName("text")]
+    public string Text { get; set; } = string.Empty;
+
+    [JsonPropertyName("options")]
+    public List<string> Options { get; set; } = new();
+
+    [JsonPropertyName("points_hint")]
+    public int? PointsHint { get; set; }
 }

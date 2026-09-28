@@ -212,6 +212,32 @@ button { font-family: inherit; }
 /* ---------- question editor rows ---------- */
 
 .question-row { border: 1px solid var(--border); border-radius: var(--radius-md); padding: 18px; margin-bottom: 14px; }
+.stimulus-panel { background: var(--panel-alt); margin-bottom: 14px; }
+.section-group {
+  border: 2px solid var(--grad-from); border-radius: var(--radius-lg); padding: 20px 20px 6px;
+  margin-bottom: 32px; background: rgba(124, 58, 237, 0.03);
+}
+.section-group-label {
+  font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+  color: var(--grad-from); margin-bottom: 12px;
+}
+.instructions-panel {
+  border: 1px dashed var(--border); border-radius: var(--radius-md); padding: 12px 16px;
+  margin-bottom: 14px; background: transparent;
+}
+.instructions-panel-label {
+  display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+  color: var(--text-muted); margin-bottom: 6px;
+}
+.image-gallery { display: flex; flex-wrap: wrap; gap: 12px; }
+.image-gallery img {
+  max-width: 220px; max-height: 220px; border-radius: var(--radius-md); border: 1px solid var(--border);
+  object-fit: contain; background: var(--panel-alt);
+}
+.inline-content-image {
+  display: block; max-width: 100%; max-height: 320px; width: auto; border-radius: var(--radius-md);
+  border: 1px solid var(--border); object-fit: contain; background: var(--panel-alt); margin: 4px 0 10px;
+}
 .question-row-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; gap: 12px; flex-wrap: wrap; }
 .question-text { font-size: 14px; color: var(--text-secondary); white-space: pre-wrap; margin-bottom: 10px; }
 .tag-chip {

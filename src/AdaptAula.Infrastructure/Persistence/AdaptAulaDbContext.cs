@@ -25,12 +25,14 @@ public class AdaptAulaDbContext : DbContext
         {
             e.HasKey(a => a.Id);
             e.Property(a => a.LockedFields).HasConversion(stringListConverter).Metadata.SetValueComparer(stringListComparer);
+            e.Property(a => a.ImageDataUris).HasConversion(stringListConverter).Metadata.SetValueComparer(stringListComparer);
             e.HasMany(a => a.Sections).WithOne().HasForeignKey(s => s.AssessmentId).OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<Section>(e =>
         {
             e.HasKey(s => s.Id);
+            e.Property(s => s.AssetRefs).HasConversion(stringListConverter).Metadata.SetValueComparer(stringListComparer);
             e.HasMany(s => s.Questions).WithOne().HasForeignKey(q => q.SectionId).OnDelete(DeleteBehavior.Cascade);
         });
 

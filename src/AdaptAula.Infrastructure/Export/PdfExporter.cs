@@ -20,7 +20,7 @@ public class PdfExporter
         var lineHeight = style.LargeAccessibleFont ? 1.5f : 1.2f;
         var leftAlign = style.LeftAlignLowDensity;
 
-        var orderedQuestions = questionsById.Values.OrderBy(q => q.Order).ToList();
+        var orderedSections = assessment.Sections.OrderBy(s => s.Order).ToList();
         var byQuestionId = adaptedQuestions.ToDictionary(a => a.QuestionId);
 
         var document = Document.Create(container =>
@@ -40,11 +40,22 @@ public class PdfExporter
 
                 page.Content().PaddingTop(12).Column(col =>
                 {
-                    foreach (var question in orderedQuestions)
+                    foreach (var section in orderedSections)
                     {
-                        if (!byQuestionId.TryGetValue(question.Id, out var adapted)) continue;
+                        var orderedQuestions = section.Questions
+                            .OrderBy(q => q.Order)
+                            .Where(q => byQuestionId.ContainsKey(q.Id))
+                            .ToList();
+                        if (orderedQuestions.Count == 0) continue;
 
-                        col.Item().PaddingTop(14).Element(e => RenderQuestion(e, question, adapted, style, bodySize, leftAlign));
+                        if (!string.IsNullOrWhiteSpace(section.StimulusText))
+                            col.Item().PaddingTop(14).Element(e => RenderStimulus(e, section.StimulusText, section.AssetRefs, bodySize));
+
+                        foreach (var question in orderedQuestions)
+                        {
+                            var adapted = byQuestionId[question.Id];
+                            col.Item().PaddingTop(14).Element(e => RenderQuestion(e, question, adapted, style, bodySize, leftAlign));
+                        }
                     }
                 });
 
@@ -57,6 +68,30 @@ public class PdfExporter
         });
 
         return document.GeneratePdf();
+    }
+
+    /// <summary>The shared reading passage/instructions a group of questions refers to — rendered
+    /// once above them, in a visually distinct panel, with its images interleaved inline in the
+    /// same reading order as the original document (mirrors the web app's Analysis screen).</summary>
+    private static void RenderStimulus(QuestPDF.Infrastructure.IContainer container, string stimulusText, List<string> assetRefs, int bodySize)
+    {
+        container.Background(Colors.Grey.Lighten4).Padding(10).Column(col =>
+        {
+            col.Item().Text("Enunciado / texto de referencia").FontSize(bodySize - 1).Italic().FontColor(Colors.Grey.Darken1);
+
+            foreach (var block in ContentBlocks.FromInterleavedText(stimulusText, assetRefs))
+            {
+                switch (block)
+                {
+                    case TextBlock text:
+                        col.Item().PaddingTop(6).Text(text.Text);
+                        break;
+                    case ImageBlock image:
+                        col.Item().PaddingTop(6).MaxHeight(240).Image(image.Bytes).FitArea();
+                        break;
+                }
+            }
+        });
     }
 
     private static void RenderQuestion(
@@ -72,6 +107,9 @@ public class PdfExporter
                 var text = col.Item().PaddingTop(4).Text(line.Trim());
                 if (leftAlign) text.AlignLeft(); else text.Justify();
             }
+
+            foreach (var image in ContentBlocks.FromImageGallery(question.AssetRefs).OfType<ImageBlock>())
+                col.Item().PaddingTop(6).MaxHeight(200).Image(image.Bytes).FitArea();
 
             if (adapted.Supports.Count > 0)
             {

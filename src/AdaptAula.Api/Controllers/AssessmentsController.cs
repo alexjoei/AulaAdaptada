@@ -35,7 +35,7 @@ public class AssessmentsController : ControllerBase
     [HttpPost("text")]
     public async Task<ActionResult<Assessment>> CreateFromText(CreateAssessmentFromTextRequest request, CancellationToken ct)
     {
-        var result = _ingestion.IngestPlainText(request.Title, request.Text);
+        var result = await _ingestion.IngestPlainTextAsync(request.Title, request.Text, ct);
         return await Persist(result, request.Grade, request.Subject, request.Language, ct);
     }
 
@@ -51,8 +51,8 @@ public class AssessmentsController : ControllerBase
 
         var result = extension switch
         {
-            ".docx" => _ingestion.IngestDocx(file.FileName, stream),
-            ".pdf" => _ingestion.IngestPdf(file.FileName, stream),
+            ".docx" => await _ingestion.IngestDocxAsync(file.FileName, stream, ct),
+            ".pdf" => await _ingestion.IngestPdfAsync(file.FileName, stream, ct),
             _ => throw new InvalidOperationException($"Formato no soportado en MVP1: {extension}. Usa DOCX, PDF o pega el texto.")
         };
 

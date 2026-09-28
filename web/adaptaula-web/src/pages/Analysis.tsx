@@ -19,6 +19,25 @@ const CONSTRUCT_TAGS = [
   { key: "listening_comprehension", label: "Comprensión auditiva" },
 ];
 
+/** A section's stimulusText can contain "\0IMG:<index>\0" markers — placed by the ingestion
+ * pipeline at the exact point an image occurs in the original reading flow — referencing that
+ * section's own assetRefs by position. Rendering them inline (rather than as a separate gallery
+ * below the text) keeps the passage looking like the original document, which matters here: a
+ * caption, a labelled diagram or a photo next to a specific sentence is often part of what the
+ * question is actually asking about. */
+const IMAGE_MARKER = /IMG:(\d+)/g;
+
+function renderInterleavedContent(text: string, assetRefs: string[], altPrefix: string) {
+  const parts = text.split(IMAGE_MARKER);
+  return parts.map((part, i) => {
+    if (i % 2 === 1) {
+      const uri = assetRefs[Number(part)];
+      return uri ? <img key={i} src={uri} alt={`${altPrefix} ${Math.floor(i / 2) + 1}`} className="inline-content-image" /> : null;
+    }
+    return part.trim() ? <p key={i} className="question-text" style={{ marginBottom: 10 }}>{part.trim()}</p> : null;
+  });
+}
+
 const LOCK_OPTIONS = [
   { key: "content", label: "Contenido" },
   { key: "criteria", label: "Criterios" },
@@ -44,6 +63,7 @@ export default function Analysis() {
 
   const lowConfidence = (assessment.extractionConfidence ?? 1) < 0.6;
   const questions = assessment.sections.flatMap((s) => s.questions);
+  const sections = [...assessment.sections].sort((a, b) => a.order - b.order);
 
   function patchQuestion(qid: string, patch: Partial<Question>) {
     setDirtyQuestions((prev) => ({ ...prev, [qid]: { ...prev[qid], ...patch } }));
@@ -112,46 +132,70 @@ export default function Analysis() {
         </div>
 
         <div className="stack">
-          {questions.map((q, i) => {
-            const patch = dirtyQuestions[q.id] ?? {};
-            const tags = patch.constructTags ?? q.constructTags;
-            return (
-              <div key={q.id} className="question-row">
-                <div className="question-row-header">
-                  <strong>Pregunta {i + 1}</strong>
-                  <div className="row">
-                    <label style={{ fontSize: 13 }}>Puntos:</label>
+          {sections.map((section, sectionIndex) => {
+            const questionRows = [...section.questions].sort((a, b) => a.order - b.order).map((q) => {
+              const patch = dirtyQuestions[q.id] ?? {};
+              const tags = patch.constructTags ?? q.constructTags;
+              return (
+                <div key={q.id} className="question-row">
+                  <div className="question-row-header">
+                    <strong>Pregunta {q.order + 1}</strong>
+                    <div className="row">
+                      <label style={{ fontSize: 13 }}>Puntos:</label>
+                      <input
+                        type="number" style={{ width: 70, padding: "6px 10px" }}
+                        value={patch.points ?? q.points}
+                        onChange={(e) => patchQuestion(q.id, { points: Number(e.target.value) })}
+                      />
+                    </div>
+                  </div>
+                  <p className="question-text">{q.originalText}</p>
+                  {q.assetRefs.length > 0 && (
+                    <div className="image-gallery" style={{ marginBottom: 10 }}>
+                      {q.assetRefs.map((uri, i) => (
+                        <img key={i} src={uri} alt={`Imagen de la pregunta ${q.order + 1}`} />
+                      ))}
+                    </div>
+                  )}
+                  <div className="field" style={{ marginBottom: 10 }}>
+                    <label style={{ fontSize: 12 }}>Respuesta esperada (opcional; nunca se muestra a la IA)</label>
                     <input
-                      type="number" style={{ width: 70, padding: "6px 10px" }}
-                      value={patch.points ?? q.points}
-                      onChange={(e) => patchQuestion(q.id, { points: Number(e.target.value) })}
+                      value={patch.expectedAnswer ?? q.expectedAnswer ?? ""}
+                      onChange={(e) => patchQuestion(q.id, { expectedAnswer: e.target.value })}
                     />
                   </div>
-                </div>
-                <p className="question-text">{q.originalText}</p>
-                <div className="field" style={{ marginBottom: 10 }}>
-                  <label style={{ fontSize: 12 }}>Respuesta esperada (opcional; nunca se muestra a la IA)</label>
-                  <input
-                    value={patch.expectedAnswer ?? q.expectedAnswer ?? ""}
-                    onChange={(e) => patchQuestion(q.id, { expectedAnswer: e.target.value })}
-                  />
-                </div>
-                <div>
-                  <label style={{ fontSize: 12, fontWeight: 600, display: "block", marginBottom: 6 }}>
-                    ¿Qué mide esta pregunta? (constructo evaluado)
-                  </label>
-                  <div className="row">
-                    {CONSTRUCT_TAGS.map((tag) => (
-                      <span
-                        key={tag.key}
-                        className={`tag-chip${tags.includes(tag.key) ? " selected" : ""}`}
-                        onClick={() => toggleTag(q, tag.key)}
-                      >
-                        {tag.label}
-                      </span>
-                    ))}
+                  <div>
+                    <label style={{ fontSize: 12, fontWeight: 600, display: "block", marginBottom: 6 }}>
+                      ¿Qué mide esta pregunta? (constructo evaluado)
+                    </label>
+                    <div className="row">
+                      {CONSTRUCT_TAGS.map((tag) => (
+                        <span
+                          key={tag.key}
+                          className={`tag-chip${tags.includes(tag.key) ? " selected" : ""}`}
+                          onClick={() => toggleTag(q, tag.key)}
+                        >
+                          {tag.label}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
+              );
+            });
+
+            if (!section.stimulusText) {
+              return <div key={section.id} className="stack">{questionRows}</div>;
+            }
+
+            return (
+              <div key={section.id} className="section-group">
+                <div className="section-group-label">Grupo {sectionIndex + 1} · {section.questions.length} preguntas relacionadas</div>
+                <div className="card-panel stimulus-panel">
+                  <span className="eyebrow" style={{ marginBottom: 10 }}>Enunciado / texto de referencia</span>
+                  {renderInterleavedContent(section.stimulusText, section.assetRefs, `Imagen del grupo ${sectionIndex + 1}`)}
+                </div>
+                <div className="stack">{questionRows}</div>
               </div>
             );
           })}

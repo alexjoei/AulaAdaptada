@@ -38,17 +38,15 @@ public class GeminiAdaptationTextGenerator : IAdaptationTextGenerator
             GenerationConfig = new GeminiGenerationConfig { ResponseSchema = ResponseSchema }
         };
 
-        var url = $"{_options.BaseUrl}/models/{_options.Model}:generateContent?key={Uri.EscapeDataString(_options.ApiKey)}";
-        using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url)
-        {
-            Content = new StringContent(JsonSerializer.Serialize(body, JsonOptions), Encoding.UTF8, "application/json")
-        };
-
-        using var httpResponse = await _http.SendAsync(httpRequest, ct);
-        var responseBody = await httpResponse.Content.ReadAsStringAsync(ct);
-
-        if (!httpResponse.IsSuccessStatusCode)
-            throw new InvalidOperationException($"Gemini request failed ({(int)httpResponse.StatusCode}): {responseBody}");
+        var json = JsonSerializer.Serialize(body, JsonOptions);
+        var responseBody = await GeminiHttpExecutor.SendWithRetryAsync(
+            _http,
+            _options,
+            model => new HttpRequestMessage(HttpMethod.Post, $"{_options.BaseUrl}/models/{model}:generateContent?key={Uri.EscapeDataString(_options.ApiKey)}")
+            {
+                Content = new StringContent(json, Encoding.UTF8, "application/json")
+            },
+            ct);
 
         var parsed = JsonSerializer.Deserialize<GeminiResponse>(responseBody, JsonOptions)
             ?? throw new InvalidOperationException("Empty response from Gemini.");
@@ -114,6 +112,8 @@ public class GeminiAdaptationTextGenerator : IAdaptationTextGenerator
         (6) No uses ningún diagnóstico para inferir nivel intelectual o curricular; solo usa el objetivo curricular si se te indica explícitamente que fue autorizado por el docente.
         (7) Devuelve cambios atómicos y trazables en cambios_log, uno por regla aplicada.
         (8) Si no puedes preservar el constructo evaluado con las reglas dadas, dilo en "warnings" en vez de forzar un cambio.
+        (9) Formatea "adapted_text" para que se lea con claridad cuando se imprima: cada paso numerado en su propia línea (usa un salto de línea real entre pasos, nunca los concatenes en una sola frase), y cada opción de respuesta (A, B, C, D...) en su propia línea separada de la pregunta.
+        (10) Nunca incluyas casillas de verificación, la palabra "Checklist" ni ningún marcador de progreso (p. ej. "[ ]") dentro de "adapted_text". Cualquier elemento de apoyo, checklist o seguimiento de progreso va exclusivamente en "supports", uno por elemento, sin duplicarlo también en "adapted_text".
         SALIDA: JSON estructurado según el esquema proporcionado.
         """;
 

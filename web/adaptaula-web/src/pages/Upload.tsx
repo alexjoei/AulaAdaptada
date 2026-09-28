@@ -15,10 +15,12 @@ export default function Upload() {
   const [language, setLanguage] = useState("es");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [errorCode, setErrorCode] = useState<string | null>(null);
 
   async function submit() {
     setBusy(true);
     setError(null);
+    setErrorCode(null);
     try {
       const assessment = mode === "file" && file
         ? await api.assessments.upload(file, grade, subject, language)
@@ -26,6 +28,7 @@ export default function Upload() {
       navigate(`/assessments/${assessment.id}/analysis`);
     } catch (e) {
       setError(e instanceof ApiError ? e.message : "No se pudo procesar el documento.");
+      setErrorCode(e instanceof ApiError ? e.code ?? null : null);
     } finally {
       setBusy(false);
     }
@@ -102,10 +105,16 @@ export default function Upload() {
             </div>
           </div>
 
-          {error && <p style={{ color: "var(--error)", marginBottom: 12 }}>{error}</p>}
+          {error && errorCode === "ai_unavailable" && (
+            <div className="card-panel" style={{ borderColor: "var(--warning)", marginBottom: 12 }}>
+              <span className="badge badge-warning">Servicio de IA no disponible</span>
+              <p className="muted" style={{ marginTop: 8, marginBottom: 0 }}>{error}</p>
+            </div>
+          )}
+          {error && errorCode !== "ai_unavailable" && <p style={{ color: "var(--error)", marginBottom: 12 }}>{error}</p>}
 
           <button className="btn" disabled={!canSubmit || busy} onClick={submit}>
-            {busy ? "Procesando…" : "Analizar prueba"}
+            {busy ? "Procesando…" : errorCode === "ai_unavailable" ? "Reintentar" : "Analizar prueba"}
           </button>
         </div>
       </div>

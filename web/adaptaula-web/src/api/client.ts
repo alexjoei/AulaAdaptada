@@ -7,10 +7,28 @@ const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:5080";
 
 class ApiError extends Error {
   status: number;
-  constructor(status: number, message: string) {
+  /** A machine-readable error code the backend attaches for cases the UI should react to
+   * specifically — e.g. "ai_unavailable" when Gemini is temporarily down — as opposed to an
+   * arbitrary/unclassified failure the UI can only show generically. */
+  code?: string;
+  constructor(status: number, message: string, code?: string) {
     super(message);
     this.status = status;
+    this.code = code;
   }
+}
+
+/** The backend reports known failures as JSON ({ error, code }); anything else (an unhandled
+ * exception's raw text in dev, a plain-text body, an empty body) falls back to a generic message
+ * instead of showing that raw text to the teacher. */
+async function buildApiError(status: number, bodyText: string): Promise<ApiError> {
+  try {
+    const parsed = JSON.parse(bodyText) as { error?: string; code?: string };
+    if (parsed?.error) return new ApiError(status, parsed.error, parsed.code);
+  } catch {
+    // not JSON — fall through to the generic message below
+  }
+  return new ApiError(status, "Ha ocurrido un error inesperado. Inténtalo de nuevo.");
 }
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
@@ -20,7 +38,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   });
   if (!res.ok) {
     const body = await res.text().catch(() => "");
-    throw new ApiError(res.status, body || `Request failed: ${res.status}`);
+    throw await buildApiError(res.status, body);
   }
   if (res.status === 204) return undefined as T;
   return res.json() as Promise<T>;
@@ -41,7 +59,7 @@ export const api = {
       form.append("subject", subject);
       form.append("language", language);
       const res = await fetch(`${BASE_URL}/api/assessments/upload`, { method: "POST", body: form });
-      if (!res.ok) throw new ApiError(res.status, await res.text());
+      if (!res.ok) throw await buildApiError(res.status, await res.text().catch(() => ""));
       return res.json() as Promise<Assessment>;
     },
     update: (id: string, body: {

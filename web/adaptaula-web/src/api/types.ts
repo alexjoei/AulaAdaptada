@@ -27,6 +27,8 @@ export interface Section {
   assessmentId: string;
   title: string;
   order: number;
+  stimulusText: string | null;
+  assetRefs: string[];
   questions: Question[];
 }
 
@@ -41,6 +43,7 @@ export interface Assessment {
   createdAt: string;
   extractionConfidence: number | null;
   lockedFields: string[];
+  imageDataUris: string[];
   sections: Section[];
 }
 

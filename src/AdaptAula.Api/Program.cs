@@ -35,6 +35,7 @@ builder.Services.AddDbContext<AdaptAulaDbContext>(options => options.UseSqlite(c
 
 builder.Services.Configure<GeminiOptions>(builder.Configuration.GetSection(GeminiOptions.SectionName));
 builder.Services.AddHttpClient<IAdaptationTextGenerator, GeminiAdaptationTextGenerator>();
+builder.Services.AddHttpClient<IDocumentStructureExtractor, GeminiDocumentStructureExtractor>();
 
 builder.Services.AddSingleton<DocumentIngestionService>();
 builder.Services.AddSingleton<DocxExporter>();
@@ -55,6 +56,24 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// Wraps every request so an AI-service outage (Gemini 503/429, retries and fallback model already
+// exhausted by GeminiHttpExecutor) reaches the teacher as a clear, actionable message instead of a
+// raw stack trace — everything else still falls through to the default (dev exception page, or a
+// bare 500 in production) unchanged.
+app.Use(async (context, next) =>
+{
+    try
+    {
+        await next();
+    }
+    catch (AiServiceUnavailableException ex)
+    {
+        context.Response.Clear();
+        context.Response.StatusCode = StatusCodes.Status503ServiceUnavailable;
+        await context.Response.WriteAsJsonAsync(new { error = ex.Message, code = "ai_unavailable" });
+    }
+});
 
 app.UseCors("AdaptaulaWeb");
 app.UseAuthorization();
