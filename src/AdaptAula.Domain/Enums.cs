@@ -49,7 +49,12 @@ public enum RuleCategory
     Vocabulary,
     Planning,
     Translation,
-    Deepening
+    Deepening,
+    Visual,
+    Math,
+    Writing,
+    Presentation,
+    Reading
 }
 
 public enum RiskLevel
@@ -78,7 +83,18 @@ public enum ValidationCode
     DifficultyReduced,
     CurricularChange,
     LowExtractionConfidence,
-    UnsupportedConflict
+    UnsupportedConflict,
+    ProtectedVocabularyMissing,
+    QuestionCountChanged,
+    LanguageChanged,
+    NumberingChanged,
+    AnswerSpaceMissing,
+    ExcessiveHints,
+    CriteriaCoverage,
+    CognitiveDemandChanged,
+    ImageMayRevealAnswer,
+    ProposalPending,
+    QuestionMissing
 }
 
 public enum ExportFormat

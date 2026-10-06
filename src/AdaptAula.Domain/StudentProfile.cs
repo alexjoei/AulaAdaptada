@@ -26,5 +26,13 @@ public class StudentProfile
     /// <summary>Explicit opt-outs: atomic rule ids this student's plan must never apply even if the preset would.</summary>
     public List<string> Exceptions { get; set; } = new();
 
+    /// <summary>Per-student values for measure parameters (font size, extra time %, response mode…).
+    /// Two students with the same need can have different values (V2 §4). Keys are
+    /// "&lt;ruleId&gt;.&lt;paramKey&gt;".</summary>
+    public Dictionary<string, string> Settings { get; set; } = new();
+
+    /// <summary>1 = legacy profile whose preset measures all applied; 2 = needs only enable their Recommended measures.</summary>
+    public int SchemaVersion { get; set; } = 2;
+
     public DateTime ReviewDate { get; set; } = DateTime.UtcNow;
 }

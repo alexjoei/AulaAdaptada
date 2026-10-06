@@ -94,3 +94,14 @@ mismo dominio (para evitar que la app .NET y el sitio estático se pisen):
 Fuera de alcance por ahora (roadmap): OCR de documentos escaneados, hipoacusia/baja
 visión/discapacidad motora en la UI, adaptación masiva por clase, integración con
 Drive/OneDrive, autenticación multi-centro.
+
+## V2: editor pedagógico
+
+La biblioteca de medidas y las necesidades viven como datos en `src/AdaptAula.RulesEngine/Data/measure-library.json`; el currículo LOMLOE
+(Primaria · Comunidad de Madrid, **transcrito de memoria y pendiente de verificar con el BOCM**) en `Data/curriculum/`. Añadir medidas, necesidades
+u otras CCAA es editar/añadir JSON, no código.
+
+Modo sin IA para demos y pruebas (sin clave ni red): `Ai__Provider=Offline`.
+
+Pendiente a propósito: generación de imágenes/pictogramas con IA (V2 §11) y su clasificación automática (§12); hoy las imágenes se suben a mano
+y el docente indica su función (decorativa, ayuda, pista, revela la respuesta).

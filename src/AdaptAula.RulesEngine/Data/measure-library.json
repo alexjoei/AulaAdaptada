@@ -1,0 +1,2587 @@
+{
+ "version": 2,
+ "groups": [
+  {
+   "key": "presentation",
+   "label": "Presentación"
+  },
+  {
+   "key": "reading",
+   "label": "Lectura"
+  },
+  {
+   "key": "writing",
+   "label": "Escritura"
+  },
+  {
+   "key": "language",
+   "label": "Lenguaje"
+  },
+  {
+   "key": "attention",
+   "label": "Atención y funciones ejecutivas"
+  },
+  {
+   "key": "math",
+   "label": "Matemáticas"
+  },
+  {
+   "key": "time",
+   "label": "Tiempo"
+  },
+  {
+   "key": "response",
+   "label": "Forma de respuesta"
+  },
+  {
+   "key": "visual",
+   "label": "Apoyos visuales"
+  },
+  {
+   "key": "evaluation",
+   "label": "Evaluación"
+  }
+ ],
+ "measures": [
+  {
+   "id": "adhd.fragment_tasks",
+   "description": "Fragmentar tareas largas en bloques breves",
+   "group": "attention",
+   "category": "Structure",
+   "kind": "Text",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Los bloques cortos reducen la carga de memoria de trabajo y facilitan empezar y terminar cada tarea.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "adhd.one_action_per_block",
+   "description": "Máximo una acción principal por bloque; numerar pasos",
+   "group": "attention",
+   "category": "Instructions",
+   "kind": "Text",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Una sola acción por bloque evita que se pierdan pasos cuando la atención se dispersa.",
+   "devNotes": "instruction.max_actions=1",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "adhd.highlight_action_verbs",
+   "description": "Destacar verbos de acción y datos esenciales",
+   "group": "attention",
+   "category": "Attention",
+   "kind": "Text",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Resaltar el verbo y los datos clave dirige la atención a lo que hay que hacer.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "adhd.progress_checklist",
+   "description": "Añadir checklist de progreso/revisión",
+   "group": "attention",
+   "category": "SelfRegulation",
+   "kind": "Support",
+   "applyMode": "Default",
+   "minLevel": 2,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Marcar lo hecho da retroalimentación inmediata y ayuda a autorregular el ritmo.",
+   "devNotes": "",
+   "style": {
+    "checklistSupports": "true"
+   },
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "adhd.configurable_time",
+   "description": "Permitir tiempo/pausas configurables",
+   "group": "time",
+   "category": "Time",
+   "kind": "Logistics",
+   "applyMode": "Configurable",
+   "minLevel": 2,
+   "riskLevel": "Medium",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": false,
+   "rationale": "Un tiempo flexible evita que la velocidad enmascare lo que el alumno sabe.",
+   "devNotes": "Valor definido por docente",
+   "style": {},
+   "parameters": [
+    {
+     "key": "extraTimePercent",
+     "label": "Tiempo extra",
+     "type": "number",
+     "default": "25",
+     "unit": "%",
+     "choices": []
+    }
+   ],
+   "conflictsWith": []
+  },
+  {
+   "id": "dyslexia.typography_sans_serif",
+   "description": "Sans serif clara, tamaño 12-14+ configurable",
+   "group": "presentation",
+   "category": "Typography",
+   "kind": "Style",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Una sans serif y un tamaño mayor facilitan el reconocimiento de letras.",
+   "devNotes": "",
+   "style": {
+    "fontFamily": "Arial",
+    "fontSizePt": "14"
+   },
+   "parameters": [
+    {
+     "key": "fontSizePt",
+     "label": "Tamaño de letra",
+     "type": "number",
+     "default": "14",
+     "unit": "pt",
+     "choices": []
+    }
+   ],
+   "conflictsWith": []
+  },
+  {
+   "id": "dyslexia.left_align_low_density",
+   "description": "Alineación izquierda; evitar justificado y bloques densos",
+   "group": "presentation",
+   "category": "Layout",
+   "kind": "Style",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "El texto justificado crea espacios irregulares que dificultan seguir la línea.",
+   "devNotes": "",
+   "style": {
+    "align": "left",
+    "lineSpacing": "1.5",
+    "paragraphSpacingPt": "8"
+   },
+   "parameters": [
+    {
+     "key": "lineSpacing",
+     "label": "Interlineado",
+     "type": "number",
+     "default": "1.5",
+     "unit": "",
+     "choices": []
+    }
+   ],
+   "conflictsWith": []
+  },
+  {
+   "id": "dyslexia.short_statements_keywords",
+   "description": "Enunciados breves y separados; destacar palabras clave",
+   "group": "reading",
+   "category": "Language",
+   "kind": "Text",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [
+    "reading"
+   ],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": false,
+   "rationale": "Frases cortas y palabras clave destacadas reducen la carga de decodificación.",
+   "devNotes": "No aplicar si simplifica el constructo de lectura",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "dyslexia.read_aloud_audio",
+   "description": "Lectura en voz alta/audio cuando esté permitido",
+   "group": "reading",
+   "category": "Access",
+   "kind": "Logistics",
+   "applyMode": "Configurable",
+   "minLevel": 2,
+   "riskLevel": "High",
+   "blockedByConstructTags": [
+    "reading"
+   ],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": false,
+   "rationale": "Si la lectura no es lo evaluado, oír el enunciado separa el acceso al texto de la competencia medida.",
+   "devNotes": "No aplicar si lectura es el constructo",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "dysgraphia.reduce_copying",
+   "description": "Reducir copia innecesaria; ampliar espacios",
+   "group": "writing",
+   "category": "Response",
+   "kind": "Text",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Copiar enunciados consume esfuerzo motor que no forma parte de lo evaluado.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "dysgraphia.alt_response_mode",
+   "description": "Permitir teclado/selección/oral según medidas",
+   "group": "response",
+   "category": "Response",
+   "kind": "Support",
+   "applyMode": "Configurable",
+   "minLevel": 2,
+   "riskLevel": "Medium",
+   "blockedByConstructTags": [
+    "writing"
+   ],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": false,
+   "rationale": "Responder por otra vía permite demostrar el conocimiento sin la barrera de la escritura manual.",
+   "devNotes": "No aplicar si escritura manual es el constructo",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "dysorthography.separate_content_spelling",
+   "description": "Separar contenido y ortografía",
+   "group": "evaluation",
+   "category": "Evaluation",
+   "kind": "Logistics",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Medium",
+   "blockedByConstructTags": [
+    "spelling"
+   ],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": false,
+   "rationale": "Valorar el contenido y la ortografía por separado evita que una dificultad oculte la otra.",
+   "devNotes": "No aplicar si ortografía es el constructo",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "dysorthography.word_bank_corrector",
+   "description": "Banco de palabras/corrector solo autorizado",
+   "group": "writing",
+   "category": "Support",
+   "kind": "Support",
+   "applyMode": "Configurable",
+   "minLevel": 2,
+   "riskLevel": "High",
+   "blockedByConstructTags": [
+    "spelling"
+   ],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": true,
+   "rationale": "Un banco de palabras apoya la escritura, pero puede dar pistas: requiere decisión docente.",
+   "devNotes": "No aplicar si ortografía es el constructo. Validator: SPELLING_CONSTRUCT_BYPASSED",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "dyscalculia.align_figures_grid",
+   "description": "Alinear cifras y usar cuadrícula cuando ayude",
+   "group": "math",
+   "category": "Layout",
+   "kind": "Style",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Alinear cifras en cuadrícula evita errores de colocación ajenos al cálculo.",
+   "devNotes": "",
+   "style": {
+    "gridAnswerSpace": "true"
+   },
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "dyscalculia.data_operation_answer_split",
+   "description": "Separar Datos / Operación / Respuesta",
+   "group": "math",
+   "category": "Problems",
+   "kind": "Text",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Separar datos, operación y respuesta hace explícito el proceso de resolución.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "dyscalculia.reference_material",
+   "description": "Material de referencia/manipulativo solo autorizado",
+   "group": "math",
+   "category": "Support",
+   "kind": "Support",
+   "applyMode": "Configurable",
+   "minLevel": 2,
+   "riskLevel": "High",
+   "blockedByConstructTags": [
+    "calculation",
+    "memory"
+   ],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": true,
+   "rationale": "Tablas o material de referencia alivian la memoria, pero pueden sustituir lo evaluado.",
+   "devNotes": "No aplicar si cálculo/memoria es el constructo",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "tdl_tel.direct_syntax",
+   "description": "Sintaxis directa sin eliminar vocabulario curricular clave",
+   "group": "language",
+   "category": "Language",
+   "kind": "Text",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Medium",
+   "blockedByConstructTags": [
+    "linguistic_complexity"
+   ],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": true,
+   "rationale": "Las frases directas (sujeto-verbo-objeto) son más fáciles de procesar; el vocabulario curricular se conserva.",
+   "devNotes": "No aplicar si complejidad lingüística es el constructo",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "tdl_tel.glossary_visual_support",
+   "description": "Glosario breve y apoyo visual",
+   "group": "language",
+   "category": "Support",
+   "kind": "Support",
+   "applyMode": "Default",
+   "minLevel": 2,
+   "riskLevel": "Medium",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": false,
+   "rationale": "Aclarar términos sin sustituirlos mantiene el contenido y reduce la barrera léxica.",
+   "devNotes": "No revelar respuestas. Validator: HINT_REVEALS_ANSWER",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "tdl_tel.split_multi_instructions",
+   "description": "Dividir instrucciones múltiples",
+   "group": "language",
+   "category": "Instructions",
+   "kind": "Text",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Una instrucción por frase reduce la carga de procesamiento del lenguaje.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "asd.predictable_stable_format",
+   "description": "Formato predecible y estable",
+   "group": "presentation",
+   "category": "Structure",
+   "kind": "Text",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Un formato igual en todas las preguntas reduce la incertidumbre.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "asd.literal_explicit_language",
+   "description": "Lenguaje literal y explícito; evitar ambigüedad innecesaria",
+   "group": "language",
+   "category": "Language",
+   "kind": "Text",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [
+    "figurative_language"
+   ],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": false,
+   "rationale": "El lenguaje literal evita malinterpretaciones por doble sentido ajenas al contenido evaluado.",
+   "devNotes": "No aplicar si lenguaje figurado/ambigüedad es el constructo",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "asd.task_step_count",
+   "description": "Indicar número de tareas y pasos",
+   "group": "attention",
+   "category": "Orientation",
+   "kind": "Text",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Saber cuántas tareas y pasos hay hace predecible el final.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "hearing.written_backup_for_oral",
+   "description": "Toda instrucción oral relevante también por escrito",
+   "group": "language",
+   "category": "Access",
+   "kind": "Text",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Toda información oral importante debe poder leerse.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "hearing.subtitles_transcript",
+   "description": "Subtítulos/transcripción cuando proceda",
+   "group": "visual",
+   "category": "Multimedia",
+   "kind": "Support",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Medium",
+   "blockedByConstructTags": [
+    "listening_comprehension"
+   ],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": false,
+   "rationale": "La transcripción da acceso a material audiovisual.",
+   "devNotes": "No aplicar si comprensión auditiva es el constructo y la medida no lo permite",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "low_vision.configurable_size_contrast",
+   "description": "Tamaño, contraste y espaciado configurables",
+   "group": "presentation",
+   "category": "Accessibility",
+   "kind": "Style",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Mayor tamaño y contraste mejoran la lectura con baja visión.",
+   "devNotes": "",
+   "style": {
+    "fontSizePt": "18",
+    "highContrast": "true",
+    "lineSpacing": "1.5"
+   },
+   "parameters": [
+    {
+     "key": "fontSizePt",
+     "label": "Tamaño de letra",
+     "type": "number",
+     "default": "18",
+     "unit": "pt",
+     "choices": []
+    }
+   ],
+   "conflictsWith": []
+  },
+  {
+   "id": "low_vision.no_color_only_coding",
+   "description": "No transmitir información solo mediante color",
+   "group": "visual",
+   "category": "Accessibility",
+   "kind": "Text",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "El color no debe ser el único portador de información.",
+   "devNotes": "No usar color como único código",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "low_vision.alt_text_screen_reader",
+   "description": "Texto alternativo y compatibilidad lector de pantalla",
+   "group": "visual",
+   "category": "Accessibility",
+   "kind": "Support",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Describir las imágenes permite acceder a ellas con lector de pantalla.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "motor.minimize_nonessential_writing",
+   "description": "Minimizar escritura/manipulación no esencial",
+   "group": "response",
+   "category": "Response",
+   "kind": "Text",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Reducir escritura no esencial libera esfuerzo motor.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "motor.keyboard_selection_voice",
+   "description": "Teclado/selección/voz según medidas",
+   "group": "response",
+   "category": "Response",
+   "kind": "Logistics",
+   "applyMode": "Configurable",
+   "minLevel": 2,
+   "riskLevel": "Medium",
+   "blockedByConstructTags": [
+    "motor_mode"
+   ],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": false,
+   "rationale": "Un canal de respuesta alternativo evita que la motricidad limite la demostración del conocimiento.",
+   "devNotes": "No aplicar si el modo motor es el constructo",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "curricular.never_infer_from_diagnosis",
+   "description": "No inferir nivel curricular por diagnóstico",
+   "group": "evaluation",
+   "category": "Curricular",
+   "kind": "Logistics",
+   "applyMode": "Always",
+   "minLevel": 1,
+   "riskLevel": "Critical",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": false,
+   "rationale": "El nivel curricular nunca se deduce de una necesidad: lo decide el docente.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "curricular.use_teacher_defined_referents_only",
+   "description": "Usar únicamente nivel/referentes definidos por docente",
+   "group": "evaluation",
+   "category": "Curricular",
+   "kind": "Logistics",
+   "applyMode": "Always",
+   "minLevel": 3,
+   "riskLevel": "Critical",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": false,
+   "rationale": "Solo se adapta a los referentes que el docente defina.",
+   "devNotes": "Hard rule CURRICULAR_CHANGE. No sustituye prueba base",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "reading_comprehension.fragment_text_near_questions",
+   "description": "Fragmentar texto y acercar preguntas al fragmento",
+   "group": "reading",
+   "category": "Text",
+   "kind": "Text",
+   "applyMode": "Default",
+   "minLevel": 2,
+   "riskLevel": "Medium",
+   "blockedByConstructTags": [
+    "text_structure"
+   ],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": false,
+   "rationale": "Acercar cada pregunta a su fragmento reduce la carga de memoria al responder.",
+   "devNotes": "No aplicar si estructura textual es parte del constructo",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "reading_comprehension.anticipate_vocabulary",
+   "description": "Anticipar vocabulario no evaluado",
+   "group": "reading",
+   "category": "Vocabulary",
+   "kind": "Support",
+   "applyMode": "Configurable",
+   "minLevel": 2,
+   "riskLevel": "Medium",
+   "blockedByConstructTags": [
+    "vocabulary"
+   ],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": false,
+   "rationale": "Aclarar de antemano vocabulario no evaluado evita que bloquee la comprensión.",
+   "devNotes": "No aplicar si vocabulario es el constructo",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "slow_processing.lower_density_per_page",
+   "description": "Menor densidad por página",
+   "group": "presentation",
+   "category": "Layout",
+   "kind": "Style",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Menos contenido por página reduce la sobrecarga visual.",
+   "devNotes": "",
+   "style": {
+    "pageBreakPerQuestion": "true",
+    "paragraphSpacingPt": "10"
+   },
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "slow_processing.configurable_time_pauses",
+   "description": "Tiempo/pausas configurables",
+   "group": "time",
+   "category": "Time",
+   "kind": "Logistics",
+   "applyMode": "Configurable",
+   "minLevel": 2,
+   "riskLevel": "Medium",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": false,
+   "rationale": "Más tiempo permite demostrar lo aprendido sin la presión de la velocidad.",
+   "devNotes": "Valor definido por docente",
+   "style": {},
+   "parameters": [
+    {
+     "key": "extraTimePercent",
+     "label": "Tiempo extra",
+     "type": "number",
+     "default": "25",
+     "unit": "%",
+     "choices": []
+    }
+   ],
+   "conflictsWith": []
+  },
+  {
+   "id": "executive_functions.checklist_steps_progress",
+   "description": "Checklist + pasos 1-2-3 + progreso",
+   "group": "attention",
+   "category": "Planning",
+   "kind": "Support",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Una secuencia de pasos con casillas ayuda a planificar y supervisar la tarea.",
+   "devNotes": "",
+   "style": {
+    "checklistSupports": "true"
+   },
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "spanish_l2.visual_glossary_clear_language",
+   "description": "Glosario visual y lenguaje claro",
+   "group": "language",
+   "category": "Language",
+   "kind": "Support",
+   "applyMode": "Default",
+   "minLevel": 2,
+   "riskLevel": "Medium",
+   "blockedByConstructTags": [
+    "language_domain"
+   ],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": false,
+   "rationale": "Un glosario visual da acceso al vocabulario mientras se aprende el idioma.",
+   "devNotes": "No aplicar si dominio lingüístico es el constructo",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "spanish_l2.translation_only_if_authorized",
+   "description": "Traducción solo si autorizada",
+   "group": "language",
+   "category": "Translation",
+   "kind": "Support",
+   "applyMode": "Never",
+   "minLevel": 2,
+   "riskLevel": "High",
+   "blockedByConstructTags": [
+    "language_domain"
+   ],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": true,
+   "rationale": "La traducción cambia el idioma de la prueba: solo con autorización expresa.",
+   "devNotes": "No afirmar una fuente 'especial' universal. No aplicar si idioma es el constructo",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "gifted.optional_depth_extension",
+   "description": "Extensión opcional de transferencia/razonamiento",
+   "group": "evaluation",
+   "category": "Deepening",
+   "kind": "Support",
+   "applyMode": "Configurable",
+   "minLevel": 2,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": false,
+   "rationale": "Una ampliación opcional enriquece sin sustituir la prueba base.",
+   "devNotes": "No sustituye la prueba base ni sus 10 puntos",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "present.line_spacing",
+   "description": "Interlineado amplio",
+   "group": "presentation",
+   "category": "Typography",
+   "kind": "Style",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Más espacio entre líneas ayuda a no saltar de renglón.",
+   "devNotes": "",
+   "style": {
+    "lineSpacing": "1.5"
+   },
+   "parameters": [
+    {
+     "key": "lineSpacing",
+     "label": "Interlineado",
+     "type": "number",
+     "default": "1.5",
+     "unit": "",
+     "choices": []
+    }
+   ],
+   "conflictsWith": []
+  },
+  {
+   "id": "present.letter_spacing",
+   "description": "Mayor espaciado entre letras",
+   "group": "presentation",
+   "category": "Typography",
+   "kind": "Style",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Reduce el apiñamiento visual de las letras.",
+   "devNotes": "",
+   "style": {
+    "letterSpacingPt": "0.6"
+   },
+   "parameters": [
+    {
+     "key": "letterSpacingPt",
+     "label": "Espaciado entre letras",
+     "type": "number",
+     "default": "0.6",
+     "unit": "pt",
+     "choices": []
+    }
+   ],
+   "conflictsWith": []
+  },
+  {
+   "id": "present.word_spacing",
+   "description": "Mayor espaciado entre palabras",
+   "group": "presentation",
+   "category": "Typography",
+   "kind": "Style",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Separa mejor las palabras al leer.",
+   "devNotes": "",
+   "style": {
+    "wordSpacingPt": "3"
+   },
+   "parameters": [
+    {
+     "key": "wordSpacingPt",
+     "label": "Espaciado entre palabras",
+     "type": "number",
+     "default": "3",
+     "unit": "pt",
+     "choices": []
+    }
+   ],
+   "conflictsWith": []
+  },
+  {
+   "id": "present.generous_margins",
+   "description": "Márgenes amplios",
+   "group": "presentation",
+   "category": "Layout",
+   "kind": "Style",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Los márgenes amplios descargan visualmente la página.",
+   "devNotes": "",
+   "style": {
+    "marginMm": "25"
+   },
+   "parameters": [
+    {
+     "key": "marginMm",
+     "label": "Margen",
+     "type": "number",
+     "default": "25",
+     "unit": "mm",
+     "choices": []
+    }
+   ],
+   "conflictsWith": []
+  },
+  {
+   "id": "present.high_contrast",
+   "description": "Alto contraste",
+   "group": "presentation",
+   "category": "Accessibility",
+   "kind": "Style",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Texto negro sobre fondo blanco, sin tonos grises.",
+   "devNotes": "",
+   "style": {
+    "highContrast": "true"
+   },
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "present.one_question_per_page",
+   "description": "Una pregunta por página",
+   "group": "presentation",
+   "category": "Layout",
+   "kind": "Style",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Presentar una sola pregunta por página evita la sobrecarga.",
+   "devNotes": "",
+   "style": {
+    "pageBreakPerQuestion": "true"
+   },
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "attention.reduce_distractors",
+   "description": "Reducir elementos decorativos y distractores",
+   "group": "attention",
+   "category": "Layout",
+   "kind": "Style",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Quitar elementos decorativos reduce la carga sensorial y atencional.",
+   "devNotes": "",
+   "style": {
+    "hideDecorativeImages": "true"
+   },
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "reading.pre_reading_organizer",
+   "description": "Organizador previo a la lectura (qué voy a leer y para qué)",
+   "group": "reading",
+   "category": "Text",
+   "kind": "Support",
+   "applyMode": "Default",
+   "minLevel": 2,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [
+    "text_structure"
+   ],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Anticipar el propósito de la lectura facilita la comprensión.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "reading.numbered_lines_paragraphs",
+   "description": "Numerar párrafos o líneas del texto",
+   "group": "reading",
+   "category": "Text",
+   "kind": "Text",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Numerar permite localizar rápidamente la información que pide la pregunta.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "writing.larger_answer_space",
+   "description": "Espacio de respuesta ampliado",
+   "group": "writing",
+   "category": "Response",
+   "kind": "Style",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Un espacio mayor acomoda una escritura más grande.",
+   "devNotes": "",
+   "style": {
+    "answerSpaceFactor": "1.5"
+   },
+   "parameters": [
+    {
+     "key": "answerSpaceFactor",
+     "label": "Factor de espacio",
+     "type": "number",
+     "default": "1.5",
+     "unit": "",
+     "choices": []
+    }
+   ],
+   "conflictsWith": []
+  },
+  {
+   "id": "writing.ruled_lines",
+   "description": "Espacios de respuesta con líneas",
+   "group": "writing",
+   "category": "Response",
+   "kind": "Style",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Las líneas guían el tamaño y la alineación de la escritura.",
+   "devNotes": "",
+   "style": {
+    "ruledAnswerLines": "true"
+   },
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "writing.sentence_starters",
+   "description": "Inicios de frase para responder",
+   "group": "writing",
+   "category": "Support",
+   "kind": "Support",
+   "applyMode": "Configurable",
+   "minLevel": 2,
+   "riskLevel": "Medium",
+   "blockedByConstructTags": [
+    "writing"
+   ],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": true,
+   "rationale": "Un arranque de frase facilita empezar, pero puede condicionar la respuesta.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "writing.checklist_revision",
+   "description": "Lista de revisión final (mayúsculas, puntos, tildes)",
+   "group": "writing",
+   "category": "SelfRegulation",
+   "kind": "Support",
+   "applyMode": "Default",
+   "minLevel": 2,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [
+    "spelling"
+   ],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Revisar con una lista guiada compensa errores no relacionados con el contenido.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "language.one_idea_per_sentence",
+   "description": "Una idea por frase",
+   "group": "language",
+   "category": "Language",
+   "kind": "Text",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Las frases con una sola idea son más fáciles de procesar.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "language.avoid_double_negatives",
+   "description": "Evitar dobles negaciones y estructuras pasivas innecesarias",
+   "group": "language",
+   "category": "Language",
+   "kind": "Text",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [
+    "linguistic_complexity"
+   ],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Las dobles negaciones confunden sin aportar a lo evaluado.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "language.simple_wording",
+   "description": "Vocabulario cotidiano en lugar de vocabulario no curricular",
+   "group": "language",
+   "category": "Language",
+   "kind": "Text",
+   "applyMode": "Configurable",
+   "minLevel": 1,
+   "riskLevel": "Medium",
+   "blockedByConstructTags": [
+    "linguistic_complexity",
+    "vocabulary"
+   ],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": true,
+   "rationale": "Sustituir palabras poco frecuentes reduce la barrera léxica, pero no debe tocar el vocabulario curricular.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "attention.self_check_box",
+   "description": "Casilla de autorrevisión al final de cada tarea",
+   "group": "attention",
+   "category": "SelfRegulation",
+   "kind": "Support",
+   "applyMode": "Default",
+   "minLevel": 2,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Fomenta revisar antes de entregar.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "attention.step_by_step_plan",
+   "description": "Plan de pasos previo a la tarea",
+   "group": "attention",
+   "category": "Planning",
+   "kind": "Support",
+   "applyMode": "Default",
+   "minLevel": 2,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Planificar antes de empezar reduce la impulsividad.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "math.large_operation_space",
+   "description": "Espacio amplio para operaciones",
+   "group": "math",
+   "category": "Layout",
+   "kind": "Style",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Un espacio amplio permite colocar bien las cifras.",
+   "devNotes": "",
+   "style": {
+    "answerSpaceFactor": "2",
+    "gridAnswerSpace": "true"
+   },
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "math.number_line_support",
+   "description": "Recta numérica o tabla de apoyo",
+   "group": "math",
+   "category": "Support",
+   "kind": "Support",
+   "applyMode": "Configurable",
+   "minLevel": 2,
+   "riskLevel": "High",
+   "blockedByConstructTags": [
+    "calculation",
+    "memory"
+   ],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": true,
+   "rationale": "Apoya el cálculo mental, pero puede sustituir lo evaluado.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "math.calculator_allowed",
+   "description": "Calculadora permitida",
+   "group": "math",
+   "category": "Support",
+   "kind": "Logistics",
+   "applyMode": "Configurable",
+   "minLevel": 2,
+   "riskLevel": "High",
+   "blockedByConstructTags": [
+    "calculation",
+    "memory"
+   ],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": true,
+   "rationale": "Descarga el cálculo rutinario; solo si el cálculo no es lo evaluado.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "math.reduce_numbers",
+   "description": "Reducir el tamaño de los números",
+   "group": "math",
+   "category": "Problems",
+   "kind": "Text",
+   "applyMode": "Configurable",
+   "minLevel": 2,
+   "riskLevel": "High",
+   "blockedByConstructTags": [
+    "calculation"
+   ],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": true,
+   "rationale": "Cambia la exigencia de cálculo: nunca se aplica en silencio.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "time.extra_time",
+   "description": "Tiempo extra",
+   "group": "time",
+   "category": "Time",
+   "kind": "Logistics",
+   "applyMode": "Configurable",
+   "minLevel": 1,
+   "riskLevel": "Medium",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": false,
+   "rationale": "Permite demostrar lo aprendido sin la presión de la velocidad.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [
+    {
+     "key": "extraTimePercent",
+     "label": "Tiempo extra",
+     "type": "number",
+     "default": "25",
+     "unit": "%",
+     "choices": []
+    }
+   ],
+   "conflictsWith": []
+  },
+  {
+   "id": "time.scheduled_breaks",
+   "description": "Pausas programadas",
+   "group": "time",
+   "category": "Time",
+   "kind": "Logistics",
+   "applyMode": "Configurable",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Las pausas regulares mantienen la atención.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [
+    {
+     "key": "breakEveryMin",
+     "label": "Pausa cada",
+     "type": "number",
+     "default": "20",
+     "unit": "min",
+     "choices": []
+    },
+    {
+     "key": "breakLengthMin",
+     "label": "Duración de la pausa",
+     "type": "number",
+     "default": "5",
+     "unit": "min",
+     "choices": []
+    }
+   ],
+   "conflictsWith": []
+  },
+  {
+   "id": "time.split_sessions",
+   "description": "Realizar la prueba en varias sesiones",
+   "group": "time",
+   "category": "Time",
+   "kind": "Logistics",
+   "applyMode": "Configurable",
+   "minLevel": 1,
+   "riskLevel": "Medium",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": false,
+   "rationale": "Evita la fatiga en pruebas largas.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [
+    {
+     "key": "sessions",
+     "label": "Nº de sesiones",
+     "type": "number",
+     "default": "2",
+     "unit": "",
+     "choices": []
+    }
+   ],
+   "conflictsWith": []
+  },
+  {
+   "id": "response.oral_answer",
+   "description": "Respuesta oral (el docente la transcribe)",
+   "group": "response",
+   "category": "Response",
+   "kind": "Logistics",
+   "applyMode": "Configurable",
+   "minLevel": 2,
+   "riskLevel": "Medium",
+   "blockedByConstructTags": [
+    "writing",
+    "spelling"
+   ],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": true,
+   "rationale": "Una respuesta oral separa el conocimiento de la escritura.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "response.use_computer",
+   "description": "Responder con ordenador",
+   "group": "response",
+   "category": "Response",
+   "kind": "Logistics",
+   "applyMode": "Configurable",
+   "minLevel": 2,
+   "riskLevel": "Medium",
+   "blockedByConstructTags": [
+    "writing",
+    "motor_mode"
+   ],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": false,
+   "rationale": "Escribir con teclado evita la barrera de la escritura manual.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "response.scribe",
+   "description": "Escribiente / transcriptor",
+   "group": "response",
+   "category": "Response",
+   "kind": "Logistics",
+   "applyMode": "Configurable",
+   "minLevel": 2,
+   "riskLevel": "Medium",
+   "blockedByConstructTags": [
+    "writing",
+    "motor_mode"
+   ],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": false,
+   "rationale": "Una persona transcribe lo que el alumno dicta.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "response.convert_to_multiple_choice",
+   "description": "Convertir preguntas abiertas en opción múltiple",
+   "group": "response",
+   "category": "Response",
+   "kind": "Text",
+   "applyMode": "Configurable",
+   "minLevel": 2,
+   "riskLevel": "High",
+   "blockedByConstructTags": [
+    "writing",
+    "text_structure"
+   ],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": true,
+   "rationale": "Cambia el tipo de demanda cognitiva (de producir a reconocer): requiere decisión docente.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "visual.pictograms",
+   "description": "Proponer pictogramas para vocabulario clave",
+   "group": "visual",
+   "category": "Multimedia",
+   "kind": "Support",
+   "applyMode": "Default",
+   "minLevel": 2,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Un pictograma junto al término clave apoya su comprensión. (La propuesta indica el pictograma; el docente lo inserta.)",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "visual.organizer_table",
+   "description": "Organizador gráfico / tabla para estructurar la respuesta",
+   "group": "visual",
+   "category": "Planning",
+   "kind": "Support",
+   "applyMode": "Default",
+   "minLevel": 2,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [
+    "text_structure"
+   ],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Estructurar visualmente la respuesta reduce la carga organizativa.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "visual.timeline_scheme",
+   "description": "Línea temporal o esquema de apoyo",
+   "group": "visual",
+   "category": "Multimedia",
+   "kind": "Support",
+   "applyMode": "Configurable",
+   "minLevel": 2,
+   "riskLevel": "Medium",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": false,
+   "rationale": "Un esquema visual ordena la información temporal.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "visual.tactile_or_audio_format",
+   "description": "Entregar en formato ampliado, braille o audio",
+   "group": "visual",
+   "category": "Access",
+   "kind": "Logistics",
+   "applyMode": "Configurable",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Garantiza el acceso a la prueba con discapacidad visual.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "evaluation.no_penalize_handwriting",
+   "description": "No penalizar grafía ni presentación",
+   "group": "evaluation",
+   "category": "Evaluation",
+   "kind": "Logistics",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "La caligrafía no es lo evaluado.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "evaluation.oral_check",
+   "description": "Comprobar oralmente respuestas ambiguas",
+   "group": "evaluation",
+   "category": "Evaluation",
+   "kind": "Logistics",
+   "applyMode": "Configurable",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Una pregunta oral aclara qué quiso decir el alumno.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "evaluation.reduce_items",
+   "description": "Reducir el número de ítems repetitivos",
+   "group": "evaluation",
+   "category": "Evaluation",
+   "kind": "Text",
+   "applyMode": "Configurable",
+   "minLevel": 2,
+   "riskLevel": "High",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": true,
+   "rationale": "Cambia el número de preguntas: es una decisión docente, nunca automática.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "evaluation.show_points",
+   "description": "Indicar la puntuación de cada pregunta",
+   "group": "evaluation",
+   "category": "Evaluation",
+   "kind": "Text",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Saber cuánto vale cada pregunta ayuda a priorizar.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "id.plain_language",
+   "description": "Lenguaje claro y frases cortas",
+   "group": "language",
+   "category": "Language",
+   "kind": "Text",
+   "applyMode": "Configurable",
+   "minLevel": 1,
+   "riskLevel": "Medium",
+   "blockedByConstructTags": [
+    "linguistic_complexity"
+   ],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": true,
+   "rationale": "Reduce la barrera lingüística sin cambiar el referente curricular.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "id.worked_example",
+   "description": "Ejemplo resuelto de una actividad equivalente",
+   "group": "attention",
+   "category": "Support",
+   "kind": "Support",
+   "applyMode": "Configurable",
+   "minLevel": 2,
+   "riskLevel": "High",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": true,
+   "rationale": "Un ejemplo guía el procedimiento; nunca debe contener la respuesta de la pregunta.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "id.concrete_context",
+   "description": "Contextualizar con ejemplos cercanos a su experiencia",
+   "group": "language",
+   "category": "Support",
+   "kind": "Support",
+   "applyMode": "Configurable",
+   "minLevel": 2,
+   "riskLevel": "Medium",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": true,
+   "rationale": "Los ejemplos concretos facilitan comprender situaciones abstractas.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "hearing.sign_interpreter",
+   "description": "Intérprete de lengua de signos / apoyo en instrucciones orales",
+   "group": "language",
+   "category": "Access",
+   "kind": "Logistics",
+   "applyMode": "Configurable",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Garantiza el acceso a las instrucciones dadas en voz.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "asd.announce_changes",
+   "description": "Anticipar cambios de actividad o de formato",
+   "group": "attention",
+   "category": "Orientation",
+   "kind": "Support",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Anticipar los cambios reduce la ansiedad ante lo imprevisto.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "motor.larger_answer_boxes",
+   "description": "Casillas y espacios de respuesta más grandes",
+   "group": "response",
+   "category": "Layout",
+   "kind": "Style",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Un espacio mayor tolera un trazo menos preciso.",
+   "devNotes": "",
+   "style": {
+    "answerSpaceFactor": "2"
+   },
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "motor.avoid_cut_paste",
+   "description": "Evitar tareas de recortar, pegar o unir con flechas",
+   "group": "response",
+   "category": "Response",
+   "kind": "Text",
+   "applyMode": "Default",
+   "minLevel": 1,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": false,
+   "altersAssessedConstruct": false,
+   "rationale": "Sustituir la manipulación por selección evita barreras motoras.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "spanish_l2.bilingual_glossary",
+   "description": "Glosario bilingüe de términos clave",
+   "group": "language",
+   "category": "Translation",
+   "kind": "Support",
+   "applyMode": "Configurable",
+   "minLevel": 2,
+   "riskLevel": "High",
+   "blockedByConstructTags": [
+    "language_domain",
+    "vocabulary"
+   ],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": true,
+   "rationale": "Un glosario en la lengua materna apoya la comprensión, pero cambia el idioma del apoyo.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "gifted.open_challenge",
+   "description": "Reto abierto de ampliación",
+   "group": "evaluation",
+   "category": "Deepening",
+   "kind": "Support",
+   "applyMode": "Configurable",
+   "minLevel": 2,
+   "riskLevel": "Low",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": false,
+   "rationale": "Un reto abierto opcional profundiza sin sustituir la prueba.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  },
+  {
+   "id": "gifted.reduce_repetition",
+   "description": "Eximir de ejercicios repetitivos ya dominados",
+   "group": "evaluation",
+   "category": "Evaluation",
+   "kind": "Text",
+   "applyMode": "Configurable",
+   "minLevel": 2,
+   "riskLevel": "High",
+   "blockedByConstructTags": [],
+   "requiresTeacherReview": true,
+   "altersAssessedConstruct": true,
+   "rationale": "Cambia el número de ítems: decisión docente.",
+   "devNotes": "",
+   "style": {},
+   "parameters": [],
+   "conflictsWith": []
+  }
+ ],
+ "needs": [
+  {
+   "key": "adhd",
+   "displayName": "TDAH",
+   "description": "Dificultad sostenida de atención, impulsividad y/o hiperactividad.",
+   "hidden": false,
+   "measures": [
+    {
+     "ruleId": "adhd.fragment_tasks",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "adhd.one_action_per_block",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "adhd.highlight_action_verbs",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "adhd.progress_checklist",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "attention.self_check_box",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "attention.reduce_distractors",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "attention.step_by_step_plan",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "time.scheduled_breaks",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "present.one_question_per_page",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "evaluation.show_points",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "asd.task_step_count",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "adhd.configurable_time",
+     "classification": "decision"
+    },
+    {
+     "ruleId": "time.extra_time",
+     "classification": "decision"
+    },
+    {
+     "ruleId": "evaluation.reduce_items",
+     "classification": "decision"
+    },
+    {
+     "ruleId": "response.convert_to_multiple_choice",
+     "classification": "not_recommended"
+    }
+   ]
+  },
+  {
+   "key": "dyslexia",
+   "displayName": "Dislexia",
+   "description": "Dificultad específica y persistente en la lectura (decodificación y fluidez).",
+   "hidden": false,
+   "measures": [
+    {
+     "ruleId": "dyslexia.typography_sans_serif",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "dyslexia.left_align_low_density",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "dyslexia.short_statements_keywords",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "present.line_spacing",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "present.letter_spacing",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "present.word_spacing",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "present.generous_margins",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "dysorthography.separate_content_spelling",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "writing.checklist_revision",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "reading.numbered_lines_paragraphs",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "reading.pre_reading_organizer",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "evaluation.oral_check",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "visual.pictograms",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "dyslexia.read_aloud_audio",
+     "classification": "decision"
+    },
+    {
+     "ruleId": "time.extra_time",
+     "classification": "decision"
+    },
+    {
+     "ruleId": "response.oral_answer",
+     "classification": "decision"
+    },
+    {
+     "ruleId": "language.simple_wording",
+     "classification": "not_recommended"
+    }
+   ]
+  },
+  {
+   "key": "dysgraphia",
+   "displayName": "Disgrafía",
+   "description": "Dificultad específica en el trazo y la producción escrita manual.",
+   "hidden": false,
+   "measures": [
+    {
+     "ruleId": "dysgraphia.reduce_copying",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "writing.larger_answer_space",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "evaluation.no_penalize_handwriting",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "writing.ruled_lines",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "motor.minimize_nonessential_writing",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "dysgraphia.alt_response_mode",
+     "classification": "decision"
+    },
+    {
+     "ruleId": "response.use_computer",
+     "classification": "decision"
+    },
+    {
+     "ruleId": "response.oral_answer",
+     "classification": "decision"
+    },
+    {
+     "ruleId": "response.scribe",
+     "classification": "decision"
+    },
+    {
+     "ruleId": "time.extra_time",
+     "classification": "decision"
+    },
+    {
+     "ruleId": "response.convert_to_multiple_choice",
+     "classification": "not_recommended"
+    }
+   ]
+  },
+  {
+   "key": "dysorthography",
+   "displayName": "Disortografía",
+   "description": "Dificultad específica en la ortografía y la escritura correcta de palabras.",
+   "hidden": false,
+   "measures": [
+    {
+     "ruleId": "dysorthography.separate_content_spelling",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "writing.checklist_revision",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "evaluation.oral_check",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "time.extra_time",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "dysorthography.word_bank_corrector",
+     "classification": "decision"
+    }
+   ]
+  },
+  {
+   "key": "dyscalculia",
+   "displayName": "Discalculia",
+   "description": "Dificultad específica en el sentido numérico y el cálculo.",
+   "hidden": false,
+   "measures": [
+    {
+     "ruleId": "dyscalculia.align_figures_grid",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "dyscalculia.data_operation_answer_split",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "math.large_operation_space",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "math.number_line_support",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "visual.organizer_table",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "dyscalculia.reference_material",
+     "classification": "decision"
+    },
+    {
+     "ruleId": "math.calculator_allowed",
+     "classification": "decision"
+    },
+    {
+     "ruleId": "time.extra_time",
+     "classification": "decision"
+    },
+    {
+     "ruleId": "math.reduce_numbers",
+     "classification": "not_recommended"
+    },
+    {
+     "ruleId": "evaluation.reduce_items",
+     "classification": "not_recommended"
+    }
+   ]
+  },
+  {
+   "key": "tdl_tel",
+   "displayName": "TDL / TEL",
+   "description": "Trastorno del desarrollo del lenguaje (antes TEL).",
+   "hidden": false,
+   "measures": [
+    {
+     "ruleId": "tdl_tel.direct_syntax",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "tdl_tel.glossary_visual_support",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "tdl_tel.split_multi_instructions",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "language.one_idea_per_sentence",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "language.avoid_double_negatives",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "visual.pictograms",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "reading.pre_reading_organizer",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "hearing.written_backup_for_oral",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "response.oral_answer",
+     "classification": "decision"
+    },
+    {
+     "ruleId": "time.extra_time",
+     "classification": "decision"
+    },
+    {
+     "ruleId": "language.simple_wording",
+     "classification": "decision"
+    }
+   ]
+  },
+  {
+   "key": "asd",
+   "displayName": "TEA",
+   "description": "Trastorno del espectro autista.",
+   "hidden": false,
+   "measures": [
+    {
+     "ruleId": "asd.predictable_stable_format",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "asd.literal_explicit_language",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "asd.task_step_count",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "asd.announce_changes",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "attention.reduce_distractors",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "visual.pictograms",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "executive_functions.checklist_steps_progress",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "language.one_idea_per_sentence",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "time.scheduled_breaks",
+     "classification": "decision"
+    }
+   ]
+  },
+  {
+   "key": "intellectual_disability",
+   "displayName": "Discapacidad intelectual",
+   "description": "Limitaciones en el funcionamiento intelectual y la conducta adaptativa. El nivel curricular NUNCA se deduce de esta necesidad.",
+   "hidden": false,
+   "measures": [
+    {
+     "ruleId": "curricular.never_infer_from_diagnosis",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "language.one_idea_per_sentence",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "tdl_tel.split_multi_instructions",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "visual.pictograms",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "executive_functions.checklist_steps_progress",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "id.concrete_context",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "attention.step_by_step_plan",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "id.plain_language",
+     "classification": "decision"
+    },
+    {
+     "ruleId": "id.worked_example",
+     "classification": "decision"
+    },
+    {
+     "ruleId": "curricular.use_teacher_defined_referents_only",
+     "classification": "decision"
+    },
+    {
+     "ruleId": "time.extra_time",
+     "classification": "decision"
+    },
+    {
+     "ruleId": "language.simple_wording",
+     "classification": "decision"
+    },
+    {
+     "ruleId": "evaluation.reduce_items",
+     "classification": "not_recommended"
+    }
+   ]
+  },
+  {
+   "key": "hearing_impairment",
+   "displayName": "Discapacidad auditiva",
+   "description": "Pérdida auditiva (hipoacusia o sordera).",
+   "hidden": false,
+   "measures": [
+    {
+     "ruleId": "hearing.written_backup_for_oral",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "hearing.subtitles_transcript",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "visual.pictograms",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "language.one_idea_per_sentence",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "hearing.sign_interpreter",
+     "classification": "decision"
+    },
+    {
+     "ruleId": "language.simple_wording",
+     "classification": "not_recommended"
+    }
+   ]
+  },
+  {
+   "key": "low_vision",
+   "displayName": "Discapacidad visual",
+   "description": "Baja visión o ceguera.",
+   "hidden": false,
+   "measures": [
+    {
+     "ruleId": "low_vision.configurable_size_contrast",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "low_vision.no_color_only_coding",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "low_vision.alt_text_screen_reader",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "present.high_contrast",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "present.generous_margins",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "writing.larger_answer_space",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "present.line_spacing",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "visual.tactile_or_audio_format",
+     "classification": "decision"
+    },
+    {
+     "ruleId": "time.extra_time",
+     "classification": "decision"
+    }
+   ]
+  },
+  {
+   "key": "motor_disability",
+   "displayName": "Discapacidad motora",
+   "description": "Limitación del movimiento que afecta a escribir, manipular o desplazarse.",
+   "hidden": false,
+   "measures": [
+    {
+     "ruleId": "motor.minimize_nonessential_writing",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "motor.larger_answer_boxes",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "motor.avoid_cut_paste",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "time.scheduled_breaks",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "motor.keyboard_selection_voice",
+     "classification": "decision"
+    },
+    {
+     "ruleId": "response.use_computer",
+     "classification": "decision"
+    },
+    {
+     "ruleId": "response.scribe",
+     "classification": "decision"
+    },
+    {
+     "ruleId": "response.oral_answer",
+     "classification": "decision"
+    },
+    {
+     "ruleId": "time.extra_time",
+     "classification": "decision"
+    }
+   ]
+  },
+  {
+   "key": "reading_comprehension",
+   "displayName": "Comprensión lectora",
+   "description": "Dificultades para comprender lo que se lee aunque se decodifique bien.",
+   "hidden": false,
+   "measures": [
+    {
+     "ruleId": "reading_comprehension.fragment_text_near_questions",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "reading.numbered_lines_paragraphs",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "reading.pre_reading_organizer",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "language.one_idea_per_sentence",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "visual.organizer_table",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "dyslexia.short_statements_keywords",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "tdl_tel.glossary_visual_support",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "reading_comprehension.anticipate_vocabulary",
+     "classification": "decision"
+    },
+    {
+     "ruleId": "time.extra_time",
+     "classification": "decision"
+    }
+   ]
+  },
+  {
+   "key": "slow_processing",
+   "displayName": "Procesamiento lento",
+   "description": "Velocidad de procesamiento inferior a la esperada.",
+   "hidden": false,
+   "measures": [
+    {
+     "ruleId": "slow_processing.lower_density_per_page",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "time.extra_time",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "attention.self_check_box",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "present.one_question_per_page",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "adhd.fragment_tasks",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "time.scheduled_breaks",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "slow_processing.configurable_time_pauses",
+     "classification": "decision"
+    },
+    {
+     "ruleId": "time.split_sessions",
+     "classification": "decision"
+    },
+    {
+     "ruleId": "evaluation.reduce_items",
+     "classification": "not_recommended"
+    }
+   ]
+  },
+  {
+   "key": "executive_functions",
+   "displayName": "Funciones ejecutivas",
+   "description": "Dificultades de planificación, organización y autorregulación.",
+   "hidden": false,
+   "measures": [
+    {
+     "ruleId": "executive_functions.checklist_steps_progress",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "attention.step_by_step_plan",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "attention.self_check_box",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "adhd.one_action_per_block",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "asd.task_step_count",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "time.scheduled_breaks",
+     "classification": "optional"
+    }
+   ]
+  },
+  {
+   "key": "spanish_l2",
+   "displayName": "Incorporación tardía / desconocimiento del idioma",
+   "description": "Alumnado que se incorpora tarde al sistema o no domina el idioma de la prueba.",
+   "hidden": false,
+   "measures": [
+    {
+     "ruleId": "spanish_l2.visual_glossary_clear_language",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "visual.pictograms",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "language.one_idea_per_sentence",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "response.oral_answer",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "evaluation.oral_check",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "spanish_l2.bilingual_glossary",
+     "classification": "decision"
+    },
+    {
+     "ruleId": "spanish_l2.translation_only_if_authorized",
+     "classification": "decision"
+    },
+    {
+     "ruleId": "time.extra_time",
+     "classification": "decision"
+    },
+    {
+     "ruleId": "language.simple_wording",
+     "classification": "decision"
+    }
+   ]
+  },
+  {
+   "key": "gifted",
+   "displayName": "Altas capacidades",
+   "description": "Capacidad intelectual o rendimiento muy superior en uno o varios ámbitos.",
+   "hidden": false,
+   "measures": [
+    {
+     "ruleId": "gifted.optional_depth_extension",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "gifted.open_challenge",
+     "classification": "optional"
+    },
+    {
+     "ruleId": "gifted.reduce_repetition",
+     "classification": "decision"
+    }
+   ]
+  },
+  {
+   "key": "curricular",
+   "displayName": "Adaptación curricular",
+   "description": "Se gestiona con el interruptor «¿Existe adaptación curricular?» al crear la adaptación.",
+   "hidden": true,
+   "measures": [
+    {
+     "ruleId": "curricular.never_infer_from_diagnosis",
+     "classification": "recommended"
+    },
+    {
+     "ruleId": "curricular.use_teacher_defined_referents_only",
+     "classification": "recommended"
+    }
+   ]
+  },
+  {
+   "key": "custom",
+   "displayName": "Perfil personalizado",
+   "description": "Sin necesidades predefinidas: elige tú mismo cada medida de la biblioteca.",
+   "hidden": false,
+   "measures": []
+  }
+ ]
+}

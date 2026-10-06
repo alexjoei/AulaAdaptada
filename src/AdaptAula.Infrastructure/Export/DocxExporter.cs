@@ -1,3 +1,4 @@
+using System.Globalization;
 using AdaptAula.Domain;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
@@ -8,78 +9,34 @@ using PIC = DocumentFormat.OpenXml.Drawing.Pictures;
 
 namespace AdaptAula.Infrastructure.Export;
 
-/// <summary>RENDER step (spec §7) for DOCX, built with DocumentFormat.OpenXml (free, MIT) —
-/// no dependency on Word/LibreOffice being installed.</summary>
+/// <summary>RENDER step (spec §7) for DOCX, built with DocumentFormat.OpenXml (free, MIT) — no dependency on
+/// Word/LibreOffice being installed. Renders the editor's document model, so the Word file the teacher can still edit
+/// matches the screen (V2 §9, §20).</summary>
 public class DocxExporter
 {
-    // Content width available inside an A4 page with this document's margins, at the 96 DPI Word
-    // assumes for pixel-sized images — keeps embedded photos from overflowing the page.
+    // Content width inside an A4 page with default margins, at the 96 DPI Word assumes for pixel-sized images.
     private const int MaxImageWidthPx = 550;
     private const int MaxImageHeightPx = 700;
     private const long EmuPerPixelAt96Dpi = 9525; // 914400 EMU/inch ÷ 96 px/inch
+    private const double TwipsPerMm = 56.6929;
 
-    public byte[] Export(
-        Assessment assessment,
-        AdaptationPlan plan,
-        IReadOnlyDictionary<Guid, Question> questionsById,
-        IReadOnlyList<AdaptedQuestion> adaptedQuestions)
+    public byte[] Render(IReadOnlyList<DocBlock> blocks, DocumentStyle style)
     {
-        var style = ExportStyle.From(plan);
-        var fontSize = style.LargeAccessibleFont ? "28" : "22"; // half-points: 14pt / 11pt
-        var justification = style.LeftAlignLowDensity ? JustificationValues.Left : JustificationValues.Both;
-
         using var stream = new MemoryStream();
         using (var document = WordprocessingDocument.Create(stream, WordprocessingDocumentType.Document))
         {
             var mainPart = document.AddMainDocumentPart();
             mainPart.Document = new Document();
             var body = mainPart.Document.AppendChild(new Body());
-            var nextImageId = 1;
+            var context = new RenderContext(mainPart, style);
 
-            body.AppendChild(Heading($"{assessment.Title}", "32"));
-            body.AppendChild(Paragraph(BuildSubtitle(assessment), "20", italic: true));
-            body.AppendChild(EmptyParagraph());
+            foreach (var element in RenderBlocks(blocks, context, topLevel: true))
+                body.AppendChild(element);
 
-            var orderedSections = assessment.Sections.OrderBy(s => s.Order).ToList();
-            var byQuestionId = adaptedQuestions.ToDictionary(a => a.QuestionId);
-
-            foreach (var section in orderedSections)
-            {
-                var orderedQuestions = section.Questions
-                    .OrderBy(q => q.Order)
-                    .Where(q => byQuestionId.ContainsKey(q.Id))
-                    .ToList();
-                if (orderedQuestions.Count == 0) continue;
-
-                if (!string.IsNullOrWhiteSpace(section.StimulusText))
-                {
-                    body.AppendChild(Paragraph("Enunciado / texto de referencia", "18", italic: true));
-                    foreach (var block in ContentBlocks.FromInterleavedText(section.StimulusText, section.AssetRefs))
-                        AppendBlock(body, mainPart, block, fontSize, justification, ref nextImageId);
-                    body.AppendChild(EmptyParagraph());
-                }
-
-                foreach (var question in orderedQuestions)
-                {
-                    var adapted = byQuestionId[question.Id];
-
-                    body.AppendChild(Heading($"Pregunta {question.Order + 1} · {adapted.Points} puntos", "24"));
-
-                    foreach (var line in adapted.AdaptedText.Split('\n', StringSplitOptions.RemoveEmptyEntries))
-                        body.AppendChild(Paragraph(line.Trim(), fontSize, justification: justification));
-
-                    foreach (var image in ContentBlocks.FromImageGallery(question.AssetRefs).OfType<ImageBlock>())
-                        body.AppendChild(ImageParagraph(mainPart, image, ref nextImageId));
-
-                    if (adapted.Supports.Count > 0)
-                    {
-                        foreach (var support in adapted.Supports)
-                            body.AppendChild(Paragraph((style.ShowSupportsAsChecklist ? "□ " : "• ") + support, fontSize));
-                    }
-
-                    body.AppendChild(EmptyParagraph());
-                }
-            }
+            var margin = (int)Math.Round(Math.Clamp(style.MarginMm, 5, 60) * TwipsPerMm);
+            body.AppendChild(new SectionProperties(
+                new PageSize { Width = 11906U, Height = 16838U },
+                new PageMargin { Top = margin, Right = (uint)margin, Bottom = margin, Left = (uint)margin, Header = 708U, Footer = 708U, Gutter = 0U }));
 
             mainPart.Document.Save();
         }
@@ -87,39 +44,265 @@ public class DocxExporter
         return stream.ToArray();
     }
 
-    private static void AppendBlock(
-        Body body, MainDocumentPart mainPart, ContentBlock block, string fontSize, JustificationValues justification, ref int nextImageId)
+    private class RenderContext
     {
-        switch (block)
-        {
-            case TextBlock text:
-                body.AppendChild(Paragraph(text.Text, fontSize, justification: justification));
-                break;
-            case ImageBlock image:
-                body.AppendChild(ImageParagraph(mainPart, image, ref nextImageId));
-                break;
-        }
+        public RenderContext(MainDocumentPart part, DocumentStyle style) { Part = part; Style = style; }
+        public MainDocumentPart Part { get; }
+        public DocumentStyle Style { get; }
+        public int NextImageId { get; set; } = 1;
     }
 
-    private static Paragraph ImageParagraph(MainDocumentPart mainPart, ImageBlock image, ref int nextImageId)
+    private static List<OpenXmlElement> RenderBlocks(IReadOnlyList<DocBlock> blocks, RenderContext ctx, bool topLevel)
+    {
+        var elements = new List<OpenXmlElement>();
+        foreach (var block in blocks)
+        {
+            switch (block)
+            {
+                case ParagraphBlock p:
+                    elements.Add(RenderParagraph(p, ctx));
+                    break;
+                case ImageDocBlock image:
+                    elements.Add(RenderImage(image, ctx));
+                    break;
+                case PageBreakBlock:
+                    elements.Add(new Paragraph(new Run(new Break { Type = BreakValues.Page })));
+                    break;
+                case AnswerSpaceBlock space:
+                    elements.AddRange(RenderAnswerSpace(space, ctx));
+                    break;
+                case TableBlock table:
+                    elements.Add(RenderTable(table, ctx));
+                    elements.Add(Spacer());
+                    break;
+                case BoxBlock box:
+                    elements.Add(RenderBox(box, ctx));
+                    elements.Add(Spacer());
+                    break;
+            }
+        }
+
+        // A table cell (and the body) must not end on a table: Word needs a closing paragraph.
+        if (!topLevel && (elements.Count == 0 || elements[^1] is Table)) elements.Add(Spacer());
+        return elements;
+    }
+
+    private static Paragraph Spacer() =>
+        new(new ParagraphProperties(new SpacingBetweenLines { After = "0", Line = "120", LineRule = LineSpacingRuleValues.Exact }), new Run(new Text(string.Empty)));
+
+    // ---------------------------------------------------------------- text
+
+    private static Paragraph RenderParagraph(ParagraphBlock block, RenderContext ctx)
+    {
+        var style = ctx.Style;
+        var baseSize = style.FontSizePt;
+        var sizeFactor = block.HeadingLevel switch { 1 => 1.7, 2 => 1.3, 3 => 1.15, _ => 1.0 };
+        var heading = block.HeadingLevel > 0;
+
+        var props = new ParagraphProperties();
+        var lineSpacing = block.LineSpacing ?? style.LineSpacing;
+        props.AppendChild(new SpacingBetweenLines
+        {
+            Line = ((int)Math.Round(lineSpacing * 240)).ToString(CultureInfo.InvariantCulture),
+            LineRule = LineSpacingRuleValues.Auto,
+            Before = heading ? "120" : "0",
+            After = ((int)Math.Round(style.ParagraphSpacingPt * 20)).ToString(CultureInfo.InvariantCulture)
+        });
+
+        if (block.ListKind is not null)
+        {
+            var left = 360 * (block.ListDepth + 1);
+            props.AppendChild(new Indentation { Left = left.ToString(), Hanging = "360" });
+        }
+
+        props.AppendChild(new Justification { Val = ToJustification(block.Align ?? style.Align) });
+
+        var paragraph = new Paragraph(props);
+
+        if (block.ListKind is not null)
+        {
+            var marker = block.ListKind == "ordered" ? $"{block.ListIndex}.\t" : "•\t";
+            paragraph.AppendChild(new Run(RunProps(new RunStyle(), baseSize, style, bold: false), new Text(marker) { Space = SpaceProcessingModeValues.Preserve }));
+        }
+
+        foreach (var run in block.Runs)
+        {
+            var effectiveStyle = heading ? run.Style with { Bold = true } : run.Style;
+            var size = (effectiveStyle.SizePt ?? baseSize * sizeFactor);
+            var runProps = RunProps(effectiveStyle, size, style, bold: effectiveStyle.Bold);
+
+            if (run.LineBreak)
+            {
+                paragraph.AppendChild(new Run(runProps.CloneNode(true), new Break()));
+                continue;
+            }
+
+            // Word has no "word spacing" property: widen the spaces themselves with extra character spacing.
+            var wordSpacing = effectiveStyle.WordSpacingPt ?? style.WordSpacingPt;
+            if (wordSpacing <= 0)
+            {
+                paragraph.AppendChild(new Run(runProps, new Text(run.Text) { Space = SpaceProcessingModeValues.Preserve }));
+                continue;
+            }
+
+            foreach (var (segment, isSpace) in TextSegments.SplitSpaces(run.Text))
+            {
+                var segmentProps = RunProps(effectiveStyle, size, style, bold: effectiveStyle.Bold, extraSpacingPt: isSpace ? wordSpacing : 0);
+                paragraph.AppendChild(new Run(segmentProps, new Text(segment) { Space = SpaceProcessingModeValues.Preserve }));
+            }
+        }
+
+        if (!paragraph.Elements<Run>().Any()) paragraph.AppendChild(new Run(new Text(string.Empty)));
+        return paragraph;
+    }
+
+    /// <remarks>Child order follows the CT_RPr schema (rFonts, b, i, strike, color, spacing, sz, u, shd); Word is strict about it.</remarks>
+    private static RunProperties RunProps(RunStyle run, double sizePt, DocumentStyle style, bool bold, double extraSpacingPt = 0)
+    {
+        var font = run.Font ?? style.FontFamily;
+        var props = new RunProperties(new RunFonts { Ascii = font, HighAnsi = font, ComplexScript = font });
+        if (bold) props.AppendChild(new Bold());
+        if (run.Italic) props.AppendChild(new Italic());
+        if (run.Strike) props.AppendChild(new Strike());
+
+        var color = style.HighContrast ? "000000" : run.Color;
+        if (color is not null) props.AppendChild(new Color { Val = color });
+
+        var letter = (run.LetterSpacingPt ?? style.LetterSpacingPt) + extraSpacingPt;
+        if (letter > 0) props.AppendChild(new Spacing { Val = (int)Math.Round(letter * 20) });
+
+        props.AppendChild(new FontSize { Val = ((int)Math.Round(sizePt * 2)).ToString(CultureInfo.InvariantCulture) });
+        if (run.Underline) props.AppendChild(new Underline { Val = UnderlineValues.Single });
+        if (run.Highlight is not null && !style.HighContrast)
+            props.AppendChild(new Shading { Val = ShadingPatternValues.Clear, Color = "auto", Fill = run.Highlight });
+        return props;
+    }
+
+    private static JustificationValues ToJustification(string? align) => align?.ToLowerInvariant() switch
+    {
+        "center" => JustificationValues.Center,
+        "right" => JustificationValues.Right,
+        "justify" => JustificationValues.Both,
+        _ => JustificationValues.Left
+    };
+
+    // ---------------------------------------------------------------- boxes, tables, answer space
+
+    private static Table RenderBox(BoxBlock box, RenderContext ctx)
+    {
+        var fill = box.Kind == "stimulus" ? "F2F2F2" : null;
+        var table = NewTable(single: true);
+        var cell = new TableCell(new TableCellProperties(
+            new TableCellWidth { Type = TableWidthUnitValues.Pct, Width = "5000" },
+            new TableCellMargin(
+                new TopMargin { Width = "100", Type = TableWidthUnitValues.Dxa },
+                new LeftMargin { Width = "160", Type = TableWidthUnitValues.Dxa },
+                new BottomMargin { Width = "100", Type = TableWidthUnitValues.Dxa },
+                new RightMargin { Width = "160", Type = TableWidthUnitValues.Dxa })));
+        if (fill is not null) cell.TableCellProperties!.AppendChild(new Shading { Val = ShadingPatternValues.Clear, Fill = fill });
+
+        foreach (var element in RenderBlocks(box.Children, ctx, topLevel: false)) cell.AppendChild(element);
+        table.AppendChild(new TableRow(cell));
+        return table;
+    }
+
+    private static Table RenderTable(TableBlock block, RenderContext ctx)
+    {
+        var table = NewTable(single: false);
+        var columns = Math.Max(1, block.Rows.Max(r => r.Count));
+        foreach (var (row, rowIndex) in block.Rows.Select((r, i) => (r, i)))
+        {
+            var tableRow = new TableRow();
+            for (var c = 0; c < columns; c++)
+            {
+                var content = c < row.Count ? row[c] : new List<DocBlock>();
+                var cell = new TableCell(new TableCellProperties(new TableCellWidth { Type = TableWidthUnitValues.Pct, Width = (5000 / columns).ToString() }));
+                if (block.HeaderRow && rowIndex == 0)
+                    cell.TableCellProperties!.AppendChild(new Shading { Val = ShadingPatternValues.Clear, Fill = "E7E6F5" });
+                foreach (var element in RenderBlocks(content, ctx, topLevel: false)) cell.AppendChild(element);
+                tableRow.AppendChild(cell);
+            }
+            table.AppendChild(tableRow);
+        }
+        return table;
+    }
+
+    private static Table NewTable(bool single)
+    {
+        var color = single ? "808080" : "999999";
+        return new Table(new TableProperties(
+            new TableWidth { Type = TableWidthUnitValues.Pct, Width = "5000" },
+            new TableBorders(
+                new TopBorder { Val = BorderValues.Single, Size = 6, Color = color },
+                new LeftBorder { Val = BorderValues.Single, Size = 6, Color = color },
+                new BottomBorder { Val = BorderValues.Single, Size = 6, Color = color },
+                new RightBorder { Val = BorderValues.Single, Size = 6, Color = color },
+                new InsideHorizontalBorder { Val = single ? BorderValues.None : BorderValues.Single, Size = 4, Color = "BBBBBB" },
+                new InsideVerticalBorder { Val = single ? BorderValues.None : BorderValues.Single, Size = 4, Color = "BBBBBB" }),
+            new TableLayout { Type = TableLayoutValues.Fixed }));
+    }
+
+    private static IEnumerable<OpenXmlElement> RenderAnswerSpace(AnswerSpaceBlock space, RenderContext ctx)
+    {
+        if (space.Lines <= 0) yield break;
+
+        if (space.Grid)
+        {
+            const int cellTwips = 340;
+            const int columns = 26;
+            var table = new Table(new TableProperties(
+                new TableBorders(
+                    new TopBorder { Val = BorderValues.Single, Size = 4, Color = "A0A0A0" },
+                    new LeftBorder { Val = BorderValues.Single, Size = 4, Color = "A0A0A0" },
+                    new BottomBorder { Val = BorderValues.Single, Size = 4, Color = "A0A0A0" },
+                    new RightBorder { Val = BorderValues.Single, Size = 4, Color = "A0A0A0" },
+                    new InsideHorizontalBorder { Val = BorderValues.Single, Size = 4, Color = "C8C8C8" },
+                    new InsideVerticalBorder { Val = BorderValues.Single, Size = 4, Color = "C8C8C8" }),
+                new TableLayout { Type = TableLayoutValues.Fixed }));
+            for (var r = 0; r < space.Lines; r++)
+            {
+                var row = new TableRow(new TableRowProperties(new TableRowHeight { Val = cellTwips, HeightType = HeightRuleValues.Exact }));
+                for (var c = 0; c < columns; c++)
+                    row.AppendChild(new TableCell(
+                        new TableCellProperties(new TableCellWidth { Type = TableWidthUnitValues.Dxa, Width = cellTwips.ToString() }),
+                        Spacer()));
+                table.AppendChild(row);
+            }
+            yield return table;
+            yield return Spacer();
+            yield break;
+        }
+
+        for (var i = 0; i < space.Lines; i++)
+        {
+            yield return new Paragraph(
+                new ParagraphProperties(
+                    new ParagraphBorders(new BottomBorder { Val = space.Ruled ? BorderValues.Single : BorderValues.Dotted, Size = 6, Space = 1, Color = "9A9A9A" }),
+                    new SpacingBetweenLines { Before = "0", After = "0", Line = "520", LineRule = LineSpacingRuleValues.Exact }),
+                new Run(new Text(string.Empty)));
+        }
+        yield return Spacer();
+    }
+
+    // ---------------------------------------------------------------- images
+
+    private static Paragraph RenderImage(ImageDocBlock image, RenderContext ctx)
     {
         var imagePartType = image.MimeType.Contains("png", StringComparison.OrdinalIgnoreCase)
             ? ImagePartType.Png
-            : ImagePartType.Jpeg;
+            : image.MimeType.Contains("gif", StringComparison.OrdinalIgnoreCase) ? ImagePartType.Gif : ImagePartType.Jpeg;
 
-        var imagePart = mainPart.AddImagePart(imagePartType);
+        var imagePart = ctx.Part.AddImagePart(imagePartType);
         using (var imageStream = new MemoryStream(image.Bytes))
             imagePart.FeedData(imageStream);
-        var relationshipId = mainPart.GetIdOfPart(imagePart);
+        var relationshipId = ctx.Part.GetIdOfPart(imagePart);
 
-        var (widthEmu, heightEmu) = ComputeImageSizeEmu(image.Bytes);
-        var id = nextImageId++;
-        var drawing = BuildImageDrawing(relationshipId, widthEmu, heightEmu, id);
-
-        return new Paragraph(new Run(drawing));
+        var (widthEmu, heightEmu) = ComputeImageSizeEmu(image.Bytes, image.WidthPx);
+        var id = ctx.NextImageId++;
+        return new Paragraph(new Run(BuildImageDrawing(relationshipId, widthEmu, heightEmu, id, image.Alt)));
     }
 
-    private static (long WidthEmu, long HeightEmu) ComputeImageSizeEmu(byte[] bytes)
+    private static (long WidthEmu, long HeightEmu) ComputeImageSizeEmu(byte[] bytes, double? requestedWidthPx)
     {
         int width = MaxImageWidthPx;
         int height = MaxImageWidthPx * 3 / 4;
@@ -134,24 +317,24 @@ public class DocxExporter
             // Fall back to the default box above rather than fail the whole export over one image.
         }
 
-        var scale = Math.Min(1.0, Math.Min((double)MaxImageWidthPx / width, (double)MaxImageHeightPx / height));
-        var finalWidthPx = Math.Max(1, (int)(width * scale));
-        var finalHeightPx = Math.Max(1, (int)(height * scale));
+        double targetWidth = requestedWidthPx is > 0 ? requestedWidthPx.Value : width;
+        double targetHeight = targetWidth * height / width;
+        var scale = Math.Min(1.0, Math.Min(MaxImageWidthPx / targetWidth, MaxImageHeightPx / targetHeight));
+        var finalWidthPx = Math.Max(1, (int)(targetWidth * scale));
+        var finalHeightPx = Math.Max(1, (int)(targetHeight * scale));
 
         return ((long)finalWidthPx * EmuPerPixelAt96Dpi, (long)finalHeightPx * EmuPerPixelAt96Dpi);
     }
 
-    /// <summary>Standard OpenXml SDK inline-picture boilerplate: an inline drawing that embeds the
-    /// image part via <paramref name="relationshipId"/>, sized to <paramref name="widthEmu"/> x
-    /// <paramref name="heightEmu"/> English Metric Units.</summary>
-    private static Drawing BuildImageDrawing(string relationshipId, long widthEmu, long heightEmu, int id)
+    /// <summary>Standard OpenXml SDK inline-picture boilerplate, with the alt text screen readers announce.</summary>
+    private static Drawing BuildImageDrawing(string relationshipId, long widthEmu, long heightEmu, int id, string? alt)
     {
         var name = $"Imagen {id}";
         return new Drawing(
             new DW.Inline(
                 new DW.Extent { Cx = widthEmu, Cy = heightEmu },
                 new DW.EffectExtent { LeftEdge = 0L, TopEdge = 0L, RightEdge = 0L, BottomEdge = 0L },
-                new DW.DocProperties { Id = (UInt32Value)(uint)id, Name = name },
+                new DW.DocProperties { Id = (UInt32Value)(uint)id, Name = name, Description = alt ?? string.Empty },
                 new DW.NonVisualGraphicFrameDrawingProperties(new A.GraphicFrameLocks { NoChangeAspect = true }),
                 new A.Graphic(
                     new A.GraphicData(
@@ -175,37 +358,5 @@ public class DocxExporter
                 DistanceFromLeft = 0U,
                 DistanceFromRight = 0U
             });
-    }
-
-    /// <summary>Grade/subject/points, joined loosely — grade and subject are optional (a teacher may
-    /// not have specified them), so only the parts that are actually present appear.</summary>
-    private static string BuildSubtitle(Assessment assessment)
-    {
-        var parts = new List<string>();
-        if (!string.IsNullOrWhiteSpace(assessment.Subject)) parts.Add(assessment.Subject);
-        if (assessment.Grade is not null) parts.Add($"{assessment.Grade}º");
-        parts.Add($"{assessment.TotalPoints} puntos");
-        return string.Join(" · ", parts);
-    }
-
-    private static Paragraph Heading(string text, string fontSize) =>
-        Paragraph(text, fontSize, bold: true);
-
-    private static Paragraph EmptyParagraph() => new(new Run(new Text(string.Empty)));
-
-    private static Paragraph Paragraph(string text, string fontSize, bool bold = false, bool italic = false,
-        JustificationValues? justification = null)
-    {
-        var runProperties = new RunProperties(
-            new RunFonts { Ascii = "Arial" },
-            new FontSize { Val = fontSize });
-        if (bold) runProperties.AppendChild(new Bold());
-        if (italic) runProperties.AppendChild(new Italic());
-
-        var paragraphProperties = new ParagraphProperties(
-            new Justification { Val = justification ?? JustificationValues.Both },
-            new SpacingBetweenLines { Line = "360", LineRule = LineSpacingRuleValues.Auto });
-
-        return new Paragraph(paragraphProperties, new Run(runProperties, new Text(text) { Space = SpaceProcessingModeValues.Preserve }));
     }
 }

@@ -1,44 +1,39 @@
 import { useEffect, useState } from "react";
 import { api } from "../api/client";
 import type { NecessityPreset, StudentProfile } from "../api/types";
-import { Eyebrow, EmptyState } from "../components/ui";
+import { Eyebrow, EmptyState, Callout } from "../components/ui";
+import ProfileEditor from "../components/ProfileEditor";
+import { useLibrary } from "../hooks/useLibrary";
 
 export default function Profiles() {
+  const { library } = useLibrary();
   const [profiles, setProfiles] = useState<StudentProfile[]>([]);
-  const [presets, setPresets] = useState<NecessityPreset[]>([]);
-  const [alias, setAlias] = useState("");
-  const [measures, setMeasures] = useState<string[]>([]);
-  const [busy, setBusy] = useState(false);
+  const [editing, setEditing] = useState<StudentProfile | "new" | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   function refresh() {
-    api.profiles.list().then(setProfiles);
+    api.profiles.list().then(setProfiles).catch(() => setError("No se pudieron cargar los perfiles."));
   }
 
-  useEffect(() => {
+  useEffect(refresh, []);
+
+  const needName = new Map<string, NecessityPreset>((library?.needs ?? []).map((n) => [n.key, n]));
+
+  async function remove(p: StudentProfile) {
+    if (!window.confirm(`¿Eliminar a «${p.alias}»? También se borrarán las adaptaciones hechas para este alumno.`)) return;
+    await api.profiles.remove(p.id);
     refresh();
-    api.profiles.presets().then(setPresets);
-  }, []);
-
-  function toggleMeasure(key: string) {
-    setMeasures((prev) => (prev.includes(key) ? prev.filter((m) => m !== key) : [...prev, key]));
   }
 
-  async function create() {
+  async function duplicate(p: StudentProfile) {
+    const alias = window.prompt("Alias del nuevo perfil (parte de las mismas medidas):", `${p.alias} (copia)`);
     if (!alias) return;
-    setBusy(true);
     try {
-      await api.profiles.create({ alias, measures, accommodations: [], exceptions: [] });
-      setAlias("");
-      setMeasures([]);
+      await api.profiles.duplicate(p.id, alias);
       refresh();
-    } finally {
-      setBusy(false);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "No se pudo duplicar el perfil.");
     }
-  }
-
-  async function remove(id: string) {
-    await api.profiles.remove(id);
-    refresh();
   }
 
   return (
@@ -46,42 +41,55 @@ export default function Profiles() {
       <div className="wrap">
         <Eyebrow>Perfiles</Eyebrow>
         <h1 style={{ fontSize: 28, marginBottom: 8 }}>Perfiles de alumnado</h1>
-        <p className="muted" style={{ marginBottom: 28, maxWidth: 640 }}>
-          Solo alias — nunca nombre real ni diagnóstico clínico. Un perfil guarda las medidas
-          educativas configurables que se usarán al generar futuras adaptaciones.
+        <p className="muted" style={{ marginBottom: 20, maxWidth: 680 }}>
+          Un perfil guarda las medidas reales de un alumno: tamaño de letra, tiempo extra, fragmentación, tipo de respuesta… Dos alumnos con la
+          misma necesidad pueden tener perfiles distintos.
         </p>
-
-        <div className="card-panel" style={{ marginBottom: 28, maxWidth: 640 }}>
-          <h3 style={{ fontSize: 16, marginBottom: 12 }}>Nuevo perfil</h3>
-          <div className="field">
-            <label>Alias</label>
-            <input value={alias} onChange={(e) => setAlias(e.target.value)} placeholder="alu-14" />
-          </div>
-          <div className="field">
-            <label>Medidas</label>
-            <div className="row">
-              {presets.map((p) => (
-                <span key={p.key} className={`tag-chip${measures.includes(p.key) ? " selected" : ""}`} onClick={() => toggleMeasure(p.key)}>
-                  {p.displayName}
-                </span>
-              ))}
-            </div>
-          </div>
-          <button className="btn" disabled={!alias || busy} onClick={create}>Crear perfil</button>
+        <div style={{ marginBottom: 24, maxWidth: 680 }}>
+          <Callout kind="info">
+            <strong>Privacidad:</strong> guarda solo un alias («Alumno A»), nunca nombres reales ni diagnósticos clínicos. Los perfiles, las pruebas y las
+            adaptaciones son información educativa sensible: elimínalos cuando dejen de hacer falta.
+          </Callout>
         </div>
+        {error && <p style={{ color: "var(--error)", marginBottom: 12 }} role="alert">{error}</p>}
 
-        {profiles.length === 0
+        {editing === null && (
+          <div className="row" style={{ marginBottom: 24 }}>
+            <button className="btn" onClick={() => setEditing("new")}>Nuevo perfil</button>
+          </div>
+        )}
+
+        {editing !== null && (
+          <div className="card-panel" style={{ marginBottom: 28 }}>
+            <h3 style={{ fontSize: 18, marginBottom: 14 }}>{editing === "new" ? "Nuevo perfil" : `Editar «${editing.alias}»`}</h3>
+            <ProfileEditor
+              profile={editing === "new" ? undefined : editing}
+              onSaved={() => { setEditing(null); refresh(); }}
+              onCancel={() => setEditing(null)}
+            />
+          </div>
+        )}
+
+        {profiles.length === 0 && editing === null
           ? <EmptyState title="Todavía no hay perfiles" description="Crea uno para reutilizar sus medidas en próximas adaptaciones." />
           : (
             <div className="card-grid cols-3">
               {profiles.map((p) => (
-                <div key={p.id} className="card-panel">
+                <div key={p.id} className="card-panel" data-profile={p.alias}>
                   <div className="row spread" style={{ marginBottom: 10 }}>
                     <strong>{p.alias}</strong>
-                    <button className="btn-sm btn-outline" onClick={() => remove(p.id)}>Eliminar</button>
+                    <span className="muted" style={{ fontSize: 12 }}>
+                      {p.accommodations.length} añadidas · {p.exceptions.length} desactivadas
+                    </span>
+                  </div>
+                  <div className="row" style={{ marginBottom: 14 }}>
+                    {p.measures.map((m) => <span key={m} className="badge">{needName.get(m)?.displayName ?? m}</span>)}
+                    {p.measures.length === 0 && <span className="muted" style={{ fontSize: 12 }}>Sin necesidades predefinidas</span>}
                   </div>
                   <div className="row">
-                    {p.measures.map((m) => <span key={m} className="badge">{m}</span>)}
+                    <button className="btn-sm btn btn-outline" onClick={() => setEditing(p)}>Editar</button>
+                    <button className="btn-sm btn btn-outline" onClick={() => duplicate(p)}>Duplicar</button>
+                    <button className="btn-sm btn btn-outline" onClick={() => remove(p)}>Eliminar</button>
                   </div>
                 </div>
               ))}

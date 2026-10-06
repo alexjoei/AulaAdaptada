@@ -22,7 +22,8 @@ public class PlanResolverTests
     public void ConstructProtection_BlocksReadAloud_WhenQuestionTestsReading()
     {
         var assessment = SingleQuestionAssessment(ConstructTags.Reading);
-        var profile = new StudentProfile { Alias = "alu-01", Measures = new List<string> { "dyslexia" } };
+        // read-aloud is a "requires teacher decision" measure: it only exists in the plan once the teacher switches it on.
+        var profile = new StudentProfile { Alias = "alu-01", Measures = new List<string> { "dyslexia" }, Accommodations = new List<string> { "dyslexia.read_aloud_audio" } };
 
         var plan = PlanResolver.Resolve(new PlanResolverInput
         {
@@ -40,7 +41,7 @@ public class PlanResolverTests
     public void ConstructProtection_AllowsReadAloud_WhenReadingIsNotTheConstruct()
     {
         var assessment = SingleQuestionAssessment(); // no construct tags
-        var profile = new StudentProfile { Alias = "alu-02", Measures = new List<string> { "dyslexia" } };
+        var profile = new StudentProfile { Alias = "alu-02", Measures = new List<string> { "dyslexia" }, Accommodations = new List<string> { "dyslexia.read_aloud_audio" } };
 
         var plan = PlanResolver.Resolve(new PlanResolverInput
         {
@@ -159,7 +160,6 @@ public class PlanResolverTests
         });
 
         var resolved = plan.ResolvedRulesByQuestion[OnlyQuestion(assessment).Id];
-        var translation = resolved.Single(r => r.RuleId == "spanish_l2.translation_only_if_authorized");
-        Assert.False(translation.Applied);
+        Assert.DoesNotContain(resolved, r => r.RuleId == "spanish_l2.translation_only_if_authorized" && r.Applied);
     }
 }

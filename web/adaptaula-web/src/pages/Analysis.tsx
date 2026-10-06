@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { api } from "../api/client";
-import type { Assessment, Question } from "../api/types";
-import { Eyebrow, Stepper, PIPELINE_STEPS } from "../components/ui";
+import type { Assessment, Curriculum, CurriculumSummary, Question, QuestionAnalysis } from "../api/types";
+import { Eyebrow, Stepper, PIPELINE_STEPS, Callout } from "../components/ui";
 
 const CONSTRUCT_TAGS = [
   { key: "reading", label: "Lectura" },
@@ -25,7 +25,7 @@ const CONSTRUCT_TAGS = [
  * below the text) keeps the passage looking like the original document, which matters here: a
  * caption, a labelled diagram or a photo next to a specific sentence is often part of what the
  * question is actually asking about. */
-const IMAGE_MARKER = /IMG:(\d+)/g;
+const IMAGE_MARKER = /IMG:(\d+)/g;
 
 function renderInterleavedContent(text: string, assetRefs: string[], altPrefix: string) {
   const parts = text.split(IMAGE_MARKER);
@@ -38,28 +38,70 @@ function renderInterleavedContent(text: string, assetRefs: string[], altPrefix: 
   });
 }
 
+/** Protected elements (V2 §8): everything the teacher can freeze before generating. */
 const LOCK_OPTIONS = [
-  { key: "content", label: "Contenido" },
-  { key: "criteria", label: "Criterios" },
-  { key: "total_points", label: "Puntuación total" },
-  { key: "language", label: "Idioma" },
-  { key: "grade", label: "Curso" },
+  { key: "content", label: "Contenido evaluado", hint: "Ninguna pregunta puede perder sus ideas clave." },
+  { key: "criteria", label: "Criterio de evaluación", hint: "Cada criterio vinculado sigue evaluándose." },
+  { key: "correct_answer", label: "Respuesta correcta", hint: "Ni se modifica ni se insinúa en pistas o apoyos." },
+  { key: "total_points", label: "Puntuación", hint: "La puntuación total y la de cada pregunta no cambian." },
+  { key: "language", label: "Idioma", hint: "El enunciado no cambia de idioma (salvo traducción autorizada)." },
+  { key: "essential_vocabulary", label: "Vocabulario curricular esencial", hint: "Los términos que indiques deben aparecer tal cual." },
+  { key: "question_count", label: "Número de preguntas", hint: "No se elimina ni se añade ninguna pregunta." },
+  { key: "cognitive_demand", label: "Nivel / demanda cognitiva", hint: "No se acepta un texto mucho más corto que rebaje la exigencia." },
+  { key: "grade", label: "Curso", hint: "El curso de la prueba no cambia." },
 ];
+
+const COGNITIVE = ["recordar", "comprender", "aplicar", "analizar", "evaluar", "crear"];
+const LOADS = ["baja", "media", "alta"];
+
+const BLANK_ANALYSIS: QuestionAnalysis = {
+  content: "", skill: "", cognitiveDemand: "", linguisticDemand: "", readingLoad: "", writingLoad: "", executiveLoad: "",
+  criteriaIds: [], contentIds: [], source: "teacher", confirmed: false,
+};
 
 export default function Analysis() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [assessment, setAssessment] = useState<Assessment | null>(null);
   const [dirtyQuestions, setDirtyQuestions] = useState<Record<string, Partial<Question>>>({});
+  const [analysisEdits, setAnalysisEdits] = useState<Record<string, QuestionAnalysis>>({});
   const [locks, setLocks] = useState<string[]>([]);
+  const [vocabulary, setVocabulary] = useState<string[]>([]);
+  const [vocabInput, setVocabInput] = useState("");
+  const [curriculumId, setCurriculumId] = useState("");
+  const [areaId, setAreaId] = useState("");
+  const [summaries, setSummaries] = useState<CurriculumSummary[]>([]);
+  const [curriculum, setCurriculum] = useState<Curriculum | null>(null);
   const [saving, setSaving] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [openAnalysis, setOpenAnalysis] = useState<string | null>(null);
 
   useEffect(() => {
     if (!id) return;
-    api.assessments.get(id).then((a) => { setAssessment(a); setLocks(a.lockedFields); });
+    api.assessments.get(id).then((a) => {
+      setAssessment(a);
+      setLocks(a.lockedFields);
+      setVocabulary(a.protectedVocabulary);
+      setCurriculumId(a.curriculumId ?? "");
+      setAreaId(a.curriculumAreaId ?? "");
+    }).catch(() => setError("No se pudo cargar la prueba."));
+    api.curriculum.list().then(setSummaries).catch(() => setSummaries([]));
   }, [id]);
 
-  if (!assessment) return <div className="page wrap"><p className="muted">Cargando…</p></div>;
+  useEffect(() => {
+    if (!curriculumId) { setCurriculum(null); return; }
+    api.curriculum.get(curriculumId).then(setCurriculum).catch(() => setCurriculum(null));
+  }, [curriculumId]);
+
+  const criteriaById = useMemo(() => new Map((curriculum?.areas ?? []).flatMap((a) => a.criteria).map((c) => [c.id, c])), [curriculum]);
+  const contentsById = useMemo(() => new Map((curriculum?.areas ?? []).flatMap((a) => a.contents).map((c) => [c.id, c])), [curriculum]);
+  const area = curriculum?.areas.find((a) => a.id === areaId) ?? null;
+  const cycle = curriculum && assessment?.grade ? curriculum.cycles.find((c) => c.grades.includes(assessment.grade!))?.id : undefined;
+  const areaCriteria = (area?.criteria ?? []).filter((c) => !cycle || c.cycle === cycle);
+  const areaContents = (area?.contents ?? []).filter((c) => !cycle || c.cycle === cycle);
+
+  if (!assessment) return <div className="page wrap"><p className="muted">{error ?? "Cargando…"}</p></div>;
 
   const lowConfidence = (assessment.extractionConfidence ?? 1) < 0.6;
   const questions = assessment.sections.flatMap((s) => s.questions);
@@ -79,20 +121,71 @@ export default function Analysis() {
     setLocks((prev) => (prev.includes(key) ? prev.filter((l) => l !== key) : [...prev, key]));
   }
 
+  function addVocab() {
+    const terms = vocabInput.split(",").map((t) => t.trim()).filter(Boolean);
+    if (terms.length === 0) return;
+    setVocabulary((prev) => [...new Set([...prev, ...terms])]);
+    if (!locks.includes("essential_vocabulary")) setLocks((prev) => [...prev, "essential_vocabulary"]);
+    setVocabInput("");
+  }
+
+  function currentAnalysis(q: Question): QuestionAnalysis | null {
+    return analysisEdits[q.id] ?? q.analysis;
+  }
+
+  function editAnalysis(q: Question, change: Partial<QuestionAnalysis>) {
+    const base = currentAnalysis(q) ?? BLANK_ANALYSIS;
+    setAnalysisEdits((prev) => ({ ...prev, [q.id]: { ...base, ...change, source: "teacher" } }));
+  }
+
+  function buildUpdate() {
+    return {
+      lockedFields: locks,
+      protectedVocabulary: vocabulary,
+      curriculumId, curriculumAreaId: areaId,
+      questions: questions
+        .filter((q) => dirtyQuestions[q.id] || analysisEdits[q.id])
+        .map((q) => {
+          const patch = dirtyQuestions[q.id] ?? {};
+          return {
+            id: q.id,
+            points: patch.points,
+            expectedAnswer: patch.expectedAnswer ?? undefined,
+            constructTags: patch.constructTags,
+            analysis: analysisEdits[q.id],
+          };
+        }),
+    };
+  }
+
   async function saveAndContinue() {
     if (!id) return;
     setSaving(true);
+    setError(null);
     try {
-      const edits = Object.entries(dirtyQuestions).map(([qid, patch]) => ({
-        id: qid,
-        points: patch.points,
-        expectedAnswer: patch.expectedAnswer ?? undefined,
-        constructTags: patch.constructTags,
-      }));
-      await api.assessments.update(id, { lockedFields: locks, questions: edits });
+      await api.assessments.update(id, buildUpdate());
       navigate(`/assessments/${id}/adapt`);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "No se pudo guardar.");
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function analyze() {
+    if (!id) return;
+    setAnalyzing(true);
+    setError(null);
+    try {
+      await api.assessments.update(id, buildUpdate());
+      const updated = await api.assessments.analyze(id);
+      setAssessment(updated);
+      setDirtyQuestions({});
+      setAnalysisEdits({});
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "No se pudo analizar la prueba.");
+    } finally {
+      setAnalyzing(false);
     }
   }
 
@@ -117,34 +210,99 @@ export default function Analysis() {
           </div>
         )}
 
-        <div className="card-panel" style={{ marginBottom: 24 }}>
-          <h3 style={{ fontSize: 16, marginBottom: 12 }}>Bloqueos del docente</h3>
-          <p className="muted" style={{ fontSize: 13, marginBottom: 12 }}>
-            Estos campos nunca cambiarán en ninguna adaptación generada a partir de esta prueba.
+        <div className="card-panel" style={{ marginBottom: 24 }} data-testid="protected-elements">
+          <h3 style={{ fontSize: 16, marginBottom: 6 }}>Elementos protegidos</h3>
+          <p className="muted" style={{ fontSize: 13, marginBottom: 14 }}>
+            Lo que marques aquí no cambiará en ninguna adaptación de esta prueba: si algo lo altera, la validación lo marca como error y no se podrá exportar.
           </p>
-          <div className="row">
+          <div className="card-grid cols-3">
             {LOCK_OPTIONS.map((opt) => (
-              <label key={opt.key} className="checkbox-row">
-                <input type="checkbox" checked={locks.includes(opt.key)} onChange={() => toggleLock(opt.key)} />
-                {opt.label}
+              <label key={opt.key} className="checkbox-row" style={{ alignItems: "flex-start" }} data-lock={opt.key}>
+                <input type="checkbox" checked={locks.includes(opt.key)} onChange={() => toggleLock(opt.key)} style={{ marginTop: 3 }} />
+                <span>
+                  <strong style={{ display: "block", color: "var(--text)" }}>{opt.label}</strong>
+                  <span style={{ fontSize: 12 }} className="muted">{opt.hint}</span>
+                </span>
               </label>
             ))}
           </div>
+
+          <div className="field" style={{ marginTop: 18, marginBottom: 0 }}>
+            <label htmlFor="vocab-input">Vocabulario curricular esencial (separa los términos con comas)</label>
+            <div className="row">
+              <input
+                id="vocab-input" value={vocabInput} style={{ flex: 1, minWidth: 220 }} placeholder="carbohidratos, proteínas"
+                onChange={(e) => setVocabInput(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addVocab(); } }}
+              />
+              <button type="button" className="btn btn-sm btn-outline" onClick={addVocab}>Añadir</button>
+            </div>
+            <div className="row" style={{ marginTop: 8 }} data-testid="vocabulary-list">
+              {vocabulary.map((term) => (
+                <span key={term} className="tag-chip selected">
+                  {term}
+                  <button
+                    type="button" aria-label={`Quitar ${term}`} onClick={() => setVocabulary((prev) => prev.filter((t) => t !== term))}
+                    style={{ background: "none", border: "none", color: "inherit", cursor: "pointer", padding: 0 }}
+                  >×</button>
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
+
+        <div className="card-panel" style={{ marginBottom: 24 }} data-testid="curriculum-panel">
+          <h3 style={{ fontSize: 16, marginBottom: 6 }}>Análisis curricular (LOMLOE)</h3>
+          <p className="muted" style={{ fontSize: 13, marginBottom: 14 }}>
+            La IA propone, pregunta por pregunta, el contenido, la habilidad, las demandas y los criterios y saberes relacionados. Tú confirmas o modificas.
+            El currículo es una capa independiente: nunca cambia por un diagnóstico.
+          </p>
+          {curriculum && !curriculum.verified && (
+            <div style={{ marginBottom: 14 }}>
+              <Callout kind="warning"><strong>Datos a verificar.</strong> {curriculum.note}</Callout>
+            </div>
+          )}
+          <div className="row">
+            <div className="field" style={{ marginBottom: 0 }}>
+              <label htmlFor="an-curriculum">Currículo</label>
+              <select id="an-curriculum" value={curriculumId} onChange={(e) => { setCurriculumId(e.target.value); setAreaId(""); }}>
+                <option value="">— Sin currículo —</option>
+                {summaries.map((s) => <option key={s.id} value={s.id}>{s.stage} · {s.ccaa}</option>)}
+              </select>
+            </div>
+            <div className="field" style={{ marginBottom: 0 }}>
+              <label htmlFor="an-area">Área de la prueba</label>
+              <select id="an-area" value={areaId} disabled={!curriculum} onChange={(e) => setAreaId(e.target.value)}>
+                <option value="">— Elige —</option>
+                {curriculum?.areas.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
+              </select>
+            </div>
+            <button type="button" className="btn btn-sm" disabled={!curriculumId || !areaId || analyzing || !assessment.grade} onClick={analyze}>
+              {analyzing ? "Analizando…" : "Proponer análisis con IA"}
+            </button>
+          </div>
+          {!assessment.grade && curriculumId && (
+            <p className="field-hint" style={{ marginTop: 8 }}>Indica el curso de la prueba al subirla para acotar los criterios al ciclo correspondiente.</p>
+          )}
+        </div>
+
+        {error && <div style={{ marginBottom: 16 }}><Callout kind="error">{error}</Callout></div>}
 
         <div className="stack">
           {sections.map((section, sectionIndex) => {
             const questionRows = [...section.questions].sort((a, b) => a.order - b.order).map((q) => {
               const patch = dirtyQuestions[q.id] ?? {};
               const tags = patch.constructTags ?? q.constructTags;
+              const analysis = currentAnalysis(q);
+              const open = openAnalysis === q.id;
               return (
-                <div key={q.id} className="question-row">
+                <div key={q.id} className="question-row" data-question={q.order + 1}>
                   <div className="question-row-header">
                     <strong>Pregunta {q.order + 1}</strong>
                     <div className="row">
-                      <label style={{ fontSize: 13 }}>Puntos:</label>
+                      <label htmlFor={`pts-${q.id}`} style={{ fontSize: 13 }}>Puntos:</label>
                       <input
-                        type="number" style={{ width: 70, padding: "6px 10px" }}
+                        id={`pts-${q.id}`} type="number" style={{ width: 70, padding: "6px 10px" }}
                         value={patch.points ?? q.points}
                         onChange={(e) => patchQuestion(q.id, { points: Number(e.target.value) })}
                       />
@@ -159,8 +317,9 @@ export default function Analysis() {
                     </div>
                   )}
                   <div className="field" style={{ marginBottom: 10 }}>
-                    <label style={{ fontSize: 12 }}>Respuesta esperada (opcional; nunca se muestra a la IA)</label>
+                    <label htmlFor={`ans-${q.id}`} style={{ fontSize: 12 }}>Respuesta esperada (opcional; nunca se muestra a la IA)</label>
                     <input
+                      id={`ans-${q.id}`}
                       value={patch.expectedAnswer ?? q.expectedAnswer ?? ""}
                       onChange={(e) => patchQuestion(q.id, { expectedAnswer: e.target.value })}
                     />
@@ -171,15 +330,106 @@ export default function Analysis() {
                     </label>
                     <div className="row">
                       {CONSTRUCT_TAGS.map((tag) => (
-                        <span
-                          key={tag.key}
+                        <button
+                          type="button" key={tag.key} aria-pressed={tags.includes(tag.key)}
                           className={`tag-chip${tags.includes(tag.key) ? " selected" : ""}`}
                           onClick={() => toggleTag(q, tag.key)}
                         >
                           {tag.label}
-                        </span>
+                        </button>
                       ))}
                     </div>
+                  </div>
+
+                  <div style={{ marginTop: 14, paddingTop: 12, borderTop: "1px dashed var(--border)" }}>
+                    <div className="row spread">
+                      <span style={{ fontSize: 13, fontWeight: 600, color: "var(--text)" }}>
+                        Análisis curricular{" "}
+                        {analysis
+                          ? <span className={`badge ${analysis.confirmed ? "badge-success" : "badge-review"}`}>{analysis.confirmed ? "Confirmado" : analysis.source === "ai" ? "Propuesta de la IA" : "Editado"}</span>
+                          : <span className="badge">Sin analizar</span>}
+                      </span>
+                      <button type="button" className="btn btn-sm btn-outline" onClick={() => setOpenAnalysis(open ? null : q.id)}>
+                        {open ? "Ocultar" : analysis ? "Revisar" : "Rellenar a mano"}
+                      </button>
+                    </div>
+
+                    {open && (
+                      <div style={{ marginTop: 12 }} data-testid={`analysis-${q.order + 1}`}>
+                        <div className="row">
+                          <div className="field" style={{ flex: 1, minWidth: 220 }}>
+                            <label>Contenido evaluado</label>
+                            <input value={analysis?.content ?? ""} onChange={(e) => editAnalysis(q, { content: e.target.value })} />
+                          </div>
+                          <div className="field" style={{ flex: 1, minWidth: 220 }}>
+                            <label>Habilidad</label>
+                            <input value={analysis?.skill ?? ""} onChange={(e) => editAnalysis(q, { skill: e.target.value })} />
+                          </div>
+                        </div>
+                        <div className="row">
+                          {([
+                            ["cognitiveDemand", "Demanda cognitiva", COGNITIVE],
+                            ["linguisticDemand", "Demanda lingüística", LOADS],
+                            ["readingLoad", "Carga lectora", LOADS],
+                            ["writingLoad", "Carga escritora", LOADS],
+                            ["executiveLoad", "Carga ejecutiva", LOADS],
+                          ] as const).map(([field, label, options]) => (
+                            <div key={field} className="field" style={{ marginBottom: 8 }}>
+                              <label>{label}</label>
+                              <select value={analysis?.[field] ?? ""} onChange={(e) => editAnalysis(q, { [field]: e.target.value })}>
+                                <option value="">—</option>
+                                {options.map((o) => <option key={o} value={o}>{o}</option>)}
+                              </select>
+                            </div>
+                          ))}
+                        </div>
+
+                        <div className="field">
+                          <label>Criterios de evaluación relacionados</label>
+                          <div className="row">
+                            {(analysis?.criteriaIds ?? []).map((cid) => (
+                              <span key={cid} className="tag-chip selected" title={criteriaById.get(cid)?.text}>
+                                {cid}
+                                <button type="button" aria-label={`Quitar ${cid}`} style={{ background: "none", border: "none", color: "inherit", cursor: "pointer", padding: 0 }}
+                                  onClick={() => editAnalysis(q, { criteriaIds: (analysis?.criteriaIds ?? []).filter((x) => x !== cid) })}>×</button>
+                              </span>
+                            ))}
+                          </div>
+                          <select
+                            value="" aria-label="Añadir criterio" disabled={!area}
+                            onChange={(e) => e.target.value && editAnalysis(q, { criteriaIds: [...new Set([...(analysis?.criteriaIds ?? []), e.target.value])] })}
+                          >
+                            <option value="">+ Añadir criterio…</option>
+                            {areaCriteria.map((c) => <option key={c.id} value={c.id}>{c.id} — {c.text.slice(0, 90)}</option>)}
+                          </select>
+                        </div>
+
+                        <div className="field">
+                          <label>Contenidos / saberes relacionados</label>
+                          <div className="row">
+                            {(analysis?.contentIds ?? []).map((cid) => (
+                              <span key={cid} className="tag-chip selected" title={contentsById.get(cid)?.text}>
+                                {contentsById.get(cid)?.block.split(".")[0] ?? ""} · {(contentsById.get(cid)?.text ?? cid).slice(0, 40)}
+                                <button type="button" aria-label={`Quitar ${cid}`} style={{ background: "none", border: "none", color: "inherit", cursor: "pointer", padding: 0 }}
+                                  onClick={() => editAnalysis(q, { contentIds: (analysis?.contentIds ?? []).filter((x) => x !== cid) })}>×</button>
+                              </span>
+                            ))}
+                          </div>
+                          <select
+                            value="" aria-label="Añadir saber" disabled={!area}
+                            onChange={(e) => e.target.value && editAnalysis(q, { contentIds: [...new Set([...(analysis?.contentIds ?? []), e.target.value])] })}
+                          >
+                            <option value="">+ Añadir saber…</option>
+                            {areaContents.map((c) => <option key={c.id} value={c.id}>{c.block.split(".")[0]} — {c.text.slice(0, 90)}</option>)}
+                          </select>
+                        </div>
+
+                        <label className="checkbox-row">
+                          <input type="checkbox" checked={analysis?.confirmed ?? false} onChange={(e) => editAnalysis(q, { confirmed: e.target.checked })} />
+                          Confirmo este análisis
+                        </label>
+                      </div>
+                    )}
                   </div>
                 </div>
               );

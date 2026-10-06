@@ -8,42 +8,91 @@ public class PlanResolverInput
     public required StudentProfile Profile { get; init; }
     public int Level { get; init; } = 1;
 
-    /// <summary>Only set when the teacher has explicitly opened the curricular-adaptation path
-    /// and supplied an objective. The resolver never turns this on by itself (spec §1, §5).</summary>
+    /// <summary>True only when the teacher flipped «¿Existe adaptación curricular?» (V2 §14). The resolver never
+    /// turns this on by itself, and without it the plan can never exceed level 2.</summary>
     public bool CurricularChangeAuthorized { get; init; }
     public string? CurricularObjective { get; init; }
+    public string? CurricularReference { get; init; }
+    public IReadOnlyList<string> CurricularCriteriaIds { get; init; } = Array.Empty<string>();
+    public IReadOnlyList<string> CurricularContentIds { get; init; } = Array.Empty<string>();
+
+    /// <summary>Measures the teacher defined herself (stored in the database, V2 §3).</summary>
+    public IReadOnlyList<AdaptationRule> ExtraRules { get; init; } = Array.Empty<AdaptationRule>();
 }
 
 /// <summary>
 /// Deterministic PLAN step (spec §7 PLAN, §6 Lógica de combinación de perfiles). Produces an
-/// <see cref="AdaptationPlan"/> — which atomic rules apply, per question — without rewriting
-/// any text. Precedence, highest first: teacher LOCK > individual measure > construct
-/// protection > necessity preset > global style. Conflicts are never resolved silently.
+/// <see cref="AdaptationPlan"/> — which atomic rules apply, per question — without rewriting any text.
+/// Precedence, highest first: teacher LOCK > individual measure > construct protection > need preset > global style.
+/// Conflicts are never resolved silently, and an individual measure always beats a preset in a conflict (V2 §18).
 /// </summary>
 public static class PlanResolver
 {
     public static AdaptationPlan Resolve(PlanResolverInput input)
     {
+        var extra = input.ExtraRules.ToDictionary(r => r.Id);
+        AdaptationRule? Lookup(string id) =>
+            RuleCatalog.ById.TryGetValue(id, out var rule) ? rule : extra.GetValueOrDefault(id);
+
+        var criteriaIds = input.CurricularCriteriaIds.ToList();
+        var contentIds = input.CurricularContentIds.ToList();
+        var curricular = input.CurricularChangeAuthorized &&
+                         (!string.IsNullOrWhiteSpace(input.CurricularObjective) || criteriaIds.Count > 0);
+
+        var warnings = new List<string>();
+
+        // Level 3 (curricular adaptation) exists only behind the teacher's explicit switch; the AI/engine
+        // never lowers the level by itself.
+        var level = input.Level;
+        if (!input.CurricularChangeAuthorized && level > 2)
+        {
+            level = 2;
+            warnings.Add("NIVEL_LIMITADO: el nivel 3 (adaptación curricular) solo se activa con el interruptor «¿Existe adaptación curricular?»; se usó el nivel 2.");
+        }
+
         var plan = new AdaptationPlan
         {
             AssessmentId = input.Assessment.Id,
             ProfileId = input.Profile.Id,
-            Level = input.Level,
+            Level = level,
             Locks = new List<string>(input.Assessment.LockedFields),
-            IsCurricularChange = input.CurricularChangeAuthorized && !string.IsNullOrWhiteSpace(input.CurricularObjective),
-            CurricularObjective = input.CurricularObjective
+            IsCurricularChange = curricular,
+            CurricularObjective = input.CurricularObjective,
+            CurricularReference = input.CurricularReference,
+            CurricularCriteriaIds = criteriaIds,
+            CurricularContentIds = contentIds,
+            ProfileSettings = new Dictionary<string, string>(input.Profile.Settings),
+            Warnings = warnings
         };
 
-        var candidateRuleIds = BuildCandidateRuleIds(input.Profile);
+        var effective = MeasureSelection.Compute(
+            input.Profile.Measures, input.Profile.Accommodations, input.Profile.Exceptions, input.Profile.SchemaVersion, extra);
+        var enabled = effective.Where(e => e.Enabled && Lookup(e.RuleId) is not null).ToList();
+
+        foreach (var measure in enabled.Where(e => e.Warning is not null && e.Origin == "individual"))
+            warnings.Add($"MEDIDA_NO_RECOMENDADA: «{Lookup(measure.RuleId)!.Description}» — {measure.Warning}");
+
+        var individualIds = input.Profile.Accommodations.ToHashSet();
 
         foreach (var section in input.Assessment.Sections)
         {
             foreach (var question in section.Questions)
             {
-                var resolved = ResolveForQuestion(question, candidateRuleIds, input, plan.Warnings);
-                plan.ResolvedRulesByQuestion[question.Id] = resolved;
+                plan.ResolvedRulesByQuestion[question.Id] =
+                    ResolveForQuestion(question, enabled, individualIds, Lookup, level, plan.Warnings);
             }
         }
+
+        var appliedRules = plan.ResolvedRulesByQuestion.Values
+            .SelectMany(list => list)
+            .Where(r => r.Applied)
+            .Select(r => r.RuleId)
+            .Distinct()
+            .Select(Lookup)
+            .Where(r => r is not null)
+            .Select(r => r!)
+            .ToList();
+        plan.Style = DocumentStyleResolver.Resolve(appliedRules, plan.ProfileSettings);
 
         if (plan.IsCurricularChange)
         {
@@ -52,76 +101,51 @@ public static class PlanResolver
         }
         else
         {
+            if (input.CurricularChangeAuthorized)
+                plan.Warnings.Add("CURRICULAR_SIN_REFERENTES: activaste la adaptación curricular pero no indicaste criterios ni objetivo; no se aplicó ningún cambio curricular.");
             plan.Status = PlanStatus.Planned;
         }
 
         return plan;
     }
 
-    /// <summary>Union of every necessity preset's rule ids for this profile, plus individual
-    /// accommodations, minus explicit exceptions (spec §6 precedence: medida individual > preset).</summary>
-    private static HashSet<string> BuildCandidateRuleIds(StudentProfile profile)
-    {
-        var ids = new HashSet<string>();
-
-        foreach (var measureKey in profile.Measures)
-        {
-            if (NecessityPresets.ByKey.TryGetValue(measureKey, out var preset))
-            {
-                foreach (var ruleId in preset.RuleIds)
-                    ids.Add(ruleId);
-            }
-        }
-
-        foreach (var accommodationRuleId in profile.Accommodations)
-        {
-            if (RuleCatalog.ById.ContainsKey(accommodationRuleId))
-                ids.Add(accommodationRuleId);
-        }
-
-        foreach (var exceptionRuleId in profile.Exceptions)
-            ids.Remove(exceptionRuleId);
-
-        return ids;
-    }
-
     private static List<ResolvedRule> ResolveForQuestion(
-        Question question, HashSet<string> candidateRuleIds, PlanResolverInput input, List<string> planWarnings)
+        Question question, List<EffectiveMeasure> enabled, HashSet<string> individualIds,
+        Func<string, AdaptationRule?> lookup, int level, List<string> planWarnings)
     {
         var results = new List<ResolvedRule>();
         var appliedRuleIds = new HashSet<string>();
 
-        foreach (var ruleId in candidateRuleIds)
+        foreach (var measure in enabled)
         {
-            if (!RuleCatalog.ById.TryGetValue(ruleId, out var rule))
-                continue;
+            var ruleId = measure.RuleId;
+            var rule = lookup(ruleId)!;
 
-            if (rule.MinLevel > input.Level)
+            var isIndividualMeasure = individualIds.Contains(ruleId);
+            var source = isIndividualMeasure ? RuleSource.IndividualMeasure : RuleSource.NecessityPreset;
+
+            if (rule.MinLevel > level)
             {
                 results.Add(new ResolvedRule
                 {
                     RuleId = ruleId,
                     Source = RuleSource.NecessityPreset,
                     Applied = false,
-                    Reason = $"Requiere nivel {rule.MinLevel}, plan está en nivel {input.Level}."
+                    Reason = $"Requiere nivel {rule.MinLevel}, plan está en nivel {level}."
                 });
                 continue;
             }
 
-            var isIndividualMeasure = input.Profile.Accommodations.Contains(ruleId);
-            var source = isIndividualMeasure ? RuleSource.IndividualMeasure : RuleSource.NecessityPreset;
-
-            // Construct protection always beats a preset/individual measure (priority 3 > 4/2 for this case
-            // specifically per spec: "Impide apoyo que invalide constructo").
-            var blockedByConstruct = rule.BlockedByConstructTags.Any(question.ConstructTags.Contains);
-            if (blockedByConstruct)
+            // Construct protection always beats a preset/individual measure.
+            var blockedTags = rule.BlockedByConstructTags.Where(question.ConstructTags.Contains).ToList();
+            if (blockedTags.Count > 0)
             {
                 results.Add(new ResolvedRule
                 {
                     RuleId = ruleId,
                     Source = RuleSource.ConstructProtection,
                     Applied = false,
-                    Reason = $"Bloqueada: el constructo de esta pregunta ({string.Join(",", rule.BlockedByConstructTags.Where(question.ConstructTags.Contains))}) coincide con la protección de la regla."
+                    Reason = $"Bloqueada: el constructo de esta pregunta ({string.Join(",", blockedTags)}) coincide con la protección de la regla."
                 });
                 continue;
             }
@@ -144,41 +168,52 @@ public static class PlanResolver
                 RuleId = ruleId,
                 Source = source,
                 Applied = true,
-                Reason = rule.ApplyMode == ApplyMode.Always ? "Regla siempre activa (guardrail)." : "Aplicada."
+                ProposalOnly = rule.AltersAssessedConstruct,
+                Reason = rule.ApplyMode == ApplyMode.Always
+                    ? "Regla siempre activa (guardrail)."
+                    : rule.AltersAssessedConstruct
+                        ? "Puede cambiar lo que se evalúa: la IA solo la propone, tú decides."
+                        : "Aplicada."
             });
         }
 
-        ResolveConflicts(results, appliedRuleIds, question, planWarnings);
+        ResolveConflicts(results, appliedRuleIds, question, lookup, planWarnings);
 
-        return results.OrderByDescending(r => r.Applied).ThenBy(r => r.RuleId).ToList();
+        return results.OrderByDescending(r => r.Applied).ThenBy(r => r.RuleId, StringComparer.Ordinal).ToList();
     }
 
     private static void ResolveConflicts(
-        List<ResolvedRule> results, HashSet<string> appliedRuleIds, Question question, List<string> planWarnings)
+        List<ResolvedRule> results, HashSet<string> appliedRuleIds, Question question,
+        Func<string, AdaptationRule?> lookup, List<string> planWarnings)
     {
         foreach (var resolved in results.Where(r => r.Applied).ToList())
         {
-            if (!RuleCatalog.ById.TryGetValue(resolved.RuleId, out var rule) || rule.ConflictsWith.Count == 0)
-                continue;
+            if (!resolved.Applied) continue; // may have lost an earlier conflict in this same loop
+            var rule = lookup(resolved.RuleId)!;
+            if (rule.ConflictsWith.Count == 0) continue;
 
             foreach (var conflictId in rule.ConflictsWith)
             {
-                if (!appliedRuleIds.Contains(conflictId))
-                    continue;
+                if (!appliedRuleIds.Contains(conflictId)) continue;
 
                 var other = results.First(r => r.RuleId == conflictId);
-                var otherRule = RuleCatalog.ById[conflictId];
+                var otherRule = lookup(conflictId)!;
 
-                // Keep whichever preserves the construct better (spec §6): lower risk wins;
-                // never decide silently — always emit a warning either way.
-                var keepThis = rule.RiskLevel <= otherRule.RiskLevel;
+                // Individual measure beats a preset (V2 §18); otherwise whichever preserves the construct
+                // better (lower risk) is kept. Never silent: always emits a warning.
+                bool keepThis;
+                if (resolved.Source == RuleSource.IndividualMeasure && other.Source != RuleSource.IndividualMeasure) keepThis = true;
+                else if (other.Source == RuleSource.IndividualMeasure && resolved.Source != RuleSource.IndividualMeasure) keepThis = false;
+                else keepThis = rule.RiskLevel <= otherRule.RiskLevel;
+
                 var loser = keepThis ? other : resolved;
                 loser.Applied = false;
-                loser.Reason = $"UNSUPPORTED_CONFLICT con '{(keepThis ? resolved.RuleId : other.RuleId)}'; se mantuvo la regla de menor riesgo.";
+                loser.Reason = $"UNSUPPORTED_CONFLICT con '{(keepThis ? resolved.RuleId : other.RuleId)}'; se mantuvo {(resolved.Source == RuleSource.IndividualMeasure || other.Source == RuleSource.IndividualMeasure ? "la medida individual" : "la regla de menor riesgo")}.";
                 appliedRuleIds.Remove(loser.RuleId);
 
                 planWarnings.Add(
                     $"UNSUPPORTED_CONFLICT en pregunta {question.Id}: '{resolved.RuleId}' vs '{conflictId}' — se aplicó solo '{(keepThis ? resolved.RuleId : conflictId)}'.");
+                if (!keepThis) break;
             }
         }
     }
