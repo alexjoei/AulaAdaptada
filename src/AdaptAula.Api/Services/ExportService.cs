@@ -4,6 +4,7 @@ using AdaptAula.Domain;
 using AdaptAula.Infrastructure.Export;
 using AdaptAula.Infrastructure.Persistence;
 using AdaptAula.RulesEngine;
+using AdaptAula.Validation;
 using Microsoft.EntityFrameworkCore;
 
 namespace AdaptAula.Api.Services;
@@ -13,54 +14,68 @@ public class ExportBlockedException : Exception
     public ExportBlockedException(string message) : base(message) { }
 }
 
-/// <summary>EXPORT step (spec §7/§12): renders the adapted document and records the version +
-/// approval, but only once <see cref="SafetyValidator"/> reports no unresolved ERROR — enforced
-/// again here as the last gate before anything leaves the system.</summary>
+/// <summary>EXPORT step (spec §7/§12): renders the document the teacher approved and records the version + approval,
+/// but only once <see cref="SafetyValidator"/> reports no unresolved ERROR — enforced again here, on a fresh validation of
+/// the document as it stands now, as the last gate before anything leaves the system (V2 §17).</summary>
 public class ExportService
 {
     private readonly AdaptAulaDbContext _db;
     private readonly DocxExporter _docxExporter;
     private readonly PdfExporter _pdfExporter;
+    private readonly PlanDocumentService _documents;
+    private readonly ChangeLogWriter _changeLog;
     private readonly string _exportRoot;
 
-    public ExportService(AdaptAulaDbContext db, DocxExporter docxExporter, PdfExporter pdfExporter, IWebHostEnvironment env)
+    public ExportService(
+        AdaptAulaDbContext db, DocxExporter docxExporter, PdfExporter pdfExporter, PlanDocumentService documents,
+        ChangeLogWriter changeLog, IWebHostEnvironment env)
     {
         _db = db;
         _docxExporter = docxExporter;
         _pdfExporter = pdfExporter;
+        _documents = documents;
+        _changeLog = changeLog;
         _exportRoot = Path.Combine(env.ContentRootPath, "App_Data", "exports");
         Directory.CreateDirectory(_exportRoot);
     }
 
-    public async Task<ExportVersion> ExportAsync(
-        Assessment assessment, AdaptationPlan plan, List<AdaptedQuestion> adaptedQuestions,
-        ExportFormat format, string approvedBy, CancellationToken ct)
+    /// <summary>Blocks the export on any unresolved Error and returns the (fresh) validation results.
+    /// Anything the validator flags for review — and every curricular change — needs a named approver.</summary>
+    public async Task<List<ValidationResult>> EnsureExportableAsync(PlanAssessment ctx, string approvedBy, CancellationToken ct)
     {
-        var unresolvedErrors = await _db.ValidationResults
-            .Where(v => v.PlanId == plan.Id && v.Severity == ValidationSeverity.Error)
-            .ToListAsync(ct);
+        var (validation, _) = await _documents.RevalidateAndSaveAsync(ctx, ct);
 
-        if (unresolvedErrors.Count > 0)
-        {
-            throw new ExportBlockedException(
-                $"No se puede exportar: hay {unresolvedErrors.Count} error(es) de validación sin resolver.");
-        }
+        var errors = validation.Count(v => v.Severity == ValidationSeverity.Error);
+        if (errors > 0)
+            throw new ExportBlockedException($"No se puede exportar: hay {errors} error(es) de validación sin resolver.");
 
-        if (plan.IsCurricularChange && string.IsNullOrWhiteSpace(approvedBy))
-        {
+        if (ctx.Plan.IsCurricularChange && string.IsNullOrWhiteSpace(approvedBy))
             throw new ExportBlockedException(
                 "Cambio curricular: requiere aprobación explícita del docente (nombre/alias de quien aprueba) antes de exportar.");
-        }
 
-        var questionsById = assessment.Sections.SelectMany(s => s.Questions).ToDictionary(q => q.Id);
+        if (validation.Any(v => v.Severity == ValidationSeverity.Review) && string.IsNullOrWhiteSpace(approvedBy))
+            throw new ExportBlockedException("Hay puntos marcados para revisión: indica quién aprueba la versión antes de exportar.");
 
-        var bytes = format == ExportFormat.Docx
-            ? _docxExporter.Export(assessment, plan, questionsById, adaptedQuestions)
-            : _pdfExporter.Export(assessment, plan, questionsById, adaptedQuestions);
+        return validation;
+    }
+
+    public byte[] Render(string html, DocumentStyle style, ExportFormat format, string? footer = null)
+    {
+        var blocks = RichDocumentParser.Parse(html);
+        return format == ExportFormat.Docx
+            ? _docxExporter.Render(blocks, style)
+            : footer is null ? _pdfExporter.Render(blocks, style) : _pdfExporter.Render(blocks, style, footer);
+    }
+
+    public async Task<ExportVersion> ExportAsync(PlanAssessment ctx, ExportFormat format, string approvedBy, CancellationToken ct)
+    {
+        await EnsureExportableAsync(ctx, approvedBy, ct);
+
+        var bytes = Render(PlanDocumentService.CurrentHtml(ctx), ctx.Plan.Style, format);
 
         var extension = format == ExportFormat.Docx ? "docx" : "pdf";
-        var profile = await _db.StudentProfiles.FindAsync(new object[] { plan.ProfileId }, ct);
-        var fileName = BuildFileName(assessment, profile, extension);
+        var profile = await _db.StudentProfiles.FindAsync(new object[] { ctx.Plan.ProfileId }, ct);
+        var fileName = BuildFileName(ctx.Assessment, profile, extension);
 
         // Each export version gets its own folder so the download name can stay purely descriptive
         // (grade-subject-language-accommodations-original) without a uniqueness suffix baked in —
@@ -74,9 +89,9 @@ public class ExportService
         var version = new ExportVersion
         {
             Id = versionId,
-            AssessmentId = assessment.Id,
-            ProfileId = plan.ProfileId,
-            PlanId = plan.Id,
+            AssessmentId = ctx.Assessment.Id,
+            ProfileId = ctx.Plan.ProfileId,
+            PlanId = ctx.Plan.Id,
             Format = format,
             ApprovedBy = approvedBy,
             Hash = Convert.ToHexString(SHA256.HashData(bytes)),
@@ -84,7 +99,9 @@ public class ExportService
         };
 
         _db.ExportVersions.Add(version);
-        plan.Status = PlanStatus.Exported;
+        ctx.Plan.Status = PlanStatus.Exported;
+        _changeLog.Add(ctx.Plan.Id, null, "export", string.Empty, string.Empty, fileName,
+            $"Exportado en {extension.ToUpperInvariant()}", RiskLevel.Low, TeacherDecision.Accepted, approvedBy);
         await _db.SaveChangesAsync(ct);
 
         return version;
@@ -116,5 +133,5 @@ public class ExportService
 
     private static readonly Regex UnsafeFileNameChars = new(@"[^\w\-]+", RegexOptions.Compiled);
 
-    private static string Slugify(string value) => UnsafeFileNameChars.Replace(value.Trim(), "_").Trim('_');
+    internal static string Slugify(string value) => UnsafeFileNameChars.Replace(value.Trim(), "_").Trim('_');
 }

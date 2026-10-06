@@ -11,6 +11,12 @@ export default function Dashboard() {
     api.assessments.list().then(setAssessments).catch(() => setAssessments([]));
   }, []);
 
+  async function remove(a: Assessment) {
+    if (!window.confirm(`¿Eliminar «${a.title}»? Se borrarán también todas las adaptaciones, el historial y los archivos exportados de esta prueba.`)) return;
+    await api.assessments.remove(a.id);
+    setAssessments((prev) => (prev ?? []).filter((x) => x.id !== a.id));
+  }
+
   return (
     <div className="page">
       <div className="wrap">
@@ -40,9 +46,11 @@ export default function Dashboard() {
         {assessments !== null && assessments.length > 0 && (
           <div className="card-grid cols-2">
             {assessments.map((a) => (
-              <Link key={a.id} to={`/assessments/${a.id}/analysis`} className="card-panel" style={{ textDecoration: "none" }}>
-                <h3 style={{ fontSize: 18, marginBottom: 8 }}>{a.title}</h3>
-                <p className="muted" style={{ fontSize: 14 }}>
+              <div key={a.id} className="card-panel" data-assessment={a.title}>
+                <Link to={`/assessments/${a.id}/analysis`} style={{ textDecoration: "none" }}>
+                  <h3 style={{ fontSize: 18, marginBottom: 8 }}>{a.title}</h3>
+                </Link>
+                <p className="muted" style={{ fontSize: 14, marginBottom: 14 }}>
                   {[
                     a.subject,
                     a.grade ? `${a.grade}º` : null,
@@ -50,7 +58,11 @@ export default function Dashboard() {
                     `${a.sections.reduce((n, s) => n + s.questions.length, 0)} preguntas`,
                   ].filter(Boolean).join(" · ")}
                 </p>
-              </Link>
+                <div className="row">
+                  <Link className="btn btn-sm btn-outline" to={`/assessments/${a.id}/adapt`}>Adaptar</Link>
+                  <button className="btn btn-sm btn-outline" onClick={() => remove(a)}>Eliminar</button>
+                </div>
+              </div>
             ))}
           </div>
         )}

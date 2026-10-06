@@ -52,7 +52,10 @@ export default function Upload() {
         <Stepper steps={PIPELINE_STEPS} current={0} />
         <h1 style={{ fontSize: 28, marginBottom: 8 }}>Sube una prueba</h1>
         <p className="muted" style={{ marginBottom: 28 }}>
-          MVP1 admite DOCX, PDF con texto (no escaneado) o pegar el texto directamente.
+          Admite DOCX, PDF con texto (no escaneado) o pegar el texto directamente.
+        </p>
+        <p className="field-hint" style={{ marginBottom: 20 }}>
+          🔒 Las pruebas y las adaptaciones son información educativa sensible: no incluyas nombres de alumnos en el documento y bórralo desde el panel cuando ya no lo necesites.
         </p>
 
         <div className="card-panel">

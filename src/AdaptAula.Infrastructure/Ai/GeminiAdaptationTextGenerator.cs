@@ -83,9 +83,14 @@ public class GeminiAdaptationTextGenerator : IAdaptationTextGenerator
                     RuleId = c.RuleId,
                     Description = c.Description,
                     Category = request.AppliedRules.FirstOrDefault(r => r.RuleId == c.RuleId)?.Category ?? string.Empty,
-                    Reason = string.Empty
+                    Reason = string.Empty,
+                    Before = c.Before,
+                    After = c.After
                 }).ToList(),
-                Warnings: payload.Warnings));
+                Warnings: payload.Warnings,
+                Proposal: payload.Proposal is { } proposal && !string.IsNullOrWhiteSpace(proposal.ProposedText)
+                    ? new AdaptationProposal(proposal.ProposedText, proposal.RuleIds, proposal.Reason)
+                    : null));
         }
 
         return results;
@@ -110,8 +115,31 @@ public class GeminiAdaptationTextGenerator : IAdaptationTextGenerator
                 sb.AppendLine($"Constructo evaluado (no debe verse comprometido): {string.Join(", ", request.Question.ConstructTags)}");
 
             sb.AppendLine("REGLAS RESUELTAS A APLICAR A ESTA PREGUNTA (ya decididas, no las cuestiones ni añadas otras):");
-            foreach (var rule in request.AppliedRules)
+            foreach (var rule in request.AppliedRules.Where(r => !r.ProposalOnly))
                 sb.AppendLine($"- [{rule.RuleId}] ({rule.Category}) {rule.Description}");
+
+            var proposalRules = request.AppliedRules.Where(r => r.ProposalOnly).ToList();
+            if (proposalRules.Count > 0)
+            {
+                sb.AppendLine("REGLAS SOLO COMO PROPUESTA (pueden cambiar lo que se evalúa: NO las apliques a adapted_text; devuelve el texto resultante en proposal con su motivo):");
+                foreach (var rule in proposalRules)
+                    sb.AppendLine($"- [{rule.RuleId}] ({rule.Category}) {rule.Description}");
+            }
+
+            if (request.Protected is { } prot)
+            {
+                if (prot.LockedElements.Count > 0)
+                    sb.AppendLine($"ELEMENTOS PROTEGIDOS POR EL DOCENTE (no pueden cambiar): {string.Join(", ", prot.LockedElements)}. La prueba tiene {prot.QuestionCount} preguntas y esta debe seguir existiendo con su misma numeración.");
+                if (prot.ProtectedVocabulary.Count > 0)
+                    sb.AppendLine($"VOCABULARIO CURRICULAR PROTEGIDO (debe aparecer literalmente si estaba en el original): {string.Join(", ", prot.ProtectedVocabulary)}");
+            }
+
+            if (request.CurricularReferents is { Count: > 0 })
+            {
+                sb.AppendLine("REFERENTES CURRICULARES ELEGIDOS POR EL DOCENTE (criterios/saberes aplicables):");
+                foreach (var referent in request.CurricularReferents)
+                    sb.AppendLine($"- {referent}");
+            }
 
             if (request.IsCurricularChange)
             {
@@ -142,7 +170,10 @@ public class GeminiAdaptationTextGenerator : IAdaptationTextGenerator
         (9) Formatea "adapted_text" para que se lea con claridad cuando se imprima: cada paso numerado en su propia línea (usa un salto de línea real entre pasos, nunca los concatenes en una sola frase), y cada opción de respuesta (A, B, C, D...) en su propia línea separada de la pregunta.
         (10) Nunca incluyas casillas de verificación, la palabra "Checklist" ni ningún marcador de progreso (p. ej. "[ ]") dentro de "adapted_text". Cualquier elemento de apoyo, checklist o seguimiento de progreso va exclusivamente en "supports", uno por elemento, sin duplicarlo también en "adapted_text".
         (11) Trata cada pregunta numerada de forma completamente independiente: nunca compartas ni mezcles apoyos, checklist, glosario o contexto entre preguntas distintas, aunque traten un tema parecido.
-        (12) Devuelve exactamente un elemento por cada pregunta numerada que se te indique, con su "question_index" igual al número de esa pregunta.
+        (12) Las reglas marcadas "SOLO COMO PROPUESTA" nunca se aplican a "adapted_text": ese texto solo lleva las reglas normales. Si hay reglas de propuesta, devuelve en "proposal" el texto completo resultante de aplicarlas además de las normales, los "rule_ids" implicados y un "reason" breve que diga qué podría cambiar respecto a lo evaluado. Si no hay reglas de propuesta, omite "proposal".
+        (13) En cada elemento de "change_log", rellena "before" con el fragmento original afectado y "after" con cómo quedó (fragmentos cortos y literales), para poder señalar qué medida provocó cada cambio.
+        (14) Respeta los ELEMENTOS PROTEGIDOS y el VOCABULARIO PROTEGIDO de cada pregunta sin excepción: nunca cambies el idioma, el número de preguntas, su numeración ni el vocabulario protegido.
+        (15) Devuelve exactamente un elemento por cada pregunta numerada que se te indique, con su "question_index" igual al número de esa pregunta.
         SALIDA: un array JSON estructurado según el esquema proporcionado, un elemento por pregunta.
         """;
 
@@ -164,9 +195,26 @@ public class GeminiAdaptationTextGenerator : IAdaptationTextGenerator
                     items = new
                     {
                         type = "OBJECT",
-                        properties = new { rule_id = new { type = "STRING" }, description = new { type = "STRING" } },
+                        properties = new
+                        {
+                            rule_id = new { type = "STRING" },
+                            description = new { type = "STRING" },
+                            before = new { type = "STRING" },
+                            after = new { type = "STRING" }
+                        },
                         required = new[] { "rule_id", "description" }
                     }
+                },
+                proposal = new
+                {
+                    type = "OBJECT",
+                    properties = new
+                    {
+                        proposed_text = new { type = "STRING" },
+                        rule_ids = new { type = "ARRAY", items = new { type = "STRING" } },
+                        reason = new { type = "STRING" }
+                    },
+                    required = new[] { "proposed_text", "rule_ids", "reason" }
                 },
                 warnings = new { type = "ARRAY", items = new { type = "STRING" } }
             },

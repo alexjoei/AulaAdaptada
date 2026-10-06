@@ -104,6 +104,21 @@ internal class GeminiAdaptedQuestionPayload
 
     [JsonPropertyName("warnings")]
     public List<string> Warnings { get; set; } = new();
+
+    [JsonPropertyName("proposal")]
+    public GeminiProposalPayload? Proposal { get; set; }
+}
+
+internal class GeminiProposalPayload
+{
+    [JsonPropertyName("proposed_text")]
+    public string ProposedText { get; set; } = string.Empty;
+
+    [JsonPropertyName("rule_ids")]
+    public List<string> RuleIds { get; set; } = new();
+
+    [JsonPropertyName("reason")]
+    public string Reason { get; set; } = string.Empty;
 }
 
 internal class GeminiChangeLogEntryPayload
@@ -113,6 +128,12 @@ internal class GeminiChangeLogEntryPayload
 
     [JsonPropertyName("description")]
     public string Description { get; set; } = string.Empty;
+
+    [JsonPropertyName("before")]
+    public string Before { get; set; } = string.Empty;
+
+    [JsonPropertyName("after")]
+    public string After { get; set; } = string.Empty;
 }
 
 /// <summary>Shape the model is constrained to return via response_schema for the document

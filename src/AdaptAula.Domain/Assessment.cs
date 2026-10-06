@@ -27,6 +27,13 @@ public class Assessment
     /// otherwise represented) — they aren't yet tied to a specific section/question.</summary>
     public List<string> ImageDataUris { get; set; } = new();
 
+    /// <summary>Curricular terms that must survive every adaptation verbatim (V2 §8 "vocabulario curricular esencial").</summary>
+    public List<string> ProtectedVocabulary { get; set; } = new();
+
+    /// <summary>Curriculum the teacher is working against, e.g. "madrid-primaria" and the area id inside it (V2 §6).</summary>
+    public string? CurriculumId { get; set; }
+    public string? CurriculumAreaId { get; set; }
+
     public List<Section> Sections { get; set; } = new();
 }
 
@@ -73,4 +80,29 @@ public class Question
     /// <see cref="Assessment.ImageDataUris"/> instead. See <see cref="Section.AssetRefs"/> for
     /// images belonging to a shared passage rather than one question.</summary>
     public List<string> AssetRefs { get; set; } = new();
+
+    /// <summary>Per-question curricular/cognitive analysis proposed by the AI and confirmed or edited by the teacher (V2 §7).</summary>
+    public QuestionAnalysis? Analysis { get; set; }
+}
+
+public class QuestionAnalysis
+{
+    public string Content { get; set; } = string.Empty;
+    public string Skill { get; set; } = string.Empty;
+
+    /// <summary>Bloom-style level: recordar | comprender | aplicar | analizar | evaluar | crear.</summary>
+    public string CognitiveDemand { get; set; } = string.Empty;
+
+    /// <summary>baja | media | alta for each load.</summary>
+    public string LinguisticDemand { get; set; } = string.Empty;
+    public string ReadingLoad { get; set; } = string.Empty;
+    public string WritingLoad { get; set; } = string.Empty;
+    public string ExecutiveLoad { get; set; } = string.Empty;
+
+    public List<string> CriteriaIds { get; set; } = new();
+    public List<string> ContentIds { get; set; } = new();
+
+    /// <summary>"ai" until the teacher touches it, then "teacher".</summary>
+    public string Source { get; set; } = "ai";
+    public bool Confirmed { get; set; }
 }

@@ -29,11 +29,16 @@ public class AdaptationPipelineService
     }
 
     public async Task<(List<AdaptedQuestion> Adapted, List<ValidationResult> Validation)> GenerateAndValidateAsync(
-        Assessment assessment, AdaptationPlan plan, double? extractionConfidence, CancellationToken ct)
+        Assessment assessment, AdaptationPlan plan, double? extractionConfidence, CancellationToken ct,
+        IReadOnlyDictionary<string, AdaptationRule>? extraRules = null,
+        IReadOnlyList<string>? curricularReferents = null)
     {
         var questionsById = assessment.Sections
             .SelectMany(s => s.Questions)
             .ToDictionary(q => q.Id);
+
+        var protectedContext = new ProtectedContext(
+            plan.Locks.ToList(), assessment.ProtectedVocabulary.ToList(), questionsById.Count);
 
         var adapted = new List<AdaptedQuestion>();
         var pendingRequests = new List<AdaptationTextRequest>();
@@ -46,13 +51,14 @@ public class AdaptationPipelineService
             if (!questionsById.TryGetValue(questionId, out var question))
                 continue;
 
+            // Only Text/Support measures are instructions for the AI. Style measures are rendered by the exporter and
+            // Logistics measures (extra time, scribe…) are reported to the teacher — neither needs a rewrite.
             var appliedInstructions = resolvedRules
                 .Where(r => r.Applied)
-                .Select(r => RuleCatalog.ById.TryGetValue(r.RuleId, out var rule)
-                    ? new AppliedRuleInstruction(rule.Id, rule.Description, rule.Category.ToString(), rule.RequiresTeacherReview)
-                    : null)
-                .Where(instruction => instruction is not null)
-                .Select(instruction => instruction!)
+                .Select(r => (Resolved: r, Rule: Lookup(r.RuleId, extraRules)))
+                .Where(x => x.Rule is not null && x.Rule.Kind is MeasureKind.Text or MeasureKind.Support)
+                .Select(x => new AppliedRuleInstruction(
+                    x.Rule!.Id, x.Rule.Description, x.Rule.Category.ToString(), x.Rule.RequiresTeacherReview, x.Resolved.ProposalOnly))
                 .ToList();
 
             if (appliedInstructions.Count == 0 && !plan.IsCurricularChange)
@@ -63,7 +69,7 @@ public class AdaptationPipelineService
 
             pendingRequests.Add(new AdaptationTextRequest(
                 question, appliedInstructions, plan.Level, assessment.Language,
-                plan.IsCurricularChange, plan.CurricularObjective));
+                plan.IsCurricularChange, plan.CurricularObjective, protectedContext, curricularReferents));
         }
 
         _progress.Start(plan.Id, pendingRequests.Count);
@@ -86,6 +92,9 @@ public class AdaptationPipelineService
         var validation = SafetyValidator.Validate(plan, assessment, questionsById, adapted, extractionConfidence);
         return (adapted, validation);
     }
+
+    private static AdaptationRule? Lookup(string id, IReadOnlyDictionary<string, AdaptationRule>? extra) =>
+        RuleCatalog.ById.TryGetValue(id, out var rule) ? rule : extra?.GetValueOrDefault(id);
 
     private async Task GenerateBatchWithFallbackAsync(
         AdaptationPlan plan, IReadOnlyList<AdaptationTextRequest> batch, List<AdaptedQuestion> adapted, CancellationToken ct)
@@ -128,7 +137,11 @@ public class AdaptationPipelineService
                 ResponseMode = response.ResponseMode,
                 Supports = response.Supports,
                 Points = request.Question.Points, // always the original — never taken from the AI response
-                ChangeLog = response.ChangeLog
+                ChangeLog = response.ChangeLog,
+                // A change that might alter what is assessed is parked here, never applied silently (V2 §23).
+                Proposal = response.Proposal is { } proposal && proposal.ProposedText.Trim() != response.AdaptedText.Trim()
+                    ? new QuestionProposal { ProposedText = proposal.ProposedText, RuleIds = proposal.RuleIds, Reason = proposal.Reason }
+                    : null
             });
 
             foreach (var warning in response.Warnings)

@@ -34,22 +34,42 @@ Directory.CreateDirectory(Path.Combine(builder.Environment.ContentRootPath, "App
 builder.Services.AddDbContext<AdaptAulaDbContext>(options => options.UseSqlite(connectionString));
 
 builder.Services.Configure<GeminiOptions>(builder.Configuration.GetSection(GeminiOptions.SectionName));
-builder.Services.AddHttpClient<IAdaptationTextGenerator, GeminiAdaptationTextGenerator>();
-builder.Services.AddHttpClient<IDocumentStructureExtractor, GeminiDocumentStructureExtractor>();
+
+// Ai:Provider = "Offline" swaps the Gemini services for deterministic rule-based stand-ins (no API key, no network) so the
+// whole app can be demoed and tested end to end. Anything else (the default) uses Gemini.
+if (string.Equals(builder.Configuration["Ai:Provider"], "Offline", StringComparison.OrdinalIgnoreCase))
+{
+    builder.Services.AddSingleton<IAdaptationTextGenerator, OfflineAdaptationTextGenerator>();
+    builder.Services.AddSingleton<IDocumentStructureExtractor, OfflineDocumentStructureExtractor>();
+    builder.Services.AddSingleton<ITextToolService, OfflineTextToolService>();
+    builder.Services.AddSingleton<IQuestionAnalyzer, OfflineQuestionAnalyzer>();
+}
+else
+{
+    builder.Services.AddHttpClient<IAdaptationTextGenerator, GeminiAdaptationTextGenerator>();
+    builder.Services.AddHttpClient<IDocumentStructureExtractor, GeminiDocumentStructureExtractor>();
+    builder.Services.AddHttpClient<GeminiJsonClient>();
+    builder.Services.AddTransient<ITextToolService, GeminiTextToolService>();
+    builder.Services.AddTransient<IQuestionAnalyzer, GeminiQuestionAnalyzer>();
+}
 
 builder.Services.AddSingleton<DocumentIngestionService>();
 builder.Services.AddSingleton<DocxExporter>();
 builder.Services.AddSingleton<PdfExporter>();
 builder.Services.AddSingleton<GenerationProgressTracker>();
 builder.Services.AddScoped<AdaptationPipelineService>();
+builder.Services.AddSingleton<CurriculumService>();
+builder.Services.AddScoped<PlanDocumentService>();
+builder.Services.AddScoped<ChangeLogWriter>();
 builder.Services.AddScoped<ExportService>();
+builder.Services.AddScoped<PackExportService>();
 
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AdaptAulaDbContext>();
-    db.Database.EnsureCreated();
+    SchemaUpgrader.Upgrade(db);
 }
 
 if (app.Environment.IsDevelopment())
@@ -81,3 +101,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { }

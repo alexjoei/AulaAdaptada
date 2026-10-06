@@ -7,7 +7,14 @@ namespace AdaptAula.Infrastructure.Ai;
 /// decided by the deterministic <c>PlanResolver</c>. The generator only rewrites text; it never
 /// decides which adaptations apply.
 /// </summary>
-public record AppliedRuleInstruction(string RuleId, string Description, string Category, bool RequiresTeacherReview);
+public record AppliedRuleInstruction(
+    string RuleId, string Description, string Category, bool RequiresTeacherReview, bool ProposalOnly = false);
+
+/// <summary>Everything the teacher locked before generating (V2 §8), passed to the AI as hard constraints.</summary>
+public record ProtectedContext(
+    IReadOnlyList<string> LockedElements,
+    IReadOnlyList<string> ProtectedVocabulary,
+    int QuestionCount);
 
 public record AdaptationTextRequest(
     Question Question,
@@ -15,7 +22,12 @@ public record AdaptationTextRequest(
     int Level,
     string Language,
     bool IsCurricularChange,
-    string? CurricularObjective);
+    string? CurricularObjective,
+    ProtectedContext? Protected = null,
+    IReadOnlyList<string>? CurricularReferents = null);
+
+/// <summary>A change that could alter what is assessed; kept apart from the adapted text so the teacher decides (V2 §23).</summary>
+public record AdaptationProposal(string ProposedText, List<string> RuleIds, string Reason);
 
 /// <summary>
 /// The AI's draft for one question. Deliberately excludes Points and ExpectedAnswer — those are
@@ -32,7 +44,8 @@ public record AdaptationTextResponse(
     ResponseMode ResponseMode,
     List<string> Supports,
     List<ChangeLogEntry> ChangeLog,
-    List<string> Warnings);
+    List<string> Warnings,
+    AdaptationProposal? Proposal = null);
 
 /// <summary>Swappable AI provider boundary (spec: keep the concrete model/vendor out of the rest
 /// of the pipeline so it can move from a free tier to a paid one without other changes).</summary>

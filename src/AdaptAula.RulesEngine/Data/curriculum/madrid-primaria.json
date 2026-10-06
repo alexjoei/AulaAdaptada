@@ -1,0 +1,2068 @@
+{
+ "id": "madrid-primaria",
+ "ccaa": "Comunidad de Madrid",
+ "stage": "Educación Primaria",
+ "legalBasis": "LOMLOE · Real Decreto 157/2022 (enseñanzas mínimas) · Decreto 61/2022 de la Comunidad de Madrid",
+ "verified": false,
+ "note": "Transcripción de referencia hecha de memoria y aproximada: las redacciones de criterios y saberes pueden diferir del texto oficial. Verifica cada referente con el BOCM antes de usarlo en una decisión de evaluación. Áreas incluidas por ahora: Matemáticas, Lengua Castellana y Literatura y Conocimiento del Medio Natural, Social y Cultural.",
+ "cycles": [
+  {
+   "id": "c1",
+   "name": "Primer ciclo",
+   "grades": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "c2",
+   "name": "Segundo ciclo",
+   "grades": [
+    3,
+    4
+   ]
+  },
+  {
+   "id": "c3",
+   "name": "Tercer ciclo",
+   "grades": [
+    5,
+    6
+   ]
+  }
+ ],
+ "keyCompetences": [
+  {
+   "id": "CCL",
+   "name": "Competencia en comunicación lingüística",
+   "descriptors": [
+    {
+     "id": "CCL1",
+     "text": "Expresa hechos, conceptos, pensamientos, opiniones o sentimientos de forma oral, escrita, signada o multimodal, con claridad y adecuación a distintos contextos."
+    },
+    {
+     "id": "CCL2",
+     "text": "Comprende, interpreta y valora textos orales, escritos, signados o multimodales sencillos de los ámbitos personal, social y educativo."
+    },
+    {
+     "id": "CCL3",
+     "text": "Localiza, selecciona y contrasta, con el debido acompañamiento, información sencilla procedente de dos o más fuentes."
+    },
+    {
+     "id": "CCL4",
+     "text": "Lee obras diversas adecuadas a su progreso madurativo y participa de manera progresiva en la construcción de la interpretación literaria."
+    },
+    {
+     "id": "CCL5",
+     "text": "Pone sus prácticas comunicativas al servicio de la convivencia democrática, la resolución dialogada de los conflictos y la igualdad de derechos."
+    }
+   ]
+  },
+  {
+   "id": "CP",
+   "name": "Competencia plurilingüe",
+   "descriptors": [
+    {
+     "id": "CP1",
+     "text": "Usa, al menos, una lengua además de la lengua o lenguas familiares para responder a necesidades comunicativas sencillas y predecibles."
+    },
+    {
+     "id": "CP2",
+     "text": "A partir de sus experiencias, reconoce la diversidad de perfiles lingüísticos y experimenta estrategias que favorecen la comunicación entre lenguas."
+    },
+    {
+     "id": "CP3",
+     "text": "Conoce y respeta la diversidad lingüística y cultural presente en su entorno, reconociendo y comprendiendo su valor como factor de diálogo."
+    }
+   ]
+  },
+  {
+   "id": "STEM",
+   "name": "Competencia matemática y en ciencia, tecnología e ingeniería",
+   "descriptors": [
+    {
+     "id": "STEM1",
+     "text": "Utiliza métodos inductivos y deductivos propios del razonamiento matemático en situaciones conocidas y selecciona y emplea diferentes estrategias para resolver problemas."
+    },
+    {
+     "id": "STEM2",
+     "text": "Utiliza el pensamiento científico para entender y explicar los fenómenos que ocurren a su alrededor, confiando en el conocimiento como motor de desarrollo."
+    },
+    {
+     "id": "STEM3",
+     "text": "Realiza proyectos, diseñando, fabricando y evaluando diferentes prototipos o modelos, adaptándose ante la incertidumbre, para generar cooperativamente un producto creativo."
+    },
+    {
+     "id": "STEM4",
+     "text": "Interpreta y transmite los elementos más relevantes de procesos, razonamientos, demostraciones, métodos y resultados científicos y matemáticos en diferentes formatos."
+    },
+    {
+     "id": "STEM5",
+     "text": "Participa en acciones fundamentadas científicamente para promover la salud y preservar el medio ambiente y los seres vivos."
+    }
+   ]
+  },
+  {
+   "id": "CD",
+   "name": "Competencia digital",
+   "descriptors": [
+    {
+     "id": "CD1",
+     "text": "Realiza búsquedas guiadas en internet y hace uso de estrategias sencillas para el tratamiento digital de la información."
+    },
+    {
+     "id": "CD2",
+     "text": "Crea, integra y reelabora contenidos digitales en distintos formatos mediante el uso de diversas herramientas digitales."
+    },
+    {
+     "id": "CD3",
+     "text": "Participa en actividades o proyectos escolares mediante el uso de herramientas o plataformas virtuales para construir nuevo conocimiento y comunicarse."
+    },
+    {
+     "id": "CD4",
+     "text": "Conoce los riesgos y adopta, con la orientación del docente, medidas preventivas al usar las tecnologías digitales para proteger los dispositivos, los datos personales, la salud y el medioambiente."
+    },
+    {
+     "id": "CD5",
+     "text": "Se inicia en el desarrollo de soluciones digitales sencillas y sostenibles para resolver problemas concretos."
+    }
+   ]
+  },
+  {
+   "id": "CPSAA",
+   "name": "Competencia personal, social y de aprender a aprender",
+   "descriptors": [
+    {
+     "id": "CPSAA1",
+     "text": "Es consciente de las propias emociones, ideas y comportamientos personales y emplea estrategias para gestionarlas en situaciones de tensión o conflicto."
+    },
+    {
+     "id": "CPSAA2",
+     "text": "Conoce los riesgos más relevantes y los principales activos para la salud, adopta estilos de vida saludables y sostenibles y reconoce conductas contrarias a la convivencia."
+    },
+    {
+     "id": "CPSAA3",
+     "text": "Reconoce y respeta las emociones y experiencias de las demás personas, participa activamente en el trabajo en grupo y asume las responsabilidades individuales asignadas."
+    },
+    {
+     "id": "CPSAA4",
+     "text": "Reconoce la importancia de la influencia del entorno, las personas y la cultura en el desarrollo personal y valora la importancia del aprendizaje permanente."
+    },
+    {
+     "id": "CPSAA5",
+     "text": "Planea objetivos a corto plazo, utiliza estrategias de aprendizaje cooperativo y autorregula su proceso de aprendizaje."
+    }
+   ]
+  },
+  {
+   "id": "CC",
+   "name": "Competencia ciudadana",
+   "descriptors": [
+    {
+     "id": "CC1",
+     "text": "Entiende los procesos históricos y sociales más relevantes relativos a su propia identidad y cultura y reconoce los valores del sistema democrático."
+    },
+    {
+     "id": "CC2",
+     "text": "Participa en actividades comunitarias, en la toma de decisiones y en la resolución de los conflictos de forma dialogada y respetuosa con los procedimientos democráticos."
+    },
+    {
+     "id": "CC3",
+     "text": "Reflexiona y dialoga sobre valores y problemas éticos de actualidad, comprendiendo la necesidad de respetar diferentes culturas y creencias."
+    },
+    {
+     "id": "CC4",
+     "text": "Comprende las relaciones sistémicas entre las acciones humanas y el entorno y se inicia en la adopción de estilos de vida sostenibles."
+    }
+   ]
+  },
+  {
+   "id": "CE",
+   "name": "Competencia emprendedora",
+   "descriptors": [
+    {
+     "id": "CE1",
+     "text": "Reconoce necesidades y retos que afrontar y elabora ideas originales, utilizando destrezas creativas y tomando conciencia de las consecuencias y efectos que estas ideas pudieran generar."
+    },
+    {
+     "id": "CE2",
+     "text": "Identifica fortalezas y debilidades propias utilizando estrategias de autoconocimiento y comprende los elementos fundamentales de la economía y las finanzas."
+    },
+    {
+     "id": "CE3",
+     "text": "Crea ideas y soluciones originales, planifica tareas, coopera con otros y valora el proceso realizado y el resultado obtenido."
+    }
+   ]
+  },
+  {
+   "id": "CCEC",
+   "name": "Competencia en conciencia y expresión culturales",
+   "descriptors": [
+    {
+     "id": "CCEC1",
+     "text": "Reconoce y aprecia los aspectos fundamentales del patrimonio cultural y artístico, comprendiendo las diferencias entre distintas culturas."
+    },
+    {
+     "id": "CCEC2",
+     "text": "Reconoce y se interesa por las especificidades e intencionalidades de las manifestaciones artísticas y culturales más destacadas del patrimonio."
+    },
+    {
+     "id": "CCEC3",
+     "text": "Expresa ideas, opiniones, sentimientos y emociones por medio de producciones culturales y artísticas, integrando su propio cuerpo y desarrollando su autoestima."
+    },
+    {
+     "id": "CCEC4",
+     "text": "Conoce, selecciona y utiliza con creatividad diversos medios y soportes, así como técnicas plásticas, visuales, audiovisuales, sonoras o corporales, para la creación de productos artísticos."
+    }
+   ]
+  }
+ ],
+ "areas": [
+  {
+   "id": "mat",
+   "name": "Matemáticas",
+   "competences": [
+    {
+     "id": "mat.ce1",
+     "number": 1,
+     "text": "Interpretar situaciones de la vida cotidiana proporcionando una representación matemática de las mismas a partir de la identificación de los aspectos relevantes, para obtener informaciones y conclusiones que permitan responder a situaciones reales.",
+     "keyDescriptors": [
+      "STEM1",
+      "STEM2",
+      "STEM4"
+     ]
+    },
+    {
+     "id": "mat.ce2",
+     "number": 2,
+     "text": "Resolver situaciones problematizadas, aplicando diferentes técnicas, estrategias y formas de razonamiento, para explorar distintas maneras de proceder, obtener soluciones y asegurar su validez desde un punto de vista formal y en relación con el contexto planteado.",
+     "keyDescriptors": [
+      "STEM1",
+      "STEM2",
+      "CD5",
+      "CE3"
+     ]
+    },
+    {
+     "id": "mat.ce3",
+     "number": 3,
+     "text": "Explorar, formular y comprobar conjeturas sencillas o plantear problemas de tipo matemático en situaciones basadas en la vida cotidiana, de forma guiada, reconociendo el valor del razonamiento y la argumentación para contrastar su validez, adquirir e integrar nuevo conocimiento.",
+     "keyDescriptors": [
+      "CCL1",
+      "STEM1",
+      "STEM2",
+      "CE3"
+     ]
+    },
+    {
+     "id": "mat.ce4",
+     "number": 4,
+     "text": "Utilizar el pensamiento computacional, organizando datos, descomponiendo en partes, reconociendo patrones, generalizando e interpretando, modificando y creando algoritmos de forma guiada, para modelizar y automatizar situaciones de la vida cotidiana.",
+     "keyDescriptors": [
+      "STEM1",
+      "STEM3",
+      "CD5",
+      "CE3"
+     ]
+    },
+    {
+     "id": "mat.ce5",
+     "number": 5,
+     "text": "Reconocer y utilizar conexiones entre las diferentes ideas matemáticas, así como identificar las matemáticas implicadas en otras áreas o en la vida cotidiana, interrelacionando conceptos y procedimientos, para interpretar situaciones y contextos diversos.",
+     "keyDescriptors": [
+      "STEM1",
+      "STEM3",
+      "CD3",
+      "CC4",
+      "CCEC1"
+     ]
+    },
+    {
+     "id": "mat.ce6",
+     "number": 6,
+     "text": "Comunicar y representar, de forma individual y colectiva, conceptos, procedimientos y resultados matemáticos, utilizando el lenguaje oral, escrito, gráfico, multimodal y la terminología apropiados, para dar significado y permanencia a las ideas matemáticas.",
+     "keyDescriptors": [
+      "CCL1",
+      "CCL3",
+      "STEM2",
+      "STEM4",
+      "CD3"
+     ]
+    },
+    {
+     "id": "mat.ce7",
+     "number": 7,
+     "text": "Desarrollar destrezas personales que ayuden a identificar y gestionar emociones al enfrentarse a retos matemáticos, fomentando la confianza en las propias posibilidades, aceptando el error como parte del proceso de aprendizaje y adaptándose a las situaciones de incertidumbre, para mejorar la perseverancia y disfrutar en el aprendizaje de las matemáticas.",
+     "keyDescriptors": [
+      "CPSAA1",
+      "CPSAA4",
+      "CPSAA5",
+      "CE2"
+     ]
+    },
+    {
+     "id": "mat.ce8",
+     "number": 8,
+     "text": "Desarrollar destrezas sociales, reconociendo y respetando las emociones, las experiencias de los demás y el valor de la diversidad, y participando activamente en equipos de trabajo heterogéneos con roles asignados, para construir una identidad positiva como estudiante de matemáticas, fomentar el bienestar personal y crear relaciones saludables.",
+     "keyDescriptors": [
+      "CP3",
+      "CPSAA3",
+      "CC2",
+      "CC3"
+     ]
+    }
+   ],
+   "criteria": [
+    {
+     "id": "mat.c1.1.1",
+     "cycle": "c1",
+     "competenceId": "mat.ce1",
+     "text": "Interpretar de forma verbal o gráfica problemas de la vida cotidiana, comprendiendo las preguntas planteadas a través de diferentes estrategias o herramientas, incluidas las tecnológicas."
+    },
+    {
+     "id": "mat.c2.1.1",
+     "cycle": "c2",
+     "competenceId": "mat.ce1",
+     "text": "Interpretar de forma verbal o gráfica problemas de la vida cotidiana, comprendiendo las preguntas planteadas a través de diferentes estrategias o herramientas, incluidas las tecnológicas."
+    },
+    {
+     "id": "mat.c3.1.1",
+     "cycle": "c3",
+     "competenceId": "mat.ce1",
+     "text": "Interpretar de forma verbal o gráfica problemas de la vida cotidiana, comprendiendo las preguntas planteadas a través de diferentes estrategias o herramientas, incluidas las tecnológicas."
+    },
+    {
+     "id": "mat.c1.2.1",
+     "cycle": "c1",
+     "competenceId": "mat.ce2",
+     "text": "Emplear algunas estrategias adecuadas en la resolución de problemas."
+    },
+    {
+     "id": "mat.c1.2.2",
+     "cycle": "c1",
+     "competenceId": "mat.ce2",
+     "text": "Obtener posibles soluciones de un problema, seleccionando entre varias estrategias conocidas de forma autónoma."
+    },
+    {
+     "id": "mat.c2.2.1",
+     "cycle": "c2",
+     "competenceId": "mat.ce2",
+     "text": "Emplear algunas estrategias adecuadas en la resolución de problemas."
+    },
+    {
+     "id": "mat.c2.2.2",
+     "cycle": "c2",
+     "competenceId": "mat.ce2",
+     "text": "Obtener posibles soluciones de un problema, seleccionando entre varias estrategias conocidas de forma autónoma."
+    },
+    {
+     "id": "mat.c3.2.1",
+     "cycle": "c3",
+     "competenceId": "mat.ce2",
+     "text": "Emplear algunas estrategias adecuadas en la resolución de problemas."
+    },
+    {
+     "id": "mat.c3.2.2",
+     "cycle": "c3",
+     "competenceId": "mat.ce2",
+     "text": "Obtener posibles soluciones de un problema, seleccionando entre varias estrategias conocidas de forma autónoma."
+    },
+    {
+     "id": "mat.c1.3.1",
+     "cycle": "c1",
+     "competenceId": "mat.ce3",
+     "text": "Formular y comprobar conjeturas sencillas, de forma guiada, en situaciones basadas en la vida cotidiana."
+    },
+    {
+     "id": "mat.c1.3.2",
+     "cycle": "c1",
+     "competenceId": "mat.ce3",
+     "text": "Plantear nuevos problemas sobre situaciones cotidianas que se resuelvan matemáticamente."
+    },
+    {
+     "id": "mat.c2.3.1",
+     "cycle": "c2",
+     "competenceId": "mat.ce3",
+     "text": "Formular y comprobar conjeturas sencillas, de forma guiada, en situaciones basadas en la vida cotidiana."
+    },
+    {
+     "id": "mat.c2.3.2",
+     "cycle": "c2",
+     "competenceId": "mat.ce3",
+     "text": "Plantear nuevos problemas sobre situaciones cotidianas que se resuelvan matemáticamente."
+    },
+    {
+     "id": "mat.c3.3.1",
+     "cycle": "c3",
+     "competenceId": "mat.ce3",
+     "text": "Formular y comprobar conjeturas sencillas, de forma guiada, en situaciones basadas en la vida cotidiana."
+    },
+    {
+     "id": "mat.c3.3.2",
+     "cycle": "c3",
+     "competenceId": "mat.ce3",
+     "text": "Plantear nuevos problemas sobre situaciones cotidianas que se resuelvan matemáticamente."
+    },
+    {
+     "id": "mat.c1.4.1",
+     "cycle": "c1",
+     "competenceId": "mat.ce4",
+     "text": "Reconocer patrones en la resolución de problemas sencillos, de forma guiada."
+    },
+    {
+     "id": "mat.c1.4.2",
+     "cycle": "c1",
+     "competenceId": "mat.ce4",
+     "text": "Modelizar situaciones cotidianas sencillas mediante la elaboración de secuencias de instrucciones, de forma guiada."
+    },
+    {
+     "id": "mat.c2.4.1",
+     "cycle": "c2",
+     "competenceId": "mat.ce4",
+     "text": "Reconocer patrones en la resolución de problemas sencillos, de forma guiada."
+    },
+    {
+     "id": "mat.c2.4.2",
+     "cycle": "c2",
+     "competenceId": "mat.ce4",
+     "text": "Modelizar situaciones cotidianas sencillas mediante la elaboración de secuencias de instrucciones, de forma guiada."
+    },
+    {
+     "id": "mat.c3.4.1",
+     "cycle": "c3",
+     "competenceId": "mat.ce4",
+     "text": "Reconocer patrones en la resolución de problemas sencillos, de forma guiada."
+    },
+    {
+     "id": "mat.c3.4.2",
+     "cycle": "c3",
+     "competenceId": "mat.ce4",
+     "text": "Modelizar situaciones cotidianas sencillas mediante la elaboración de secuencias de instrucciones, de forma guiada."
+    },
+    {
+     "id": "mat.c1.5.1",
+     "cycle": "c1",
+     "competenceId": "mat.ce5",
+     "text": "Reconocer conexiones entre diferentes elementos matemáticos, aplicando conocimientos y experiencias propios."
+    },
+    {
+     "id": "mat.c1.5.2",
+     "cycle": "c1",
+     "competenceId": "mat.ce5",
+     "text": "Reconocer las matemáticas presentes en la vida cotidiana y en el entorno, estableciendo conexiones sencillas entre ellas."
+    },
+    {
+     "id": "mat.c2.5.1",
+     "cycle": "c2",
+     "competenceId": "mat.ce5",
+     "text": "Reconocer conexiones entre diferentes elementos matemáticos, aplicando conocimientos y experiencias propios."
+    },
+    {
+     "id": "mat.c2.5.2",
+     "cycle": "c2",
+     "competenceId": "mat.ce5",
+     "text": "Reconocer las matemáticas presentes en la vida cotidiana y en el entorno, estableciendo conexiones sencillas entre ellas."
+    },
+    {
+     "id": "mat.c3.5.1",
+     "cycle": "c3",
+     "competenceId": "mat.ce5",
+     "text": "Reconocer conexiones entre diferentes elementos matemáticos, aplicando conocimientos y experiencias propios."
+    },
+    {
+     "id": "mat.c3.5.2",
+     "cycle": "c3",
+     "competenceId": "mat.ce5",
+     "text": "Reconocer las matemáticas presentes en la vida cotidiana y en el entorno, estableciendo conexiones sencillas entre ellas."
+    },
+    {
+     "id": "mat.c1.6.1",
+     "cycle": "c1",
+     "competenceId": "mat.ce6",
+     "text": "Reconocer el lenguaje matemático sencillo presente en la vida cotidiana, adquiriendo vocabulario específico básico."
+    },
+    {
+     "id": "mat.c1.6.2",
+     "cycle": "c1",
+     "competenceId": "mat.ce6",
+     "text": "Explicar ideas y procesos matemáticos sencillos, los pasos seguidos en la resolución de un problema o los resultados matemáticos, de forma verbal o gráfica."
+    },
+    {
+     "id": "mat.c2.6.1",
+     "cycle": "c2",
+     "competenceId": "mat.ce6",
+     "text": "Reconocer el lenguaje matemático sencillo presente en la vida cotidiana, adquiriendo vocabulario específico básico."
+    },
+    {
+     "id": "mat.c2.6.2",
+     "cycle": "c2",
+     "competenceId": "mat.ce6",
+     "text": "Explicar ideas y procesos matemáticos sencillos, los pasos seguidos en la resolución de un problema o los resultados matemáticos, de forma verbal o gráfica."
+    },
+    {
+     "id": "mat.c3.6.1",
+     "cycle": "c3",
+     "competenceId": "mat.ce6",
+     "text": "Reconocer el lenguaje matemático sencillo presente en la vida cotidiana, adquiriendo vocabulario específico básico."
+    },
+    {
+     "id": "mat.c3.6.2",
+     "cycle": "c3",
+     "competenceId": "mat.ce6",
+     "text": "Explicar ideas y procesos matemáticos sencillos, los pasos seguidos en la resolución de un problema o los resultados matemáticos, de forma verbal o gráfica."
+    },
+    {
+     "id": "mat.c1.7.1",
+     "cycle": "c1",
+     "competenceId": "mat.ce7",
+     "text": "Reconocer las emociones básicas propias al abordar retos matemáticos, pidiendo ayuda solo cuando sea necesario."
+    },
+    {
+     "id": "mat.c1.7.2",
+     "cycle": "c1",
+     "competenceId": "mat.ce7",
+     "text": "Expresar actitudes positivas ante retos matemáticos, valorando el error como una oportunidad de aprendizaje."
+    },
+    {
+     "id": "mat.c2.7.1",
+     "cycle": "c2",
+     "competenceId": "mat.ce7",
+     "text": "Reconocer las emociones básicas propias al abordar retos matemáticos, pidiendo ayuda solo cuando sea necesario."
+    },
+    {
+     "id": "mat.c2.7.2",
+     "cycle": "c2",
+     "competenceId": "mat.ce7",
+     "text": "Expresar actitudes positivas ante retos matemáticos, valorando el error como una oportunidad de aprendizaje."
+    },
+    {
+     "id": "mat.c3.7.1",
+     "cycle": "c3",
+     "competenceId": "mat.ce7",
+     "text": "Reconocer las emociones básicas propias al abordar retos matemáticos, pidiendo ayuda solo cuando sea necesario."
+    },
+    {
+     "id": "mat.c3.7.2",
+     "cycle": "c3",
+     "competenceId": "mat.ce7",
+     "text": "Expresar actitudes positivas ante retos matemáticos, valorando el error como una oportunidad de aprendizaje."
+    },
+    {
+     "id": "mat.c1.8.1",
+     "cycle": "c1",
+     "competenceId": "mat.ce8",
+     "text": "Trabajar en equipo, respetando las emociones y experiencias de los demás y escuchando su razonamiento."
+    },
+    {
+     "id": "mat.c1.8.2",
+     "cycle": "c1",
+     "competenceId": "mat.ce8",
+     "text": "Colaborar en el reparto de tareas, asumiendo responsabilidades y cumpliendo los compromisos adquiridos."
+    },
+    {
+     "id": "mat.c2.8.1",
+     "cycle": "c2",
+     "competenceId": "mat.ce8",
+     "text": "Trabajar en equipo, respetando las emociones y experiencias de los demás y escuchando su razonamiento."
+    },
+    {
+     "id": "mat.c2.8.2",
+     "cycle": "c2",
+     "competenceId": "mat.ce8",
+     "text": "Colaborar en el reparto de tareas, asumiendo responsabilidades y cumpliendo los compromisos adquiridos."
+    },
+    {
+     "id": "mat.c3.8.1",
+     "cycle": "c3",
+     "competenceId": "mat.ce8",
+     "text": "Trabajar en equipo, respetando las emociones y experiencias de los demás y escuchando su razonamiento."
+    },
+    {
+     "id": "mat.c3.8.2",
+     "cycle": "c3",
+     "competenceId": "mat.ce8",
+     "text": "Colaborar en el reparto de tareas, asumiendo responsabilidades y cumpliendo los compromisos adquiridos."
+    }
+   ],
+   "contents": [
+    {
+     "id": "mat.c1.A.1",
+     "cycle": "c1",
+     "block": "A. Sentido numérico",
+     "text": "Conteo en situaciones de la vida cotidiana con cantidades hasta el 999."
+    },
+    {
+     "id": "mat.c1.A.2",
+     "cycle": "c1",
+     "block": "A. Sentido numérico",
+     "text": "Lectura, representación (incluida la recta numérica y con materiales manipulativos), composición, descomposición y recomposición de números naturales hasta el 999."
+    },
+    {
+     "id": "mat.c1.A.3",
+     "cycle": "c1",
+     "block": "A. Sentido numérico",
+     "text": "Estrategias de cálculo mental con números naturales hasta el 100 y resolución de problemas de suma y resta."
+    },
+    {
+     "id": "mat.c1.A.4",
+     "cycle": "c1",
+     "block": "A. Sentido numérico",
+     "text": "Fracciones sencillas (mitad, cuarto, tercio) en contextos cercanos."
+    },
+    {
+     "id": "mat.c2.A.1",
+     "cycle": "c2",
+     "block": "A. Sentido numérico",
+     "text": "Lectura, escritura, comparación y ordenación de números naturales hasta el 9 999 y de números decimales hasta las centésimas."
+    },
+    {
+     "id": "mat.c2.A.2",
+     "cycle": "c2",
+     "block": "A. Sentido numérico",
+     "text": "Estrategias de cálculo mental y escrito con números naturales: suma, resta, multiplicación (tablas) y división."
+    },
+    {
+     "id": "mat.c2.A.3",
+     "cycle": "c2",
+     "block": "A. Sentido numérico",
+     "text": "Resolución de problemas de la vida cotidiana con las cuatro operaciones."
+    },
+    {
+     "id": "mat.c2.A.4",
+     "cycle": "c2",
+     "block": "A. Sentido numérico",
+     "text": "Fracciones propias con denominador hasta 12: representación, comparación y relación con la división."
+    },
+    {
+     "id": "mat.c3.A.1",
+     "cycle": "c3",
+     "block": "A. Sentido numérico",
+     "text": "Lectura, representación, ordenación y relaciones entre números naturales, fracciones y decimales."
+    },
+    {
+     "id": "mat.c3.A.2",
+     "cycle": "c3",
+     "block": "A. Sentido numérico",
+     "text": "Porcentajes (25 %, 50 %, 75 %) y su relación con fracciones y decimales."
+    },
+    {
+     "id": "mat.c3.A.3",
+     "cycle": "c3",
+     "block": "A. Sentido numérico",
+     "text": "Estrategias de cálculo con las cuatro operaciones, propiedades y operaciones combinadas."
+    },
+    {
+     "id": "mat.c3.A.4",
+     "cycle": "c3",
+     "block": "A. Sentido numérico",
+     "text": "Resolución de problemas con números naturales, fracciones y decimales."
+    },
+    {
+     "id": "mat.c1.B.1",
+     "cycle": "c1",
+     "block": "B. Sentido de la medida",
+     "text": "Medición de longitud, masa y capacidad con unidades no convencionales y convencionales (metro, kilo, litro)."
+    },
+    {
+     "id": "mat.c1.B.2",
+     "cycle": "c1",
+     "block": "B. Sentido de la medida",
+     "text": "Medida del tiempo: el calendario, las horas en punto y las medias."
+    },
+    {
+     "id": "mat.c1.B.3",
+     "cycle": "c1",
+     "block": "B. Sentido de la medida",
+     "text": "El dinero: monedas y billetes de uso cotidiano."
+    },
+    {
+     "id": "mat.c2.B.1",
+     "cycle": "c2",
+     "block": "B. Sentido de la medida",
+     "text": "Unidades de longitud, masa y capacidad y sus equivalencias más usuales."
+    },
+    {
+     "id": "mat.c2.B.2",
+     "cycle": "c2",
+     "block": "B. Sentido de la medida",
+     "text": "Medida del tiempo: relojes analógicos y digitales, horas, minutos y segundos."
+    },
+    {
+     "id": "mat.c2.B.3",
+     "cycle": "c2",
+     "block": "B. Sentido de la medida",
+     "text": "El sistema monetario europeo: resolución de problemas con dinero."
+    },
+    {
+     "id": "mat.c3.B.1",
+     "cycle": "c3",
+     "block": "B. Sentido de la medida",
+     "text": "Sistema métrico decimal: unidades de longitud, masa, capacidad y superficie y sus conversiones."
+    },
+    {
+     "id": "mat.c3.B.2",
+     "cycle": "c3",
+     "block": "B. Sentido de la medida",
+     "text": "Estimación y medición de ángulos, perímetros y áreas de figuras planas."
+    },
+    {
+     "id": "mat.c3.B.3",
+     "cycle": "c3",
+     "block": "B. Sentido de la medida",
+     "text": "Unidades de tiempo y cálculo con duraciones."
+    },
+    {
+     "id": "mat.c1.C.1",
+     "cycle": "c1",
+     "block": "C. Sentido espacial",
+     "text": "Figuras geométricas planas y cuerpos geométricos sencillos: identificación y descripción."
+    },
+    {
+     "id": "mat.c1.C.2",
+     "cycle": "c1",
+     "block": "C. Sentido espacial",
+     "text": "Posición y movimientos en cuadrículas y recorridos: izquierda, derecha, arriba, abajo."
+    },
+    {
+     "id": "mat.c2.C.1",
+     "cycle": "c2",
+     "block": "C. Sentido espacial",
+     "text": "Propiedades de figuras planas y cuerpos geométricos: lados, vértices, caras y aristas."
+    },
+    {
+     "id": "mat.c2.C.2",
+     "cycle": "c2",
+     "block": "C. Sentido espacial",
+     "text": "Simetría y traslaciones sencillas. Localización en cuadrículas con coordenadas."
+    },
+    {
+     "id": "mat.c3.C.1",
+     "cycle": "c3",
+     "block": "C. Sentido espacial",
+     "text": "Clasificación de polígonos y cuerpos geométricos; ángulos."
+    },
+    {
+     "id": "mat.c3.C.2",
+     "cycle": "c3",
+     "block": "C. Sentido espacial",
+     "text": "Transformaciones geométricas: simetrías, traslaciones y giros. Escalas y planos."
+    },
+    {
+     "id": "mat.c1.D.1",
+     "cycle": "c1",
+     "block": "D. Sentido algebraico",
+     "text": "Patrones y series con elementos de la vida cotidiana."
+    },
+    {
+     "id": "mat.c1.D.2",
+     "cycle": "c1",
+     "block": "D. Sentido algebraico",
+     "text": "Relaciones de igualdad y desigualdad. Pensamiento computacional: secuencias de instrucciones."
+    },
+    {
+     "id": "mat.c2.D.1",
+     "cycle": "c2",
+     "block": "D. Sentido algebraico",
+     "text": "Patrones numéricos y geométricos: generalización oral y escrita."
+    },
+    {
+     "id": "mat.c2.D.2",
+     "cycle": "c2",
+     "block": "D. Sentido algebraico",
+     "text": "Igualdades con operaciones; el signo igual. Algoritmos sencillos."
+    },
+    {
+     "id": "mat.c3.D.1",
+     "cycle": "c3",
+     "block": "D. Sentido algebraico",
+     "text": "Relaciones de proporcionalidad directa en situaciones cotidianas."
+    },
+    {
+     "id": "mat.c3.D.2",
+     "cycle": "c3",
+     "block": "D. Sentido algebraico",
+     "text": "Expresión de patrones y relaciones; ecuaciones sencillas de forma intuitiva. Algoritmos y pensamiento computacional."
+    },
+    {
+     "id": "mat.c1.E.1",
+     "cycle": "c1",
+     "block": "E. Sentido estocástico",
+     "text": "Recogida y registro de datos sencillos; pictogramas y tablas de conteo."
+    },
+    {
+     "id": "mat.c1.E.2",
+     "cycle": "c1",
+     "block": "E. Sentido estocástico",
+     "text": "Cuantificación de la incertidumbre en situaciones cotidianas: seguro, posible, imposible."
+    },
+    {
+     "id": "mat.c2.E.1",
+     "cycle": "c2",
+     "block": "E. Sentido estocástico",
+     "text": "Gráficos estadísticos: diagrama de barras y pictogramas; lectura e interpretación."
+    },
+    {
+     "id": "mat.c2.E.2",
+     "cycle": "c2",
+     "block": "E. Sentido estocástico",
+     "text": "Probabilidad intuitiva: experimentos aleatorios sencillos."
+    },
+    {
+     "id": "mat.c3.E.1",
+     "cycle": "c3",
+     "block": "E. Sentido estocástico",
+     "text": "Tablas de frecuencias, gráficos estadísticos y medidas de centralización (media y moda)."
+    },
+    {
+     "id": "mat.c3.E.2",
+     "cycle": "c3",
+     "block": "E. Sentido estocástico",
+     "text": "Cálculo de probabilidades sencillas con experimentos y regla de Laplace en casos elementales."
+    },
+    {
+     "id": "mat.c1.F.1",
+     "cycle": "c1",
+     "block": "F. Sentido socioafectivo",
+     "text": "Gestión emocional: reconocer y expresar emociones al aprender matemáticas."
+    },
+    {
+     "id": "mat.c1.F.2",
+     "cycle": "c1",
+     "block": "F. Sentido socioafectivo",
+     "text": "Trabajo en equipo y respeto por las ideas de los demás."
+    },
+    {
+     "id": "mat.c2.F.1",
+     "cycle": "c2",
+     "block": "F. Sentido socioafectivo",
+     "text": "Autoconfianza y perseverancia ante retos matemáticos. El error como oportunidad."
+    },
+    {
+     "id": "mat.c2.F.2",
+     "cycle": "c2",
+     "block": "F. Sentido socioafectivo",
+     "text": "Trabajo en equipo con reparto de roles."
+    },
+    {
+     "id": "mat.c3.F.1",
+     "cycle": "c3",
+     "block": "F. Sentido socioafectivo",
+     "text": "Estrategias de autorregulación y valoración del esfuerzo. Aportaciones de las matemáticas a la sociedad."
+    },
+    {
+     "id": "mat.c3.F.2",
+     "cycle": "c3",
+     "block": "F. Sentido socioafectivo",
+     "text": "Trabajo colaborativo, escucha activa y toma de decisiones compartida."
+    }
+   ]
+  },
+  {
+   "id": "lcl",
+   "name": "Lengua Castellana y Literatura",
+   "competences": [
+    {
+     "id": "lcl.ce1",
+     "number": 1,
+     "text": "Reconocer las lenguas de España y las variedades dialectales del español, identificando algunas nociones básicas de las lenguas y de su diversidad, para favorecer la reflexión interlingüística y valorar la riqueza cultural.",
+     "keyDescriptors": [
+      "CCL5",
+      "CP2",
+      "CP3",
+      "CC3"
+     ]
+    },
+    {
+     "id": "lcl.ce2",
+     "number": 2,
+     "text": "Comprender e interpretar textos orales y multimodales, reconociendo el sentido global y las ideas principales y secundarias, valorando de forma crítica aspectos formales y de contenido, para construir conocimiento y responder a diferentes necesidades comunicativas.",
+     "keyDescriptors": [
+      "CCL2",
+      "CCL3",
+      "CP1",
+      "STEM1",
+      "CD3",
+      "CPSAA4"
+     ]
+    },
+    {
+     "id": "lcl.ce3",
+     "number": 3,
+     "text": "Producir textos orales y multimodales con fluidez, coherencia, claridad y registro adecuados, empleando recursos verbales y no verbales, para expresar ideas, sentimientos y conocimientos propios y para participar en interacciones comunicativas con actitud cooperativa.",
+     "keyDescriptors": [
+      "CCL1",
+      "CCL5",
+      "CP1",
+      "STEM1",
+      "CD2",
+      "CPSAA3"
+     ]
+    },
+    {
+     "id": "lcl.ce4",
+     "number": 4,
+     "text": "Comprender e interpretar textos escritos y multimodales, reconociendo el sentido global, las ideas principales y la información explícita e implícita, para construir conocimiento y para responder a necesidades e intereses comunicativos diversos.",
+     "keyDescriptors": [
+      "CCL2",
+      "CCL3",
+      "CCL4",
+      "STEM4",
+      "CD1",
+      "CPSAA4"
+     ]
+    },
+    {
+     "id": "lcl.ce5",
+     "number": 5,
+     "text": "Producir textos escritos y multimodales, con corrección gramatical y ortográfica básicas, secuenciando correctamente los contenidos y aplicando estrategias elementales de planificación, redacción, revisión y edición, para construir conocimiento y para dar respuesta a demandas comunicativas concretas.",
+     "keyDescriptors": [
+      "CCL1",
+      "CCL3",
+      "STEM1",
+      "CD2",
+      "CPSAA5",
+      "CE3"
+     ]
+    },
+    {
+     "id": "lcl.ce6",
+     "number": 6,
+     "text": "Localizar, seleccionar y contrastar información procedente de diferentes fuentes, calibrando su fiabilidad y pertinencia en función de los objetivos de lectura, evitando los riesgos de manipulación y desinformación, y transformarla en conocimiento para comunicarla de manera creativa.",
+     "keyDescriptors": [
+      "CCL3",
+      "STEM4",
+      "CD1",
+      "CD2",
+      "CD4",
+      "CPSAA4",
+      "CC4"
+     ]
+    },
+    {
+     "id": "lcl.ce7",
+     "number": 7,
+     "text": "Seleccionar y leer de manera progresivamente autónoma textos variados, reconociendo el patrimonio literario como fuente de disfrute y herramienta para ampliar su universo cultural.",
+     "keyDescriptors": [
+      "CCL1",
+      "CCL4",
+      "CPSAA1",
+      "CCEC1"
+     ]
+    },
+    {
+     "id": "lcl.ce8",
+     "number": 8,
+     "text": "Leer, interpretar y analizar, de manera acompañada, obras o fragmentos literarios adecuados a su edad, estableciendo relaciones entre ellos y con otros textos, para iniciarse en la construcción de la interpretación literaria.",
+     "keyDescriptors": [
+      "CCL1",
+      "CCL4",
+      "CP3",
+      "CPSAA3",
+      "CCEC1",
+      "CCEC2",
+      "CCEC3",
+      "CCEC4"
+     ]
+    },
+    {
+     "id": "lcl.ce9",
+     "number": 9,
+     "text": "Reflexionar de forma guiada sobre el funcionamiento de la lengua y sus elementos, mediante la observación, comparación y transformación de palabras y enunciados, para iniciarse en el conocimiento explícito del sistema lingüístico.",
+     "keyDescriptors": [
+      "CCL2",
+      "CCL5",
+      "CP2",
+      "STEM1"
+     ]
+    },
+    {
+     "id": "lcl.ce10",
+     "number": 10,
+     "text": "Poner las prácticas comunicativas al servicio de la convivencia democrática, utilizando un lenguaje no discriminatorio y detectando usos abusivos del lenguaje, para favorecer la igualdad y la resolución dialogada de conflictos.",
+     "keyDescriptors": [
+      "CCL1",
+      "CCL5",
+      "CP3",
+      "CPSAA3",
+      "CC1",
+      "CC2",
+      "CC3"
+     ]
+    }
+   ],
+   "criteria": [
+    {
+     "id": "lcl.c1.1.1",
+     "cycle": "c1",
+     "competenceId": "lcl.ce1",
+     "text": "Reconocer la diversidad lingüística de su entorno, mostrando respeto y valorando la riqueza cultural."
+    },
+    {
+     "id": "lcl.c2.1.1",
+     "cycle": "c2",
+     "competenceId": "lcl.ce1",
+     "text": "Reconocer la diversidad lingüística de su entorno, mostrando respeto y valorando la riqueza cultural."
+    },
+    {
+     "id": "lcl.c3.1.1",
+     "cycle": "c3",
+     "competenceId": "lcl.ce1",
+     "text": "Reconocer la diversidad lingüística de su entorno, mostrando respeto y valorando la riqueza cultural."
+    },
+    {
+     "id": "lcl.c1.2.1",
+     "cycle": "c1",
+     "competenceId": "lcl.ce2",
+     "text": "Comprender el sentido global y la información relevante de textos orales y multimodales sencillos."
+    },
+    {
+     "id": "lcl.c1.2.2",
+     "cycle": "c1",
+     "competenceId": "lcl.ce2",
+     "text": "Valorar la forma y el contenido de textos orales y multimodales de manera guiada."
+    },
+    {
+     "id": "lcl.c2.2.1",
+     "cycle": "c2",
+     "competenceId": "lcl.ce2",
+     "text": "Comprender el sentido global y la información relevante de textos orales y multimodales sencillos."
+    },
+    {
+     "id": "lcl.c2.2.2",
+     "cycle": "c2",
+     "competenceId": "lcl.ce2",
+     "text": "Valorar la forma y el contenido de textos orales y multimodales de manera guiada."
+    },
+    {
+     "id": "lcl.c3.2.1",
+     "cycle": "c3",
+     "competenceId": "lcl.ce2",
+     "text": "Comprender el sentido global y la información relevante de textos orales y multimodales sencillos."
+    },
+    {
+     "id": "lcl.c3.2.2",
+     "cycle": "c3",
+     "competenceId": "lcl.ce2",
+     "text": "Valorar la forma y el contenido de textos orales y multimodales de manera guiada."
+    },
+    {
+     "id": "lcl.c1.3.1",
+     "cycle": "c1",
+     "competenceId": "lcl.ce3",
+     "text": "Producir textos orales y multimodales sencillos con coherencia, claridad y fluidez."
+    },
+    {
+     "id": "lcl.c1.3.2",
+     "cycle": "c1",
+     "competenceId": "lcl.ce3",
+     "text": "Participar en interacciones orales respetando las normas básicas de la conversación."
+    },
+    {
+     "id": "lcl.c2.3.1",
+     "cycle": "c2",
+     "competenceId": "lcl.ce3",
+     "text": "Producir textos orales y multimodales sencillos con coherencia, claridad y fluidez."
+    },
+    {
+     "id": "lcl.c2.3.2",
+     "cycle": "c2",
+     "competenceId": "lcl.ce3",
+     "text": "Participar en interacciones orales respetando las normas básicas de la conversación."
+    },
+    {
+     "id": "lcl.c3.3.1",
+     "cycle": "c3",
+     "competenceId": "lcl.ce3",
+     "text": "Producir textos orales y multimodales sencillos con coherencia, claridad y fluidez."
+    },
+    {
+     "id": "lcl.c3.3.2",
+     "cycle": "c3",
+     "competenceId": "lcl.ce3",
+     "text": "Participar en interacciones orales respetando las normas básicas de la conversación."
+    },
+    {
+     "id": "lcl.c1.4.1",
+     "cycle": "c1",
+     "competenceId": "lcl.ce4",
+     "text": "Comprender el sentido global y la información relevante de textos escritos y multimodales sencillos."
+    },
+    {
+     "id": "lcl.c1.4.2",
+     "cycle": "c1",
+     "competenceId": "lcl.ce4",
+     "text": "Valorar la forma y el contenido de textos escritos y multimodales sencillos de manera guiada."
+    },
+    {
+     "id": "lcl.c2.4.1",
+     "cycle": "c2",
+     "competenceId": "lcl.ce4",
+     "text": "Comprender el sentido global y la información relevante de textos escritos y multimodales sencillos."
+    },
+    {
+     "id": "lcl.c2.4.2",
+     "cycle": "c2",
+     "competenceId": "lcl.ce4",
+     "text": "Valorar la forma y el contenido de textos escritos y multimodales sencillos de manera guiada."
+    },
+    {
+     "id": "lcl.c3.4.1",
+     "cycle": "c3",
+     "competenceId": "lcl.ce4",
+     "text": "Comprender el sentido global y la información relevante de textos escritos y multimodales sencillos."
+    },
+    {
+     "id": "lcl.c3.4.2",
+     "cycle": "c3",
+     "competenceId": "lcl.ce4",
+     "text": "Valorar la forma y el contenido de textos escritos y multimodales sencillos de manera guiada."
+    },
+    {
+     "id": "lcl.c1.5.1",
+     "cycle": "c1",
+     "competenceId": "lcl.ce5",
+     "text": "Producir textos escritos y multimodales sencillos, con coherencia y adecuación, cuidando la presentación."
+    },
+    {
+     "id": "lcl.c1.5.2",
+     "cycle": "c1",
+     "competenceId": "lcl.ce5",
+     "text": "Aplicar con ayuda estrategias básicas de planificación, redacción y revisión, con atención a la ortografía."
+    },
+    {
+     "id": "lcl.c2.5.1",
+     "cycle": "c2",
+     "competenceId": "lcl.ce5",
+     "text": "Producir textos escritos y multimodales sencillos, con coherencia y adecuación, cuidando la presentación."
+    },
+    {
+     "id": "lcl.c2.5.2",
+     "cycle": "c2",
+     "competenceId": "lcl.ce5",
+     "text": "Aplicar con ayuda estrategias básicas de planificación, redacción y revisión, con atención a la ortografía."
+    },
+    {
+     "id": "lcl.c3.5.1",
+     "cycle": "c3",
+     "competenceId": "lcl.ce5",
+     "text": "Producir textos escritos y multimodales sencillos, con coherencia y adecuación, cuidando la presentación."
+    },
+    {
+     "id": "lcl.c3.5.2",
+     "cycle": "c3",
+     "competenceId": "lcl.ce5",
+     "text": "Aplicar con ayuda estrategias básicas de planificación, redacción y revisión, con atención a la ortografía."
+    },
+    {
+     "id": "lcl.c1.6.1",
+     "cycle": "c1",
+     "competenceId": "lcl.ce6",
+     "text": "Localizar y seleccionar información de diversas fuentes de manera guiada, y organizarla."
+    },
+    {
+     "id": "lcl.c1.6.2",
+     "cycle": "c1",
+     "competenceId": "lcl.ce6",
+     "text": "Comunicar la información obtenida de manera creativa, de forma oral, escrita o multimodal."
+    },
+    {
+     "id": "lcl.c2.6.1",
+     "cycle": "c2",
+     "competenceId": "lcl.ce6",
+     "text": "Localizar y seleccionar información de diversas fuentes de manera guiada, y organizarla."
+    },
+    {
+     "id": "lcl.c2.6.2",
+     "cycle": "c2",
+     "competenceId": "lcl.ce6",
+     "text": "Comunicar la información obtenida de manera creativa, de forma oral, escrita o multimodal."
+    },
+    {
+     "id": "lcl.c3.6.1",
+     "cycle": "c3",
+     "competenceId": "lcl.ce6",
+     "text": "Localizar y seleccionar información de diversas fuentes de manera guiada, y organizarla."
+    },
+    {
+     "id": "lcl.c3.6.2",
+     "cycle": "c3",
+     "competenceId": "lcl.ce6",
+     "text": "Comunicar la información obtenida de manera creativa, de forma oral, escrita o multimodal."
+    },
+    {
+     "id": "lcl.c1.7.1",
+     "cycle": "c1",
+     "competenceId": "lcl.ce7",
+     "text": "Elegir y leer textos de manera progresivamente autónoma, y expresar sus gustos e intereses."
+    },
+    {
+     "id": "lcl.c1.7.2",
+     "cycle": "c1",
+     "competenceId": "lcl.ce7",
+     "text": "Compartir la experiencia de lectura y recomendar textos."
+    },
+    {
+     "id": "lcl.c2.7.1",
+     "cycle": "c2",
+     "competenceId": "lcl.ce7",
+     "text": "Elegir y leer textos de manera progresivamente autónoma, y expresar sus gustos e intereses."
+    },
+    {
+     "id": "lcl.c2.7.2",
+     "cycle": "c2",
+     "competenceId": "lcl.ce7",
+     "text": "Compartir la experiencia de lectura y recomendar textos."
+    },
+    {
+     "id": "lcl.c3.7.1",
+     "cycle": "c3",
+     "competenceId": "lcl.ce7",
+     "text": "Elegir y leer textos de manera progresivamente autónoma, y expresar sus gustos e intereses."
+    },
+    {
+     "id": "lcl.c3.7.2",
+     "cycle": "c3",
+     "competenceId": "lcl.ce7",
+     "text": "Compartir la experiencia de lectura y recomendar textos."
+    },
+    {
+     "id": "lcl.c1.8.1",
+     "cycle": "c1",
+     "competenceId": "lcl.ce8",
+     "text": "Escuchar y leer textos orales y escritos de la literatura infantil, reconociendo sus elementos básicos."
+    },
+    {
+     "id": "lcl.c1.8.2",
+     "cycle": "c1",
+     "competenceId": "lcl.ce8",
+     "text": "Crear textos de intención literaria a partir de modelos dados."
+    },
+    {
+     "id": "lcl.c2.8.1",
+     "cycle": "c2",
+     "competenceId": "lcl.ce8",
+     "text": "Escuchar y leer textos orales y escritos de la literatura infantil, reconociendo sus elementos básicos."
+    },
+    {
+     "id": "lcl.c2.8.2",
+     "cycle": "c2",
+     "competenceId": "lcl.ce8",
+     "text": "Crear textos de intención literaria a partir de modelos dados."
+    },
+    {
+     "id": "lcl.c3.8.1",
+     "cycle": "c3",
+     "competenceId": "lcl.ce8",
+     "text": "Escuchar y leer textos orales y escritos de la literatura infantil, reconociendo sus elementos básicos."
+    },
+    {
+     "id": "lcl.c3.8.2",
+     "cycle": "c3",
+     "competenceId": "lcl.ce8",
+     "text": "Crear textos de intención literaria a partir de modelos dados."
+    },
+    {
+     "id": "lcl.c1.9.1",
+     "cycle": "c1",
+     "competenceId": "lcl.ce9",
+     "text": "Formular conclusiones elementales sobre el funcionamiento de la lengua a partir de la observación y comparación."
+    },
+    {
+     "id": "lcl.c1.9.2",
+     "cycle": "c1",
+     "competenceId": "lcl.ce9",
+     "text": "Aplicar el vocabulario gramatical y las normas ortográficas básicas en la revisión de sus textos."
+    },
+    {
+     "id": "lcl.c2.9.1",
+     "cycle": "c2",
+     "competenceId": "lcl.ce9",
+     "text": "Formular conclusiones elementales sobre el funcionamiento de la lengua a partir de la observación y comparación."
+    },
+    {
+     "id": "lcl.c2.9.2",
+     "cycle": "c2",
+     "competenceId": "lcl.ce9",
+     "text": "Aplicar el vocabulario gramatical y las normas ortográficas básicas en la revisión de sus textos."
+    },
+    {
+     "id": "lcl.c3.9.1",
+     "cycle": "c3",
+     "competenceId": "lcl.ce9",
+     "text": "Formular conclusiones elementales sobre el funcionamiento de la lengua a partir de la observación y comparación."
+    },
+    {
+     "id": "lcl.c3.9.2",
+     "cycle": "c3",
+     "competenceId": "lcl.ce9",
+     "text": "Aplicar el vocabulario gramatical y las normas ortográficas básicas en la revisión de sus textos."
+    },
+    {
+     "id": "lcl.c1.10.1",
+     "cycle": "c1",
+     "competenceId": "lcl.ce10",
+     "text": "Usar un lenguaje respetuoso e inclusivo, reconociendo usos discriminatorios del lenguaje."
+    },
+    {
+     "id": "lcl.c1.10.2",
+     "cycle": "c1",
+     "competenceId": "lcl.ce10",
+     "text": "Participar en conversaciones y debates respetando las normas y resolviendo conflictos de forma dialogada."
+    },
+    {
+     "id": "lcl.c2.10.1",
+     "cycle": "c2",
+     "competenceId": "lcl.ce10",
+     "text": "Usar un lenguaje respetuoso e inclusivo, reconociendo usos discriminatorios del lenguaje."
+    },
+    {
+     "id": "lcl.c2.10.2",
+     "cycle": "c2",
+     "competenceId": "lcl.ce10",
+     "text": "Participar en conversaciones y debates respetando las normas y resolviendo conflictos de forma dialogada."
+    },
+    {
+     "id": "lcl.c3.10.1",
+     "cycle": "c3",
+     "competenceId": "lcl.ce10",
+     "text": "Usar un lenguaje respetuoso e inclusivo, reconociendo usos discriminatorios del lenguaje."
+    },
+    {
+     "id": "lcl.c3.10.2",
+     "cycle": "c3",
+     "competenceId": "lcl.ce10",
+     "text": "Participar en conversaciones y debates respetando las normas y resolviendo conflictos de forma dialogada."
+    }
+   ],
+   "contents": [
+    {
+     "id": "lcl.c1.A.1",
+     "cycle": "c1",
+     "block": "A. Las lenguas y sus hablantes",
+     "text": "Biografía lingüística: lenguas y variedades del entorno."
+    },
+    {
+     "id": "lcl.c1.A.2",
+     "cycle": "c1",
+     "block": "A. Las lenguas y sus hablantes",
+     "text": "Respeto por la diversidad lingüística."
+    },
+    {
+     "id": "lcl.c2.A.1",
+     "cycle": "c2",
+     "block": "A. Las lenguas y sus hablantes",
+     "text": "Las lenguas de España y variedades dialectales del español."
+    },
+    {
+     "id": "lcl.c2.A.2",
+     "cycle": "c2",
+     "block": "A. Las lenguas y sus hablantes",
+     "text": "Estrategias de reflexión sobre la diversidad lingüística."
+    },
+    {
+     "id": "lcl.c3.A.1",
+     "cycle": "c3",
+     "block": "A. Las lenguas y sus hablantes",
+     "text": "Lenguas de España; plurilingüismo y variedades del español; prejuicios lingüísticos."
+    },
+    {
+     "id": "lcl.c3.A.2",
+     "cycle": "c3",
+     "block": "A. Las lenguas y sus hablantes",
+     "text": "Reflexión sobre los usos del lenguaje y la diversidad."
+    },
+    {
+     "id": "lcl.c1.B.1",
+     "cycle": "c1",
+     "block": "B. Comunicación",
+     "text": "Interacción oral: normas básicas, turnos de palabra; textos orales sencillos: cuentos, descripciones."
+    },
+    {
+     "id": "lcl.c1.B.2",
+     "cycle": "c1",
+     "block": "B. Comunicación",
+     "text": "Comprensión lectora: sentido global, idea principal, vocabulario; textos narrativos y descriptivos breves."
+    },
+    {
+     "id": "lcl.c1.B.3",
+     "cycle": "c1",
+     "block": "B. Comunicación",
+     "text": "Producción escrita: planificación, escritura y revisión de textos breves; caligrafía y ortografía básica."
+    },
+    {
+     "id": "lcl.c2.B.1",
+     "cycle": "c2",
+     "block": "B. Comunicación",
+     "text": "Géneros discursivos orales: narraciones, descripciones, exposiciones, diálogos."
+    },
+    {
+     "id": "lcl.c2.B.2",
+     "cycle": "c2",
+     "block": "B. Comunicación",
+     "text": "Comprensión lectora: ideas principales y secundarias, inferencias; textos narrativos, descriptivos, instructivos y expositivos."
+    },
+    {
+     "id": "lcl.c2.B.3",
+     "cycle": "c2",
+     "block": "B. Comunicación",
+     "text": "Producción escrita: planificación, redacción, revisión; coherencia, cohesión y ortografía de uso."
+    },
+    {
+     "id": "lcl.c3.B.1",
+     "cycle": "c3",
+     "block": "B. Comunicación",
+     "text": "Géneros discursivos orales y escritos: exposiciones, argumentaciones, noticias, reglamentos."
+    },
+    {
+     "id": "lcl.c3.B.2",
+     "cycle": "c3",
+     "block": "B. Comunicación",
+     "text": "Comprensión lectora crítica: información explícita e implícita, fiabilidad de fuentes."
+    },
+    {
+     "id": "lcl.c3.B.3",
+     "cycle": "c3",
+     "block": "B. Comunicación",
+     "text": "Producción escrita: planificación, redacción, revisión y edición; ortografía y signos de puntuación."
+    },
+    {
+     "id": "lcl.c1.C.1",
+     "cycle": "c1",
+     "block": "C. Educación literaria",
+     "text": "Lectura acompañada y autónoma de cuentos, poemas y adivinanzas."
+    },
+    {
+     "id": "lcl.c1.C.2",
+     "cycle": "c1",
+     "block": "C. Educación literaria",
+     "text": "Elementos básicos de los textos literarios: personajes, ambiente, rima."
+    },
+    {
+     "id": "lcl.c2.C.1",
+     "cycle": "c2",
+     "block": "C. Educación literaria",
+     "text": "Lectura de obras variadas; estructura del cuento y del poema."
+    },
+    {
+     "id": "lcl.c2.C.2",
+     "cycle": "c2",
+     "block": "C. Educación literaria",
+     "text": "Recursos expresivos básicos: comparación, personificación, onomatopeya."
+    },
+    {
+     "id": "lcl.c3.C.1",
+     "cycle": "c3",
+     "block": "C. Educación literaria",
+     "text": "Lectura de obras de la literatura infantil y juvenil; géneros narrativo, lírico y dramático."
+    },
+    {
+     "id": "lcl.c3.C.2",
+     "cycle": "c3",
+     "block": "C. Educación literaria",
+     "text": "Recursos literarios; creación de textos de intención literaria."
+    },
+    {
+     "id": "lcl.c1.D.1",
+     "cycle": "c1",
+     "block": "D. Reflexión sobre la lengua y sus usos",
+     "text": "Observación de palabras: sílabas, familias de palabras; la oración."
+    },
+    {
+     "id": "lcl.c1.D.2",
+     "cycle": "c1",
+     "block": "D. Reflexión sobre la lengua y sus usos",
+     "text": "Ortografía: mayúsculas, punto, b/v, g/j de uso muy frecuente."
+    },
+    {
+     "id": "lcl.c2.D.1",
+     "cycle": "c2",
+     "block": "D. Reflexión sobre la lengua y sus usos",
+     "text": "Clases de palabras: sustantivo, adjetivo, verbo; concordancia."
+    },
+    {
+     "id": "lcl.c2.D.2",
+     "cycle": "c2",
+     "block": "D. Reflexión sobre la lengua y sus usos",
+     "text": "Ortografía: reglas básicas de acentuación y uso de signos de puntuación."
+    },
+    {
+     "id": "lcl.c3.D.1",
+     "cycle": "c3",
+     "block": "D. Reflexión sobre la lengua y sus usos",
+     "text": "Categorías gramaticales; sujeto y predicado; tiempos verbales."
+    },
+    {
+     "id": "lcl.c3.D.2",
+     "cycle": "c3",
+     "block": "D. Reflexión sobre la lengua y sus usos",
+     "text": "Ortografía y puntuación; formación de palabras y relaciones semánticas."
+    }
+   ]
+  },
+  {
+   "id": "cm",
+   "name": "Conocimiento del Medio Natural, Social y Cultural",
+   "competences": [
+    {
+     "id": "cm.ce1",
+     "number": 1,
+     "text": "Utilizar dispositivos y recursos digitales de forma segura, responsable y eficiente, para buscar información, comunicarse y trabajar de manera individual y en equipo, y para crear contenidos digitales sencillos.",
+     "keyDescriptors": [
+      "CCL3",
+      "STEM4",
+      "CD1",
+      "CD2",
+      "CD3",
+      "CD4",
+      "CPSAA3"
+     ]
+    },
+    {
+     "id": "cm.ce2",
+     "number": 2,
+     "text": "Plantear y dar respuesta a cuestiones científicas sencillas, utilizando diferentes técnicas, instrumentos y modelos propios del pensamiento científico, para interpretar y explicar hechos y fenómenos que ocurren en el medio natural, social y cultural.",
+     "keyDescriptors": [
+      "CCL1",
+      "STEM1",
+      "STEM2",
+      "CD1",
+      "CPSAA4",
+      "CE1"
+     ]
+    },
+    {
+     "id": "cm.ce3",
+     "number": 3,
+     "text": "Resolver problemas a través de proyectos de diseño y de la aplicación del pensamiento computacional, para generar cooperativamente un producto creativo e innovador que responda a necesidades concretas.",
+     "keyDescriptors": [
+      "STEM3",
+      "CD5",
+      "CPSAA3",
+      "CE1",
+      "CE3"
+     ]
+    },
+    {
+     "id": "cm.ce4",
+     "number": 4,
+     "text": "Conocer y tomar conciencia del propio cuerpo, así como de las emociones y los sentimientos propios y ajenos, aplicando el conocimiento científico, para desarrollar hábitos saludables y seguros y lograr el bienestar físico, emocional y social.",
+     "keyDescriptors": [
+      "STEM2",
+      "STEM5",
+      "CPSAA1",
+      "CPSAA2",
+      "CC3"
+     ]
+    },
+    {
+     "id": "cm.ce5",
+     "number": 5,
+     "text": "Identificar las características de los diferentes elementos o sistemas del medio natural, social y cultural, analizando su organización y propiedades y estableciendo relaciones entre los mismos, para reconocer el valor del patrimonio.",
+     "keyDescriptors": [
+      "CCL1",
+      "STEM1",
+      "STEM2",
+      "CPSAA4",
+      "CC4"
+     ]
+    },
+    {
+     "id": "cm.ce6",
+     "number": 6,
+     "text": "Identificar las causas y consecuencias de la intervención humana en el entorno, desde los puntos de vista social, económico, cultural, tecnológico y ambiental, para mejorar la capacidad de afrontar problemas ecosociales y adoptar estilos de vida sostenibles.",
+     "keyDescriptors": [
+      "STEM5",
+      "CPSAA2",
+      "CC4",
+      "CE1"
+     ]
+    },
+    {
+     "id": "cm.ce7",
+     "number": 7,
+     "text": "Observar, comprender e interpretar continuidades y cambios del medio social y cultural, analizando relaciones de causalidad, simultaneidad y sucesión, para explicar y valorar las relaciones entre diferentes elementos y acontecimientos.",
+     "keyDescriptors": [
+      "CCL2",
+      "CPSAA4",
+      "CC1",
+      "CCEC1",
+      "CCEC2"
+     ]
+    },
+    {
+     "id": "cm.ce8",
+     "number": 8,
+     "text": "Reconocer y valorar la diversidad y la igualdad de género, mostrando empatía y respeto por otras culturas y reflexionando sobre cuestiones éticas, para contribuir al bienestar individual y colectivo de una sociedad en continua transformación.",
+     "keyDescriptors": [
+      "CCL5",
+      "CP3",
+      "CC1",
+      "CC2",
+      "CC3",
+      "CCEC1"
+     ]
+    },
+    {
+     "id": "cm.ce9",
+     "number": 9,
+     "text": "Participar en el entorno y la vida social de forma eficaz y constructiva desde el respeto a los valores democráticos, los derechos humanos y de la infancia, y los principios y valores de la Constitución española, para generar un compromiso activo con la sociedad.",
+     "keyDescriptors": [
+      "CCL5",
+      "CPSAA3",
+      "CC1",
+      "CC2",
+      "CC3"
+     ]
+    },
+    {
+     "id": "cm.ce10",
+     "number": 10,
+     "text": "Reconocer y valorar el patrimonio natural, cultural y artístico del entorno, mostrando interés por su conocimiento, conservación y difusión.",
+     "keyDescriptors": [
+      "CPSAA4",
+      "CC1",
+      "CC4",
+      "CCEC1",
+      "CCEC2"
+     ]
+    }
+   ],
+   "criteria": [
+    {
+     "id": "cm.c1.1.1",
+     "cycle": "c1",
+     "competenceId": "cm.ce1",
+     "text": "Utilizar dispositivos y recursos digitales de manera segura y responsable, con la ayuda del docente."
+    },
+    {
+     "id": "cm.c2.1.1",
+     "cycle": "c2",
+     "competenceId": "cm.ce1",
+     "text": "Utilizar dispositivos y recursos digitales de manera segura y responsable, con la ayuda del docente."
+    },
+    {
+     "id": "cm.c3.1.1",
+     "cycle": "c3",
+     "competenceId": "cm.ce1",
+     "text": "Utilizar dispositivos y recursos digitales de manera segura y responsable, con la ayuda del docente."
+    },
+    {
+     "id": "cm.c1.2.1",
+     "cycle": "c1",
+     "competenceId": "cm.ce2",
+     "text": "Formular preguntas e hipótesis sencillas sobre fenómenos del entorno."
+    },
+    {
+     "id": "cm.c1.2.2",
+     "cycle": "c1",
+     "competenceId": "cm.ce2",
+     "text": "Realizar experimentos guiados y comunicar los resultados obtenidos."
+    },
+    {
+     "id": "cm.c2.2.1",
+     "cycle": "c2",
+     "competenceId": "cm.ce2",
+     "text": "Formular preguntas e hipótesis sencillas sobre fenómenos del entorno."
+    },
+    {
+     "id": "cm.c2.2.2",
+     "cycle": "c2",
+     "competenceId": "cm.ce2",
+     "text": "Realizar experimentos guiados y comunicar los resultados obtenidos."
+    },
+    {
+     "id": "cm.c3.2.1",
+     "cycle": "c3",
+     "competenceId": "cm.ce2",
+     "text": "Formular preguntas e hipótesis sencillas sobre fenómenos del entorno."
+    },
+    {
+     "id": "cm.c3.2.2",
+     "cycle": "c3",
+     "competenceId": "cm.ce2",
+     "text": "Realizar experimentos guiados y comunicar los resultados obtenidos."
+    },
+    {
+     "id": "cm.c1.3.1",
+     "cycle": "c1",
+     "competenceId": "cm.ce3",
+     "text": "Elaborar productos sencillos de forma cooperativa, planificando y evaluando el proceso."
+    },
+    {
+     "id": "cm.c2.3.1",
+     "cycle": "c2",
+     "competenceId": "cm.ce3",
+     "text": "Elaborar productos sencillos de forma cooperativa, planificando y evaluando el proceso."
+    },
+    {
+     "id": "cm.c3.3.1",
+     "cycle": "c3",
+     "competenceId": "cm.ce3",
+     "text": "Elaborar productos sencillos de forma cooperativa, planificando y evaluando el proceso."
+    },
+    {
+     "id": "cm.c1.4.1",
+     "cycle": "c1",
+     "competenceId": "cm.ce4",
+     "text": "Identificar y adoptar hábitos de vida saludables (alimentación, higiene, descanso y actividad física)."
+    },
+    {
+     "id": "cm.c1.4.2",
+     "cycle": "c1",
+     "competenceId": "cm.ce4",
+     "text": "Reconocer las emociones propias y ajenas y gestionarlas de manera respetuosa."
+    },
+    {
+     "id": "cm.c2.4.1",
+     "cycle": "c2",
+     "competenceId": "cm.ce4",
+     "text": "Identificar y adoptar hábitos de vida saludables (alimentación, higiene, descanso y actividad física)."
+    },
+    {
+     "id": "cm.c2.4.2",
+     "cycle": "c2",
+     "competenceId": "cm.ce4",
+     "text": "Reconocer las emociones propias y ajenas y gestionarlas de manera respetuosa."
+    },
+    {
+     "id": "cm.c3.4.1",
+     "cycle": "c3",
+     "competenceId": "cm.ce4",
+     "text": "Identificar y adoptar hábitos de vida saludables (alimentación, higiene, descanso y actividad física)."
+    },
+    {
+     "id": "cm.c3.4.2",
+     "cycle": "c3",
+     "competenceId": "cm.ce4",
+     "text": "Reconocer las emociones propias y ajenas y gestionarlas de manera respetuosa."
+    },
+    {
+     "id": "cm.c1.5.1",
+     "cycle": "c1",
+     "competenceId": "cm.ce5",
+     "text": "Reconocer y describir los elementos del medio natural (seres vivos, materia, energía, Tierra) y sus relaciones."
+    },
+    {
+     "id": "cm.c1.5.2",
+     "cycle": "c1",
+     "competenceId": "cm.ce5",
+     "text": "Identificar la organización del medio social y cultural y sus elementos."
+    },
+    {
+     "id": "cm.c2.5.1",
+     "cycle": "c2",
+     "competenceId": "cm.ce5",
+     "text": "Reconocer y describir los elementos del medio natural (seres vivos, materia, energía, Tierra) y sus relaciones."
+    },
+    {
+     "id": "cm.c2.5.2",
+     "cycle": "c2",
+     "competenceId": "cm.ce5",
+     "text": "Identificar la organización del medio social y cultural y sus elementos."
+    },
+    {
+     "id": "cm.c3.5.1",
+     "cycle": "c3",
+     "competenceId": "cm.ce5",
+     "text": "Reconocer y describir los elementos del medio natural (seres vivos, materia, energía, Tierra) y sus relaciones."
+    },
+    {
+     "id": "cm.c3.5.2",
+     "cycle": "c3",
+     "competenceId": "cm.ce5",
+     "text": "Identificar la organización del medio social y cultural y sus elementos."
+    },
+    {
+     "id": "cm.c1.6.1",
+     "cycle": "c1",
+     "competenceId": "cm.ce6",
+     "text": "Reconocer la relación entre las acciones humanas y el medio, proponiendo hábitos sostenibles."
+    },
+    {
+     "id": "cm.c1.6.2",
+     "cycle": "c1",
+     "competenceId": "cm.ce6",
+     "text": "Participar en acciones de cuidado del entorno."
+    },
+    {
+     "id": "cm.c2.6.1",
+     "cycle": "c2",
+     "competenceId": "cm.ce6",
+     "text": "Reconocer la relación entre las acciones humanas y el medio, proponiendo hábitos sostenibles."
+    },
+    {
+     "id": "cm.c2.6.2",
+     "cycle": "c2",
+     "competenceId": "cm.ce6",
+     "text": "Participar en acciones de cuidado del entorno."
+    },
+    {
+     "id": "cm.c3.6.1",
+     "cycle": "c3",
+     "competenceId": "cm.ce6",
+     "text": "Reconocer la relación entre las acciones humanas y el medio, proponiendo hábitos sostenibles."
+    },
+    {
+     "id": "cm.c3.6.2",
+     "cycle": "c3",
+     "competenceId": "cm.ce6",
+     "text": "Participar en acciones de cuidado del entorno."
+    },
+    {
+     "id": "cm.c1.7.1",
+     "cycle": "c1",
+     "competenceId": "cm.ce7",
+     "text": "Ordenar cronológicamente hechos de su entorno y reconocer cambios y permanencias."
+    },
+    {
+     "id": "cm.c1.7.2",
+     "cycle": "c1",
+     "competenceId": "cm.ce7",
+     "text": "Describir cómo la sociedad ha cambiado a lo largo del tiempo."
+    },
+    {
+     "id": "cm.c2.7.1",
+     "cycle": "c2",
+     "competenceId": "cm.ce7",
+     "text": "Ordenar cronológicamente hechos de su entorno y reconocer cambios y permanencias."
+    },
+    {
+     "id": "cm.c2.7.2",
+     "cycle": "c2",
+     "competenceId": "cm.ce7",
+     "text": "Describir cómo la sociedad ha cambiado a lo largo del tiempo."
+    },
+    {
+     "id": "cm.c3.7.1",
+     "cycle": "c3",
+     "competenceId": "cm.ce7",
+     "text": "Ordenar cronológicamente hechos de su entorno y reconocer cambios y permanencias."
+    },
+    {
+     "id": "cm.c3.7.2",
+     "cycle": "c3",
+     "competenceId": "cm.ce7",
+     "text": "Describir cómo la sociedad ha cambiado a lo largo del tiempo."
+    },
+    {
+     "id": "cm.c1.8.1",
+     "cycle": "c1",
+     "competenceId": "cm.ce8",
+     "text": "Mostrar respeto por la diversidad cultural y la igualdad entre las personas."
+    },
+    {
+     "id": "cm.c2.8.1",
+     "cycle": "c2",
+     "competenceId": "cm.ce8",
+     "text": "Mostrar respeto por la diversidad cultural y la igualdad entre las personas."
+    },
+    {
+     "id": "cm.c3.8.1",
+     "cycle": "c3",
+     "competenceId": "cm.ce8",
+     "text": "Mostrar respeto por la diversidad cultural y la igualdad entre las personas."
+    },
+    {
+     "id": "cm.c1.9.1",
+     "cycle": "c1",
+     "competenceId": "cm.ce9",
+     "text": "Participar en la vida escolar y social respetando las normas y los valores democráticos."
+    },
+    {
+     "id": "cm.c2.9.1",
+     "cycle": "c2",
+     "competenceId": "cm.ce9",
+     "text": "Participar en la vida escolar y social respetando las normas y los valores democráticos."
+    },
+    {
+     "id": "cm.c3.9.1",
+     "cycle": "c3",
+     "competenceId": "cm.ce9",
+     "text": "Participar en la vida escolar y social respetando las normas y los valores democráticos."
+    },
+    {
+     "id": "cm.c1.10.1",
+     "cycle": "c1",
+     "competenceId": "cm.ce10",
+     "text": "Identificar y valorar elementos del patrimonio natural y cultural del entorno próximo y de la Comunidad de Madrid."
+    },
+    {
+     "id": "cm.c2.10.1",
+     "cycle": "c2",
+     "competenceId": "cm.ce10",
+     "text": "Identificar y valorar elementos del patrimonio natural y cultural del entorno próximo y de la Comunidad de Madrid."
+    },
+    {
+     "id": "cm.c3.10.1",
+     "cycle": "c3",
+     "competenceId": "cm.ce10",
+     "text": "Identificar y valorar elementos del patrimonio natural y cultural del entorno próximo y de la Comunidad de Madrid."
+    }
+   ],
+   "contents": [
+    {
+     "id": "cm.c1.A.1",
+     "cycle": "c1",
+     "block": "A. Cultura científica",
+     "text": "Iniciación en la actividad científica: observación, preguntas y experimentos sencillos."
+    },
+    {
+     "id": "cm.c1.A.2",
+     "cycle": "c1",
+     "block": "A. Cultura científica",
+     "text": "Los seres vivos: animales y plantas, características y necesidades."
+    },
+    {
+     "id": "cm.c1.A.3",
+     "cycle": "c1",
+     "block": "A. Cultura científica",
+     "text": "La salud: alimentación equilibrada, higiene y descanso."
+    },
+    {
+     "id": "cm.c2.A.1",
+     "cycle": "c2",
+     "block": "A. Cultura científica",
+     "text": "Procedimientos de la actividad científica: hipótesis, experimentación y conclusiones."
+    },
+    {
+     "id": "cm.c2.A.2",
+     "cycle": "c2",
+     "block": "A. Cultura científica",
+     "text": "Seres vivos: funciones vitales, clasificación y ecosistemas."
+    },
+    {
+     "id": "cm.c2.A.3",
+     "cycle": "c2",
+     "block": "A. Cultura científica",
+     "text": "Materia, energía y fuerzas en la vida cotidiana. El cuerpo humano."
+    },
+    {
+     "id": "cm.c3.A.1",
+     "cycle": "c3",
+     "block": "A. Cultura científica",
+     "text": "Proyectos de investigación científica y comunicación de resultados."
+    },
+    {
+     "id": "cm.c3.A.2",
+     "cycle": "c3",
+     "block": "A. Cultura científica",
+     "text": "Estructura y funciones de los seres vivos; ecosistemas y biodiversidad."
+    },
+    {
+     "id": "cm.c3.A.3",
+     "cycle": "c3",
+     "block": "A. Cultura científica",
+     "text": "Materia, energía, electricidad y magnetismo; la Tierra y el universo. Salud y bienestar."
+    },
+    {
+     "id": "cm.c1.B.1",
+     "cycle": "c1",
+     "block": "B. Tecnología y digitalización",
+     "text": "Dispositivos digitales de uso cotidiano y normas de uso seguro."
+    },
+    {
+     "id": "cm.c1.B.2",
+     "cycle": "c1",
+     "block": "B. Tecnología y digitalización",
+     "text": "Objetos y máquinas sencillas del entorno."
+    },
+    {
+     "id": "cm.c2.B.1",
+     "cycle": "c2",
+     "block": "B. Tecnología y digitalización",
+     "text": "Búsqueda guiada de información en internet; seguridad digital."
+    },
+    {
+     "id": "cm.c2.B.2",
+     "cycle": "c2",
+     "block": "B. Tecnología y digitalización",
+     "text": "Proyectos de diseño y construcción de objetos sencillos."
+    },
+    {
+     "id": "cm.c3.B.1",
+     "cycle": "c3",
+     "block": "B. Tecnología y digitalización",
+     "text": "Tratamiento y comunicación de la información digital; pensamiento computacional."
+    },
+    {
+     "id": "cm.c3.B.2",
+     "cycle": "c3",
+     "block": "B. Tecnología y digitalización",
+     "text": "Proyectos de diseño: planificación, prototipo y evaluación."
+    },
+    {
+     "id": "cm.c1.C.1",
+     "cycle": "c1",
+     "block": "C. Sociedades y territorios",
+     "text": "La familia, la escuela y la localidad: organización y normas."
+    },
+    {
+     "id": "cm.c1.C.2",
+     "cycle": "c1",
+     "block": "C. Sociedades y territorios",
+     "text": "El paso del tiempo: calendario y cambios en la vida cotidiana."
+    },
+    {
+     "id": "cm.c2.C.1",
+     "cycle": "c2",
+     "block": "C. Sociedades y territorios",
+     "text": "La Comunidad de Madrid y España: territorio, población y organización política básica."
+    },
+    {
+     "id": "cm.c2.C.2",
+     "cycle": "c2",
+     "block": "C. Sociedades y territorios",
+     "text": "La historia local y las huellas del pasado; fuentes históricas."
+    },
+    {
+     "id": "cm.c3.C.1",
+     "cycle": "c3",
+     "block": "C. Sociedades y territorios",
+     "text": "Organización política de España y de la Unión Europea; derechos y deberes."
+    },
+    {
+     "id": "cm.c3.C.2",
+     "cycle": "c3",
+     "block": "C. Sociedades y territorios",
+     "text": "Principales etapas históricas y su huella en el patrimonio; la población y las actividades económicas."
+    },
+    {
+     "id": "cm.c1.D.1",
+     "cycle": "c1",
+     "block": "D. Valores y conciencia ecosocial",
+     "text": "Convivencia, respeto y normas; cuidado del entorno."
+    },
+    {
+     "id": "cm.c1.D.2",
+     "cycle": "c1",
+     "block": "D. Valores y conciencia ecosocial",
+     "text": "Reducir, reutilizar y reciclar."
+    },
+    {
+     "id": "cm.c2.D.1",
+     "cycle": "c2",
+     "block": "D. Valores y conciencia ecosocial",
+     "text": "Igualdad y diversidad; resolución dialogada de conflictos."
+    },
+    {
+     "id": "cm.c2.D.2",
+     "cycle": "c2",
+     "block": "D. Valores y conciencia ecosocial",
+     "text": "Consumo responsable y problemas ambientales del entorno."
+    },
+    {
+     "id": "cm.c3.D.1",
+     "cycle": "c3",
+     "block": "D. Valores y conciencia ecosocial",
+     "text": "Derechos humanos y de la infancia; igualdad de género; diversidad cultural."
+    },
+    {
+     "id": "cm.c3.D.2",
+     "cycle": "c3",
+     "block": "D. Valores y conciencia ecosocial",
+     "text": "Cambio climático y desarrollo sostenible: medidas individuales y colectivas."
+    }
+   ]
+  }
+ ]
+}
